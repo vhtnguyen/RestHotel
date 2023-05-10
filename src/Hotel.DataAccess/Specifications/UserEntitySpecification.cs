@@ -3,7 +3,7 @@ using Hotel.Shared.Exceptions;
 
 namespace Hotel.DataAccess.Specifications;
 
-internal class UserEntitySpecification : IEntitySpecification<User>
+public class UserEntitySpecification : IEntitySpecification<User>
 {
     private static UserEntitySpecification? _instance;
     public static UserEntitySpecification GetInstance()
