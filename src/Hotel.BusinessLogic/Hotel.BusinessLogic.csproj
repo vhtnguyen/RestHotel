@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Users\" />
+    <ProjectReference Include="..\Hotel.DataAccess\Hotel.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hotel.DataAccess\Hotel.DataAccess.csproj" />
+    <Folder Include="DTO\Users\" />
   </ItemGroup>
 
 </Project>
