@@ -1,3 +1,4 @@
+using Hotel.API.Filters;
 using Hotel.BussinessLogic.Commands;
 using Hotel.Shared.Redis;
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddFilters();
 
 var app = builder.Build();
 
@@ -20,12 +22,12 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseRedisStreaming()
-//    .SubscribeAsync<SendNotificationCommand>("email")
-//    .SubscribeAsync<OrderCreated>("orders");
+//    .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommand());
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.Run();

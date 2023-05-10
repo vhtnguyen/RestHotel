@@ -12,12 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Filters\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Hotel.BussinessLogic\Hotel.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Hotel.BusinessLogic\Hotel.BusinessLogic.csproj" />
   </ItemGroup>
 
 </Project>
