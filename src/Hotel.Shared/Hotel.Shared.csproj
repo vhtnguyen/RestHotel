@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authentication\" />
+    <Folder Include="Payments\Momo\" />
   </ItemGroup>
 
 </Project>

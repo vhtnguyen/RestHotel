@@ -23,6 +23,9 @@ public static class Extensions
         var section = configuration.GetSection("redis");
         section.Bind(options);
 
+        // inject options
+        services.Configure<RedisOptions>(section);
+
         var connection = ConnectionMultiplexer.Connect(options.ConnectionString);
         services.AddSingleton<IConnectionMultiplexer>(connection);
 
