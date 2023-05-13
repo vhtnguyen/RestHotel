@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -14,12 +14,11 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="MimeKit" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="PayPal" Version="1.9.1" />
+    <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="Scrutor" Version="4.2.2" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.111" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Payments\Momo\" />
+    <PackageReference Include="Stripe.net" Version="41.15.0" />
   </ItemGroup>
 
 </Project>

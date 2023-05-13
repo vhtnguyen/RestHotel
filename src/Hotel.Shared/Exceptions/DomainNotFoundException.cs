@@ -4,11 +4,9 @@ namespace Hotel.Shared.Exceptions;
 
 public class DomainNotFoundException : DomainException
 {
-    public string Code { get; }
     public HttpStatusCode StatusCode { get; }
-    public DomainNotFoundException(string code, string message) : base(message)
+    public DomainNotFoundException(string code, string message) : base(code, message)
     {
-        Code = code;
         StatusCode = HttpStatusCode.NotFound;
     }
 

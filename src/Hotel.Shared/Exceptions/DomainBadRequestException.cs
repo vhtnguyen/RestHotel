@@ -4,11 +4,9 @@ namespace Hotel.Shared.Exceptions;
 
 public class DomainBadRequestException : DomainException
 {
-    public string Code { get; }
     public HttpStatusCode HttpStatusCode { get; }
-    public DomainBadRequestException(string code, string message) : base(message)
+    public DomainBadRequestException(string code, string message) : base(code, message)
     {
-        Code = code;
         HttpStatusCode = HttpStatusCode.BadRequest;
     }
 }
