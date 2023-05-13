@@ -1,0 +1,20 @@
+version: "3"
+services:
+  hotel_rest:
+    container_name: hotel_rest
+    build:
+      context: ../
+    environment:
+      #some config https here
+      #some config port here
+      ASPNETCORE_URLS: http://*:5000
+    ports:
+      - "5000:5000" # http
+    #some config port here
+    networks:
+      #some config network here
+      - resthotel
+
+networks:
+  resthotel:
+    external: true
