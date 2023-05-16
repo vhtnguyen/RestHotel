@@ -33,7 +33,7 @@ public static class Extensions
         services.AddSingleton<ICacheService, CacheService>();
         // add streaming service
         services.AddSingleton<IStreamingPublisher, StreamingPublisher>();
-        services.AddSingleton<IStreamingSubscriber, StreamingSubscriber>();
+        //services.AddSingleton<IStreamingSubscriber, StreamingSubscriber>();
         return services;
     }
 }

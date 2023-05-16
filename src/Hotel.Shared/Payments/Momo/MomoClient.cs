@@ -18,7 +18,7 @@ internal class MomoClient : IMomoClient
         _options = options.Value;
     }
 
-    public async Task<MomoResouce> CreateSession(CreateSessionResource resource)
+    public async Task<SessionResource> CreateSession(CreateSessionResource resource)
     {
         string rawHash = "partnerCode=" +
                 _options.PartnerCode + "&accessKey=" +
@@ -48,7 +48,7 @@ internal class MomoClient : IMomoClient
         };
 
         var response = await _momoPaymentRequest.SendPaymentRequest(_options.EndPoint, message);
-        var result = new MomoResouce(response.GetValue("payUrl")!.ToString());
+        var result = new SessionResource(response.GetValue("payUrl")!.ToString());
         return result;
     }
 }

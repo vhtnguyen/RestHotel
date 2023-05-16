@@ -2,5 +2,5 @@
 
 public interface IMomoClient
 {
-    Task<MomoResouce> CreateSession(CreateSessionResource resouce);
+    Task<SessionResource> CreateSession(CreateSessionResource resouce);
 }

@@ -1,5 +1,10 @@
+using Hotel.API.Backgrounds;
 using Hotel.API.Filters;
 using Hotel.BussinessLogic.Commands;
+using Hotel.DataAccess.Context;
+using Hotel.Shared.Dispatchers;
+using Hotel.Shared.Messaging;
+using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +17,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
 
+builder.Services.AddSql();
+builder.Services.AddRedis();
+builder.Services.AddDispatcher();
+builder.Services.AddMessaging();
+builder.Services.AddStripeCheckout();
+
+builder.Services.AddHostedService<AppInitializer>();
+builder.Services.AddHostedService<StreamingService>();
+builder.Services.AddHostedService<MessagingService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,8 +36,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseRedisStreaming()
-//    .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommand());
+app.UseRedisStreaming()
+    .SubscribeAsync<SendNotificationCommand>("email");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

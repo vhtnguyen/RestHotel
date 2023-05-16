@@ -1,6 +1,7 @@
 ﻿using Hotel.Shared.Dispatchers;
 using Hotel.Shared.Exceptions;
 using Hotel.Shared.Handlers;
+using Hotel.Shared.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,7 @@ internal class StreamingSubscriber : IStreamingSubscriber
     private readonly IStreamingPublisher _publisher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly RedisOptions _options;
+    private readonly IMessagingChannel<ICommand> _messagingChannel;
     public StreamingSubscriber(
         WebApplication application)
     {
@@ -27,10 +29,11 @@ internal class StreamingSubscriber : IStreamingSubscriber
         _publisher = application.Services.GetService<IStreamingPublisher>()!;
         _commandDispatcher = application.Services.GetService<ICommandDispatcher>()!;
         _options = application.Services.GetService<IOptions<RedisOptions>>()!.Value;
+        _messagingChannel = application.Services.GetService < IMessagingChannel<ICommand>>()!;
     }
 
     public IStreamingSubscriber SubscribeAsync<TCommand>(
-        string topic, Func<TCommand, DomainException, IRejectedCommand>? onError) 
+        string topic, Func<TCommand, DomainException, IRejectedCommand>? onError = null) 
         where TCommand : ICommand 
     {
         // write handle async function with polly fault handling
@@ -42,7 +45,8 @@ internal class StreamingSubscriber : IStreamingSubscriber
                 return;
             }
             //await _commandDispatcher.DispatchAsync(command);
-            await HandleAsync(topic, command, () => _commandDispatcher.DispatchAsync(command), onError);
+            await _messagingChannel.Writer.WriteAsync(command);
+            //await HandleAsync(topic, command, () => _commandDispatcher.DispatchAsync(command), onError);
         });
 
         return this;

@@ -8,5 +8,5 @@ public interface IStreamingSubscriber
 {
     IStreamingSubscriber SubscribeAsync<TCommand>(
         string topic, 
-        Func<TCommand, DomainException, IRejectedCommand>? onError) where TCommand : ICommand;
+        Func<TCommand, DomainException, IRejectedCommand>? onError = null) where TCommand : ICommand;
 }
