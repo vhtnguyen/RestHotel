@@ -19,7 +19,6 @@ internal class StreamingSubscriber : IStreamingSubscriber
     private readonly IStreamingPublisher _publisher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly RedisOptions _options;
-    private readonly IMessagingChannel<ICommand> _messagingChannel;
     public StreamingSubscriber(
         WebApplication application)
     {
@@ -29,7 +28,6 @@ internal class StreamingSubscriber : IStreamingSubscriber
         _publisher = application.Services.GetService<IStreamingPublisher>()!;
         _commandDispatcher = application.Services.GetService<ICommandDispatcher>()!;
         _options = application.Services.GetService<IOptions<RedisOptions>>()!.Value;
-        _messagingChannel = application.Services.GetService < IMessagingChannel<ICommand>>()!;
     }
 
     public IStreamingSubscriber SubscribeAsync<TCommand>(

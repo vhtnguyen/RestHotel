@@ -1,0 +1,25 @@
+version: "3"
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: bitnami/zookeeper:3.6.2
+    ports:
+      - "2181:2181"
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: yes
+      ZOO_SERVER_ID: 1
+      ZOO_SERVERS: 0.0.0.0:2888:3888
+    networks: resthotel
+
+  zoonavigator:
+    container_name: zoonavigator
+    image: elkozmon/zoonavigator
+    ports:
+      - 9000:9000
+    environment:
+      AUTO_CONNECT_CONNECTION_STRING: zookeeper:2181
+    networks: resthotel
+
+networks:
+  resthotel:
+    external: true
