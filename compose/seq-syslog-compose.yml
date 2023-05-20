@@ -1,0 +1,35 @@
+version: "3"
+services:
+  seq:
+    container_name: seq
+    image: datalust/seq
+    volumes:
+      - seq:/data
+    ports:
+      #UI PORT
+      - "80:80"
+      # INGEST PORT
+      - "5341:5341"
+    environment:
+      ACCEPT_EULA: "Y"
+    networks:
+      - resthotel
+
+  # syslog:
+  #   container_name: seq_syslog
+  #   image: datalust/seq-input-syslog
+  #   environment:
+  #     SEQ_ADDRESS: http://seq:5341
+  #   ports:
+  #     # port for send log
+  #     - "514:514/udp"
+  #   depends_on:
+  #     - seq
+  #   networks:
+  #     - resthotel
+
+volumes:
+  seq: {}
+networks:
+  resthotel:
+    external: true

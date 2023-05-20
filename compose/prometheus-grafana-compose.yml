@@ -1,0 +1,47 @@
+version: "3"
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-enterprise:8.2.1
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+    networks:
+      - resthotel
+
+  influx:
+    container_name: influx
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+    volumes:
+      - fluent:/var/lib/influxdb2
+    networks:
+      - resthotel
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - promethues:/promethues
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    networks:
+      - resthotel
+
+volumes:
+  grafana: {}
+  promethues: {}
+  fluent: {}
+
+networks:
+  resthotel:
+    external: true
