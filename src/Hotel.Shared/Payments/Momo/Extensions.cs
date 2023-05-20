@@ -9,7 +9,7 @@ namespace Hotel.Shared.Payments.Momo;
 */
 public static class Extensions
 {
-    public static IServiceCollection AddMomoCheckoutLink(this IServiceCollection services)
+    public static IServiceCollection AddMomoCheckout(this IServiceCollection services)
     {
         using var serviceProvider = services.BuildServiceProvider();
         var configuration = serviceProvider.GetService<IConfiguration>()!;

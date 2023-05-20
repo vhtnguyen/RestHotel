@@ -19,8 +19,8 @@ internal class StreamingPublisher : IStreamingPublisher
 
     public async Task PublishAsync<TCommand>(string topic, TCommand command) where TCommand : ICommand
     {
-        _logger.LogInformation($"publish a message {command.GetType().Name} at channel {topic}");
+        _logger.LogInformation($"publish a message {command.GetType().Name} at topic {topic}_{command.GetType().Name}");
         var data = JsonConvert.SerializeObject(command);
-        await _subscriber.PublishAsync(topic, data);
+        await _subscriber.PublishAsync($"{topic}_{command.GetType().Name}", data);
     }
 }

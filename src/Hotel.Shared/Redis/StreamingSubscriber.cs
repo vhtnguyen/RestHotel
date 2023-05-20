@@ -19,6 +19,7 @@ internal class StreamingSubscriber : IStreamingSubscriber
     private readonly IStreamingPublisher _publisher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly RedisOptions _options;
+    private readonly IMessagingChannel<ICommand> _messagingChannel;
     public StreamingSubscriber(
         WebApplication application)
     {
@@ -28,23 +29,32 @@ internal class StreamingSubscriber : IStreamingSubscriber
         _publisher = application.Services.GetService<IStreamingPublisher>()!;
         _commandDispatcher = application.Services.GetService<ICommandDispatcher>()!;
         _options = application.Services.GetService<IOptions<RedisOptions>>()!.Value;
+        _messagingChannel = application.Services.GetService<IMessagingChannel<ICommand>>()!;
     }
 
     public IStreamingSubscriber SubscribeAsync<TCommand>(
         string topic, Func<TCommand, DomainException, IRejectedCommand>? onError = null) 
         where TCommand : ICommand 
     {
+        _logger.LogInformation($"subscriber topic {topic}_{typeof(TCommand).Name}");
         // write handle async function with polly fault handling
-        _subscriber.SubscribeAsync(topic, async (channel, data) =>
+        _subscriber.SubscribeAsync($"{topic}_{typeof(TCommand).Name}", async (channel, data) =>
         {
             var command = JsonConvert.DeserializeObject<TCommand>(data!);
             if (command == null)
             {
                 return;
             }
-            //await _commandDispatcher.DispatchAsync(command);
-            await _messagingChannel.Writer.WriteAsync(command);
-            //await HandleAsync(topic, command, () => _commandDispatcher.DispatchAsync(command), onError);
+
+            if(_options.MultiWorkerEnable)
+            {
+                await _messagingChannel.Writer.WriteAsync(command);
+            }
+            else
+            {
+                await HandleAsync(topic, command, () => _commandDispatcher.DispatchAsync(command), onError);
+            } 
+                
         });
 
         return this;
@@ -78,8 +88,12 @@ internal class StreamingSubscriber : IStreamingSubscriber
                 return Task.CompletedTask;
             } catch(Exception ex)
             {
+                if (currentPollyExecution != 0)
+                {
+                    _logger.LogInformation($"retry handle message {messageName} on topic {topic} at {currentPollyExecution} time");
+                }
+
                 currentPollyExecution++;
-                _logger.LogInformation($"retry handle message {messageName} on topic {topic} at {currentPollyExecution} time");
                 if (ex is DomainException domainException && onError != null)
                 {
                     var rejectedCommand = onError(command, domainException)!;
