@@ -1,7 +1,8 @@
 ﻿using Hotel.Shared.Handlers;
 
-namespace Hotel.BussinessLogic.Commands;
+namespace Hotel.BusinessLogic.Commands;
 
 public class SendNotificationCommand : ICommand
 {
+    public string Email { get; set; }
 }

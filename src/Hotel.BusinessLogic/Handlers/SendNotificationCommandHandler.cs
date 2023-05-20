@@ -1,12 +1,13 @@
-﻿using Hotel.BussinessLogic.Commands;
+﻿using Hotel.BusinessLogic.Commands;
+using Hotel.Shared.Exceptions;
 using Hotel.Shared.Handlers;
 
 namespace Hotel.BussinessLogic.Handlers;
 
-internal class SendNotificationCommandHandler : ICommandHandler<SendNotificationCommand>
+public class SendNotificationCommandHandler : ICommandHandler<SendNotificationCommand>
 {
     public Task HandleAsync(SendNotificationCommand command)
     {
-        throw new NotImplementedException();
+        throw new DomainBadRequestException("test", "error");
     }
 }

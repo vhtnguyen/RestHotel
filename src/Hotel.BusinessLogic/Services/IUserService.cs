@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.BussinessLogic.Services
+namespace Hotel.BusinessLogic.Services
 {
     internal interface IUserService
     {
     }
 }
+    
