@@ -1,5 +1,6 @@
-﻿using Hotel.BussinessLogic.Commands;
+﻿using Hotel.BusinessLogic.Commands;
 using Hotel.Shared.Redis;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Hotel.API.Backgrounds
 {
@@ -14,14 +15,15 @@ namespace Hotel.API.Backgrounds
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (true)
-            {
-                var command = new SendNotificationCommand();
-                await streamingPublisher.PublishAsync("email", command);
-                await streamingPublisher.PublishAsync("email", command);
-                await streamingPublisher.PublishAsync("email", command);
-                await Task.Delay(1000);
-            }
+            var command = new SendNotificationCommand();
+            await streamingPublisher.PublishAsync("email", command);
+            //while (true)
+            //{
+            //    var command = new SendNotificationCommand();
+            //    await streamingPublisher.PublishAsync("email", command);
+            //    await streamingPublisher.PublishAsync("email", command);
+            //    await Task.Delay(1000);
+            //}
         }
     }
 }

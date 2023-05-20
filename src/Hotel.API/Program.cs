@@ -1,9 +1,16 @@
 using Hotel.API.Backgrounds;
 using Hotel.API.Filters;
-using Hotel.BussinessLogic.Commands;
+using Hotel.BusinessLogic;
+using Hotel.BusinessLogic.Commands;
 using Hotel.DataAccess.Context;
 using Hotel.Shared.Dispatchers;
+using Hotel.Shared.Lock;
+using Hotel.Shared.Logging;
+using Hotel.Shared.MailKit;
 using Hotel.Shared.Messaging;
+using Hotel.Shared.Monitoring;
+using Hotel.Shared.Payments.Momo;
+using Hotel.Shared.Payments.PayPal;
 using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
 
@@ -20,12 +27,21 @@ builder.Services.AddFilters();
 builder.Services.AddSql();
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
+//builder.Services.AddMailKit();
 builder.Services.AddMessaging();
+builder.Services.AddDistributedLock();
+//builder.Services.AddMomoCheckout();
+//builder.Services.AddPayPayCheckout();
 builder.Services.AddStripeCheckout();
+builder.Services.AddBusinessLogicLayer();
+//builder.Services.AddHostedService<AppInitializer>();
+//builder.Services.AddHostedService<StreamingService>();
+//builder.Services.AddHostedService<MessagingService>();
 
-builder.Services.AddHostedService<AppInitializer>();
-builder.Services.AddHostedService<StreamingService>();
-builder.Services.AddHostedService<MessagingService>();
+// custom logging
+builder.Host.UseLogging();
+builder.Host.UseMonitoring();
+
 
 var app = builder.Build();
 
@@ -37,9 +53,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRedisStreaming()
-    .SubscribeAsync<SendNotificationCommand>("email");
+    .SubscribeAsync<SendNotificationCommandRejected>("email")
+    .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommandRejected
+    { Code = e.Code, Message = e.Message, Email = c.Email});
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
