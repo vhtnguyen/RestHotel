@@ -42,13 +42,13 @@ public static class Extensions
             .UseMetrics((c, o) =>
             {
                 var options = c.Configuration.GetOptions<MetricOptions>("metrics");
-                if(options.PrometheusEnable)
+                if (options.PrometheusEnable)
                 {
                     o.EndpointOptions = endPointOptions =>
                     {
                         endPointOptions.MetricsEndpointOutputFormatter = new MetricsPrometheusTextOutputFormatter();
                     };
-                }    
+                }
             });
         return host;
     }

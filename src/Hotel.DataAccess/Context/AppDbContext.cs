@@ -19,6 +19,9 @@ internal class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration<Role>(configuration);
         modelBuilder.ApplyConfiguration<Room>(configuration);
         modelBuilder.ApplyConfiguration<RoomRegulation>(configuration);
+		modelBuilder.ApplyConfiguration<InvoiceHotelService>(configuration);
+		modelBuilder.ApplyConfiguration<ServiceCatagory>(configuration);
+		modelBuilder.ApplyConfiguration<Invoice>(configuration);
     }
 
 }

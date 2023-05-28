@@ -10,41 +10,43 @@ public class Invoice
     public string? Status { get; set; }
     public double TotalSum { get; set; }
     public double DownPayment { get; set; }
+    public string? Email { get; set; }
 
     // reference property
     public ICollection<ReservationCard> ReservationCards { get; set; } = new List<ReservationCard>();
-    public ICollection<HotelService> HotelServices { get; set; } = new List<HotelService>();
+    public ICollection<InvoiceHotelService> HotelServices { get; set; } = new List<InvoiceHotelService>();
 
     [JsonConstructor]
-    public Invoice(int id, DateTime date, string? status, double totalSum, double downPayment)
+    public Invoice(int id, DateTime date, string? status, double totalSum, double downPayment, string? email)
     {
         Id = id;
         Date = date;
         Status = status;
         TotalSum = totalSum;
         DownPayment = downPayment;
+        Email = email;
     }
 
     public void AddHotelService(HotelService service)
     {
-        var isExist = HotelServices.Any(s => s.Id == service.Id);
+        var isExist = HotelServices.Any(s => s.HotelServiceId == service.Id);
         if (isExist)
         {
             // throw exception here
         }
 
-        HotelServices.Add(service);
+        HotelServices.Add(new InvoiceHotelService { InvoiceId = Id, HotelServiceId = service.Id, CreateOn = DateTime.Now});
     }
 
     public void RemoveHotelService(HotelService service)
     {
-        var isExist = HotelServices.Any(s => s.Id == service.Id);
+        var isExist = HotelServices.Any(s => s.HotelServiceId == service.Id);
         if (!isExist)
         {
             // throw exception here
         }
 
-        HotelServices.Remove(service);
+        HotelServices.Remove(HotelServices.First(c => c.HotelServiceId == service.Id));
     }
 
     public void AddReservationCard(ReservationCard card)

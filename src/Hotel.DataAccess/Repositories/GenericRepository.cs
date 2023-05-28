@@ -1,5 +1,6 @@
 ﻿using Hotel.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories;
@@ -54,5 +55,11 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IDbContextTransaction> CreateTransaction()
+    {
+        var transaction = await _context.Database.BeginTransactionAsync();
+        return transaction;
     }
 }

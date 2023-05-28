@@ -19,7 +19,7 @@ public class HomeController : Controller
 
     [HttpGet]
     [SampleActionFilter]
-    public IActionResult Get()
+    public ActionResult<string> Get()
     {
         return Ok("Hotel API");
     }

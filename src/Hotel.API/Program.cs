@@ -13,6 +13,7 @@ using Hotel.Shared.Payments.Momo;
 using Hotel.Shared.Payments.PayPal;
 using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,11 +29,12 @@ builder.Services.AddSql();
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
 //builder.Services.AddMailKit();
-builder.Services.AddMessaging();
-builder.Services.AddDistributedLock();
+//builder.Services.AddMessaging();
+//builder.Services.AddDistributedLock();
 //builder.Services.AddMomoCheckout();
-//builder.Services.AddPayPayCheckout();
-builder.Services.AddStripeCheckout();
+//builder.Services.AddPayPalCheckout();
+//builder.Services.AddStripeCheckout();
+//builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
 //builder.Services.AddHostedService<AppInitializer>();
 //builder.Services.AddHostedService<StreamingService>();
@@ -41,6 +43,11 @@ builder.Services.AddBusinessLogicLayer();
 // custom logging
 builder.Host.UseLogging();
 builder.Host.UseMonitoring();
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.AllowSynchronousIO = true;
+});
 
 
 var app = builder.Build();
@@ -55,7 +62,7 @@ if (app.Environment.IsDevelopment())
 app.UseRedisStreaming()
     .SubscribeAsync<SendNotificationCommandRejected>("email")
     .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommandRejected
-    { Code = e.Code, Message = e.Message, Email = c.Email});
+    { Code = e.Code, Message = e.Message, Email = c.Email });
 
 //app.UseHttpsRedirection();
 app.UseAuthorization();

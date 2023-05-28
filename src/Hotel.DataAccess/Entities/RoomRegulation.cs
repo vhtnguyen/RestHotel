@@ -12,9 +12,11 @@ public class RoomRegulation
     public double MaxSurchargeRatio { get; set; }
     public double MaxOverseaSurchargeRatio { get; set; }
     public DateTime Date { get; set; }
+    public double RoomExchangeFee { get; set; }
     public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
     [JsonConstructor]
-    public RoomRegulation(int id, string? roomType, double price, int maxGuest, int defaultGuest, double maxSurchargeRatio, double maxOverseaSurchargeRatio, DateTime date)
+    public RoomRegulation(
+        int id, string? roomType, double price, int maxGuest, int defaultGuest, double maxSurchargeRatio, double maxOverseaSurchargeRatio, DateTime date, double roomExchangeFee)
     {
         Id = id;
         RoomType = roomType;
@@ -24,5 +26,6 @@ public class RoomRegulation
         MaxSurchargeRatio = maxSurchargeRatio;
         MaxOverseaSurchargeRatio = maxOverseaSurchargeRatio;
         Date = date;
+        RoomExchangeFee = roomExchangeFee;  
     }
 }

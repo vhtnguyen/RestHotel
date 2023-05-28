@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
+using System.Reflection;
 
 namespace Hotel.Shared.Logging;
 
@@ -27,13 +28,13 @@ public static class Extensions
                 .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName);
 
             // config write to on configuration logger
-            configurationLogging(configuration, level, seriLogOptions, seqOptions, elkOptions);
+            configurationLogging(configuration,  level, context.HostingEnvironment.EnvironmentName, seriLogOptions, seqOptions, elkOptions);
         });
             
         return host;
     }
 
-    private static void configurationLogging(LoggerConfiguration logger, LogEventLevel level, SeriLogOptions serilog, SeqOptions seq, ElkOptions elk)
+    private static void configurationLogging(LoggerConfiguration logger, LogEventLevel level, string env, SeriLogOptions serilog, SeqOptions seq, ElkOptions elk)
     {
         if(serilog.ElkEnable)
         {
@@ -43,8 +44,10 @@ public static class Extensions
                 AutoRegisterTemplate = true,
                 //AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
                 IndexFormat = string.IsNullOrWhiteSpace(elk.IndexFormat)
-                    ? "logstash-{0:yyyy:MM:dd}"
-                    : elk.IndexFormat
+                    ? $"{Assembly.GetCallingAssembly().GetName().Name!.ToLower().Replace(".", "-")}-{env.ToLower()}-{DateTime.UtcNow:yyyy-MM-dd}"
+                    : elk.IndexFormat,
+                NumberOfReplicas = 1,
+                NumberOfShards = 2
                 // some configuration for authentication here
                 
             });

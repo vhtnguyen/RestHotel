@@ -3,12 +3,14 @@
 namespace Hotel.DataAccess.Entities; 
 public class HotelService 
 {
+
     public int Id { get; set; }
     public string? Name { get; set; }
     public double Price { get; set; }
 
     // reference key
-    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public virtual ICollection<InvoiceHotelService> Invoices { get; set; } = new List<InvoiceHotelService>();
+    public ServiceCatagory? Catagory { get; set; }
 
     [JsonConstructor]
     public HotelService(int id, string? name, double price)

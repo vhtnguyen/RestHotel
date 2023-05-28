@@ -15,15 +15,15 @@ namespace Hotel.API.Backgrounds
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var command = new SendNotificationCommand();
-            await streamingPublisher.PublishAsync("email", command);
-            //while (true)
-            //{
-            //    var command = new SendNotificationCommand();
-            //    await streamingPublisher.PublishAsync("email", command);
-            //    await streamingPublisher.PublishAsync("email", command);
-            //    await Task.Delay(1000);
-            //}
+            //var command = new SendNotificationCommand();
+            //await streamingPublisher.PublishAsync("email", command);
+            while (true)
+            {
+                var command = new SendNotificationCommand();
+                await streamingPublisher.PublishAsync("email", command);
+                await streamingPublisher.PublishAsync("email", command);
+                await Task.Delay(1000);
+            }
         }
     }
 }
