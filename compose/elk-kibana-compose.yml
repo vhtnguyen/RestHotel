@@ -7,7 +7,7 @@ services:
     container_name: elk
     environment:
       - xpack.security.enabled=false
-      - "discovery.type=single-node"
+      - discovery.type=single-node
     # restart: always
     volumes:
       - elk:/usr/share/elasticsearch/data
