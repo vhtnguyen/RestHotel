@@ -1,0 +1,1 @@
+docker build -t hotel.api:latest .
