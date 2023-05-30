@@ -22,6 +22,8 @@ internal class AppDbContext : DbContext
 		modelBuilder.ApplyConfiguration<InvoiceHotelService>(configuration);
 		modelBuilder.ApplyConfiguration<ServiceCatagory>(configuration);
 		modelBuilder.ApplyConfiguration<Invoice>(configuration);
+		modelBuilder.ApplyConfiguration<RoomDetail>(configuration);
+        modelBuilder.ApplyConfiguration<RoomRegulationRoomDetail>(configuration);
     }
 
 }

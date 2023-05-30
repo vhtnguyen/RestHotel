@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories;
 
-//https://learn.microsoft.com/en-us/ef/core/saving/transactions
 internal interface IGenericRepository<TEntity>
     where TEntity : class
 {
@@ -14,5 +13,6 @@ internal interface IGenericRepository<TEntity>
     Task UpdateAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);
     Task SaveChangesAsync();
+    //https://learn.microsoft.com/en-us/ef/core/saving/transactions
     Task<IDbContextTransaction> CreateTransaction();
 }

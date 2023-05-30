@@ -15,7 +15,9 @@ public class EntityConfiguration
     IEntityTypeConfiguration<Room>,
     IEntityTypeConfiguration<RoomRegulation>,
     IEntityTypeConfiguration<InvoiceHotelService>,
-    IEntityTypeConfiguration<ServiceCatagory>
+    IEntityTypeConfiguration<ServiceCatagory>,
+    IEntityTypeConfiguration<RoomDetail>,
+    IEntityTypeConfiguration<RoomRegulationRoomDetail>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -53,7 +55,7 @@ public class EntityConfiguration
     {
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
-        builder.HasOne(b => b.RoomRegulation);
+        builder.HasOne(b => b.RoomDetail);
         builder.HasMany(b => b.ReservationCards);
     }
 
@@ -61,7 +63,7 @@ public class EntityConfiguration
     {
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
-        builder.HasMany(b => b.Rooms);
+        builder.HasMany(b => b.RoomDetails);
     }
 
     public void Configure(EntityTypeBuilder<InvoiceHotelService> builder)
@@ -81,6 +83,26 @@ public class EntityConfiguration
         builder.HasKey(c => c.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
         builder.HasMany(c => c.HotelServices);
+    }
+
+    public void Configure(EntityTypeBuilder<RoomDetail> builder)
+    {
+        builder.HasKey(b => b.Id);
+        builder.Property(b => b.Id).ValueGeneratedOnAdd();
+        builder.HasMany(b => b.RoomRegulations);
+    }
+
+    public void Configure(EntityTypeBuilder<RoomRegulationRoomDetail> builder)
+    {
+        builder.HasKey(b => new { b.RoomDetailId, b.RoomRegulationId });
+        builder.HasOne(b => b.RoomDetail)
+            .WithMany(b => b.RoomRegulations)
+            .HasForeignKey(b => b.RoomDetailId);
+
+        builder.HasOne(b => b.RoomRegulation)
+            .WithMany(b => b.RoomDetails)
+            .HasForeignKey(b => b.RoomRegulationId);
+
     }
 
     void IEntityTypeConfiguration<HotelService>.Configure(EntityTypeBuilder<HotelService> builder)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230516182703_Initial")]
-    partial class Initial
+    [Migration("20230530145854_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace Hotel.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CatagoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -40,6 +43,8 @@ namespace Hotel.DataAccess.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CatagoryId");
 
                     b.ToTable("HotelService");
                 });
@@ -58,6 +63,9 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<double>("DownPayment")
                         .HasColumnType("float");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
@@ -67,6 +75,24 @@ namespace Hotel.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.InvoiceHotelService", b =>
+                {
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HotelServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("InvoiceId", "HotelServiceId");
+
+                    b.HasIndex("HotelServiceId");
+
+                    b.ToTable("InvoiceHotelService");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.ReservationCard", b =>
@@ -122,16 +148,10 @@ namespace Hotel.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoomRegulationId")
+                    b.Property<int?>("RoomDetailId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -139,9 +159,34 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomRegulationId");
+                    b.HasIndex("RoomDetailId");
 
                     b.ToTable("Room");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("RoomType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomDetail");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulation", b =>
@@ -151,9 +196,6 @@ namespace Hotel.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("DefaultGuest")
                         .HasColumnType("int");
@@ -167,15 +209,46 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<double>("MaxSurchargeRatio")
                         .HasColumnType("float");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("RoomExchangeFee")
                         .HasColumnType("float");
-
-                    b.Property<string>("RoomType")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("RoomRegulation");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulationRoomDetail", b =>
+                {
+                    b.Property<int>("RoomDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomRegulationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RoomDetailId", "RoomRegulationId");
+
+                    b.HasIndex("RoomRegulationId");
+
+                    b.ToTable("RoomRegulationRoomDetail");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCatagory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ServiceCatagory");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.User", b =>
@@ -209,21 +282,6 @@ namespace Hotel.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("HotelServiceInvoice", b =>
-                {
-                    b.Property<int>("HotelServicesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InvoicesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HotelServicesId", "InvoicesId");
-
-                    b.HasIndex("InvoicesId");
-
-                    b.ToTable("HotelServiceInvoice");
-                });
-
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.Property<int>("RolesId")
@@ -237,6 +295,34 @@ namespace Hotel.DataAccess.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("RoleUser");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.HotelService", b =>
+                {
+                    b.HasOne("Hotel.DataAccess.Entities.ServiceCatagory", "Catagory")
+                        .WithMany("HotelServices")
+                        .HasForeignKey("CatagoryId");
+
+                    b.Navigation("Catagory");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.InvoiceHotelService", b =>
+                {
+                    b.HasOne("Hotel.DataAccess.Entities.HotelService", "HotelService")
+                        .WithMany("Invoices")
+                        .HasForeignKey("HotelServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hotel.DataAccess.Entities.Invoice", "Invoice")
+                        .WithMany("HotelServices")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HotelService");
+
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.ReservationCard", b =>
@@ -292,26 +378,30 @@ namespace Hotel.DataAccess.Migrations
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.Room", b =>
                 {
-                    b.HasOne("Hotel.DataAccess.Entities.RoomRegulation", "RoomRegulation")
-                        .WithMany("Rooms")
-                        .HasForeignKey("RoomRegulationId");
+                    b.HasOne("Hotel.DataAccess.Entities.RoomDetail", "RoomDetail")
+                        .WithMany()
+                        .HasForeignKey("RoomDetailId");
 
-                    b.Navigation("RoomRegulation");
+                    b.Navigation("RoomDetail");
                 });
 
-            modelBuilder.Entity("HotelServiceInvoice", b =>
+            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulationRoomDetail", b =>
                 {
-                    b.HasOne("Hotel.DataAccess.Entities.HotelService", null)
-                        .WithMany()
-                        .HasForeignKey("HotelServicesId")
+                    b.HasOne("Hotel.DataAccess.Entities.RoomDetail", "RoomDetail")
+                        .WithMany("RoomRegulations")
+                        .HasForeignKey("RoomDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hotel.DataAccess.Entities.Invoice", null)
-                        .WithMany()
-                        .HasForeignKey("InvoicesId")
+                    b.HasOne("Hotel.DataAccess.Entities.RoomRegulation", "RoomRegulation")
+                        .WithMany("RoomDetails")
+                        .HasForeignKey("RoomRegulationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("RoomDetail");
+
+                    b.Navigation("RoomRegulation");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -329,8 +419,15 @@ namespace Hotel.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Hotel.DataAccess.Entities.HotelService", b =>
+                {
+                    b.Navigation("Invoices");
+                });
+
             modelBuilder.Entity("Hotel.DataAccess.Entities.Invoice", b =>
                 {
+                    b.Navigation("HotelServices");
+
                     b.Navigation("ReservationCards");
                 });
 
@@ -339,9 +436,19 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("ReservationCards");
                 });
 
+            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomDetail", b =>
+                {
+                    b.Navigation("RoomRegulations");
+                });
+
             modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulation", b =>
                 {
-                    b.Navigation("Rooms");
+                    b.Navigation("RoomDetails");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCatagory", b =>
+                {
+                    b.Navigation("HotelServices");
                 });
 #pragma warning restore 612, 618
         }
