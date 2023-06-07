@@ -11,7 +11,7 @@ public class User
     public string? FullName { get; set; }
     public string? Email { get; set; }
     public string? TelephoneNumber { get; set; }
-    public string? Avatar { get; set; }
+    public string? AvatarURL { get; set; }
 
     // some reference field
     public ICollection<Role> Roles { get; set; } = new List<Role>();
@@ -25,7 +25,7 @@ public class User
         FullName = fullName;
         Email = email;
         TelephoneNumber = telephoneNumber;
-        Avatar = avatar;
+        AvatarURL = avatar;
     }
 
     // some method

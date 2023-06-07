@@ -6,4 +6,5 @@ namespace Hotel.DataAccess.Repositories;
 public interface IUserRepository
 {
     Task<User?> FindAsync(Expression<Func<User, bool>> predicate);
+    Task<List<User>?> GetListAsync();
 }

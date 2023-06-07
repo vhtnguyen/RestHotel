@@ -16,5 +16,8 @@ internal class UserRepository : IUserRepository
     public async Task<User?> FindAsync(Expression<Func<User, bool>> predicate) 
         => await _genericRepository.FindAsync(predicate);
 
+    public async Task<List<User>?> GetListAsync()
+       => await _genericRepository.GetListAsync();
+
     // some delegate method
 }

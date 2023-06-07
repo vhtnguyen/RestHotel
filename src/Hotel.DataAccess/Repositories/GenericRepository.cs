@@ -45,7 +45,11 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         var entity = await _collection.FindAsync(id);
         return entity;
     }
-
+    public async Task<List<TEntity>?> GetListAsync()
+    {
+        var list_entity = await _collection.ToListAsync();
+        return list_entity;
+    }
     public async Task UpdateAsync(TEntity entity)
     {
         _collection.Update(entity);

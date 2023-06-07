@@ -2,6 +2,7 @@ using Hotel.API.Backgrounds;
 using Hotel.API.Filters;
 using Hotel.BusinessLogic;
 using Hotel.BusinessLogic.Commands;
+using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Context;
 using Hotel.Shared.Dispatchers;
 using Hotel.Shared.Lock;
@@ -24,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddSql();
 builder.Services.AddRedis();
@@ -44,10 +46,13 @@ builder.Services.AddBusinessLogicLayer();
 builder.Host.UseLogging();
 builder.Host.UseMonitoring();
 
+
+
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
     options.AllowSynchronousIO = true;
 });
+
 
 
 var app = builder.Build();
@@ -66,7 +71,6 @@ app.UseRedisStreaming()
 
 //app.UseHttpsRedirection();
 app.UseAuthorization();
-
 app.MapControllers();
 //app.UseMiddleware<ErrorHandlingMiddleware>();
 
