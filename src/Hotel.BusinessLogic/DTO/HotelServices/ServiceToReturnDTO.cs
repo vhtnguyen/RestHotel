@@ -12,6 +12,13 @@ namespace Hotel.BusinessLogic.DTO.HotelServices
         public string? ServiceName { get; set; }
         public string? Category { get; set; }
         public double UnitPrice { get; set; }
-        //public string? Image { get; set; }
+
+        public ServiceToReturnDTO(int id, string? name, string? category, double price)
+        {
+            Id = id;
+            ServiceName = name;
+            Category = category;
+            UnitPrice = price;
+        }
     }
 }

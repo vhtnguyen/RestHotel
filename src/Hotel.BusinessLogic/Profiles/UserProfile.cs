@@ -27,14 +27,24 @@ namespace Hotel.BusinessLogic.Profiles
 
 
             CreateMap<ServiceToReturnDTO, HotelService>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) //skip id khi map
             .ForMember(dest => dest.Category, opt => opt.Ignore()) //skip Category khi map
           .ForMember(dest => dest.Invoices, opt => opt.Ignore()) //skip invoices khi map
-          .ConstructUsing((dto, context) => new HotelService(dto.Id, dto.ServiceName, dto.UnitPrice));
+          .ConstructUsing((dto, context) => new HotelService(0, dto.ServiceName, dto.UnitPrice));
 
 
             CreateMap<HotelService, ServiceToReturnDTO>()
-            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => GetServiceName(src.Category)));
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => GetServiceName(src.Category)))
+            .ConstructUsing((dto, context) => new ServiceToReturnDTO(dto.Id, dto.Name,null ,dto.Price));
+
            
+
+            CreateMap<ServiceToCreateDTO, HotelService>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) //skip id khi map
+           .ForMember(dest => dest.Category, opt => opt.Ignore()) //skip Category khi map
+         .ForMember(dest => dest.Invoices, opt => opt.Ignore()) //skip invoices khi map
+         .ConstructUsing((dto, context) => new HotelService(0, dto.ServiceName, dto.UnitPrice));
+
 
         }
 

@@ -59,8 +59,5 @@ public class User
 
         Roles.Remove(role);
     }
-    //private int GetHighestRole()
-    //{
-    //    int highsetRole = this.Roles.Min(r => r.Id);
-    //}
+    
 }

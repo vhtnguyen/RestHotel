@@ -22,7 +22,7 @@ public static class Extensions
         //services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         //// execute extension method addSql
         //services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRoleRepository, RoleRepository>();
+        //services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddSql();
         return services;
     }

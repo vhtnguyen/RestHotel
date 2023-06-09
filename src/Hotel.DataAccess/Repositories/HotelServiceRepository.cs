@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using org.apache.zookeeper.data;
 using Hotel.DataAccess.Repositories;
+using Stripe;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -31,8 +32,42 @@ internal class HotelServiceRepository : IHotelServiceRepository
     }
 
 
-    ////// some delegate method
-
+    /// some delegate method
     
+
+    public async Task<HotelService?> CreateAsync(HotelService service,int categoryId)
+    {
+        var category = await _context.ServiceCategory
+            .SingleOrDefaultAsync(s => s.Id == categoryId);
+
+
+        if(category != null) 
+        {
+            service.Category = category;
+            category.HotelServices.Add(service);
+             _context.SaveChanges();
+            return   service;
+
+        }
+        else { return null; }
+           
+
+    }
+
+    public async Task RemoveAsync(int id)
+    {
+        var service_to_remove = await _context.HotelService.FirstOrDefaultAsync(s => s.Id == id);
+        if (service_to_remove != null)
+        {
+            _context.HotelService.Remove(service_to_remove);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+
+        }
+    }
+
+
 }
 
