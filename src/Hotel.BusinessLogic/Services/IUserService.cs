@@ -9,11 +9,12 @@ namespace Hotel.BusinessLogic.Services
 {
     public interface IUserService
     {
-        Task<List<UserToDisplayDTO>> GetUsersAsync();
+        Task<List<UserToReturnDTO>> GetUsersAsync();
+        Task<UserToReturnDTO>CreateUserAsync(UserToCreateDTO userToCreateDTO);
+        Task RemoveUserAsync(int userId);
         //Task<UserDTO> GetUserAsync(int userId, CancellationToken cancellationToken = default);
         //Task<UserDTO> AddUserAsync(UserToAddDTO userToAddDTO);
         //Task<UserDTO> UpdateUserAsync(UserToUpdateDTO userToUpdateDTO);
-        //Task DeleteUserAsync(int userId);
     }
 }
     

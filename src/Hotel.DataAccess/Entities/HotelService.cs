@@ -9,8 +9,8 @@ public class HotelService
     public double Price { get; set; }
 
     // reference key
+    public ServiceCategory? Category { get; set; }
     public virtual ICollection<InvoiceHotelService> Invoices { get; set; } = new List<InvoiceHotelService>();
-    public ServiceCatagory? Catagory { get; set; }
 
     [JsonConstructor]
     public HotelService(int id, string? name, double price)

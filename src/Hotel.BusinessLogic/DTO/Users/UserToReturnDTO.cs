@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.DTO.Users
 {
-    public class UserToDisplayDTO
+    public class UserToReturnDTO
     {
-        public int StaffID { get; set; } 
+        public int Id { get; set; } 
         public string? FullName { get; set; }
         public string? Email { get; set; }
         public string? TelephoneNumber { get; set; }
-        public string? Role { get; set; }
-        public string? AvatarURL { get; set; }
+        public string? Roles { get; set; }
+        public string? Avatar { get; set; }
 
     }
 }
