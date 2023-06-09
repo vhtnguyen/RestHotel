@@ -3,6 +3,7 @@ using Hotel.API.Filters;
 using Hotel.BusinessLogic;
 using Hotel.BusinessLogic.Commands;
 using Hotel.BusinessLogic.Services;
+using Hotel.DataAccess;
 using Hotel.DataAccess.Context;
 using Hotel.Shared.Dispatchers;
 using Hotel.Shared.Lock;
@@ -15,7 +16,8 @@ using Hotel.Shared.Payments.PayPal;
 using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-
+using Microsoft.AspNetCore.Hosting;
+using Hotel.BusinessLogic.Profiles;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,9 +27,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-builder.Services.AddSql();
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
+//builder.Services.AddSql();
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
 //builder.Services.AddMailKit();
@@ -36,9 +38,9 @@ builder.Services.AddDispatcher();
 //builder.Services.AddMomoCheckout();
 //builder.Services.AddPayPalCheckout();
 //builder.Services.AddStripeCheckout();
-//builder.Services.AddDataAccessLayer();
+builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
-//builder.Services.AddHostedService<AppInitializer>();
+builder.Services.AddHostedService<AppInitializer>();
 //builder.Services.AddHostedService<StreamingService>();
 //builder.Services.AddHostedService<MessagingService>();
 

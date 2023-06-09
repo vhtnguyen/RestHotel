@@ -3,6 +3,7 @@ using Hotel.BusinessLogic.DTO.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Hotel.BusinessLogic.Services;
+using Hotel.DataAccess.Entities;
 
 namespace Hotel.API.Controllers;
 
@@ -19,15 +20,19 @@ namespace Hotel.API.Controllers;
     [HttpGet("")]
 
     public async Task<ActionResult> Get() {
-        try
-        {
-            return Ok(await _userService.GetUsersAsync());
-        }
-        catch (Exception)
-        {
-            return BadRequest("Something went wrong");
-        }
+        return Ok(await _userService.GetUsersAsync());
+    }
+    [HttpPost("")]
+    public async Task<ActionResult> CreateUser(UserToCreateDTO userToCreateDTO)
+    {
+        return Ok(await _userService.CreateUserAsync(userToCreateDTO));
+    }
 
+    [HttpDelete("")]
+    public async Task<ActionResult> RemoveUser(int userId)
+    {
+        await _userService.RemoveUserAsync(userId);
+            return Ok($"Removed user #'{userId}'.");
     }
 }
 
