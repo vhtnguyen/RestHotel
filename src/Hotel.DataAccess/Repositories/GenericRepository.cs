@@ -18,9 +18,11 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         _collection = _context.Set<TEntity>();
     }
 
-    public Task<IEnumerable<TEntity>> BrowserAsync()
+    public async Task<IEnumerable<TEntity>> BrowserAsync()
     {
-        throw new NotImplementedException();
+
+        IEnumerable<TEntity> collection = _collection.ToList();
+        return collection;
     }
 
     public async Task CreateAsync(TEntity entity)

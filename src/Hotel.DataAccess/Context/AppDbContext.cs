@@ -6,6 +6,7 @@ namespace Hotel.DataAccess.Context;
 internal class AppDbContext : DbContext
 {
 	public DbSet<User> Users { get; set; }
+	public DbSet<RoomRegulation> RoomRegulation {get;set;}
 	// datasets
 	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 

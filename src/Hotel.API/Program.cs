@@ -2,7 +2,9 @@ using Hotel.API.Backgrounds;
 using Hotel.API.Filters;
 using Hotel.BusinessLogic;
 using Hotel.BusinessLogic.Commands;
+using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Repositories;
 using Hotel.Shared.Dispatchers;
 using Hotel.Shared.Lock;
 using Hotel.Shared.Logging;
@@ -26,6 +28,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
 
 builder.Services.AddSql();
+//test part
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+//test part
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
 //builder.Services.AddMailKit();
@@ -36,7 +42,7 @@ builder.Services.AddDispatcher();
 //builder.Services.AddStripeCheckout();
 //builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
-//builder.Services.AddHostedService<AppInitializer>();
+builder.Services.AddHostedService<AppInitializer>();
 //builder.Services.AddHostedService<StreamingService>();
 //builder.Services.AddHostedService<MessagingService>();
 
