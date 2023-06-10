@@ -2,7 +2,13 @@ using Hotel.API.Backgrounds;
 using Hotel.API.Filters;
 using Hotel.BusinessLogic;
 using Hotel.BusinessLogic.Commands;
+using Hotel.BusinessLogic.Services;
+<<<<<<< HEAD
+=======
+using Hotel.DataAccess;
+>>>>>>> Nguyen
 using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Repositories;
 using Hotel.Shared.Dispatchers;
 using Hotel.Shared.Lock;
 using Hotel.Shared.Logging;
@@ -14,7 +20,8 @@ using Hotel.Shared.Payments.PayPal;
 using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-
+using Microsoft.AspNetCore.Hosting;
+using Hotel.BusinessLogic.Profiles;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,8 +31,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
+<<<<<<< HEAD
 
 builder.Services.AddSql();
+//test part
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+//test part
+=======
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
+//builder.Services.AddSql();
+>>>>>>> Nguyen
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
 //builder.Services.AddMailKit();
@@ -34,9 +51,9 @@ builder.Services.AddDispatcher();
 //builder.Services.AddMomoCheckout();
 //builder.Services.AddPayPalCheckout();
 //builder.Services.AddStripeCheckout();
-//builder.Services.AddDataAccessLayer();
+builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
-//builder.Services.AddHostedService<AppInitializer>();
+builder.Services.AddHostedService<AppInitializer>();
 //builder.Services.AddHostedService<StreamingService>();
 //builder.Services.AddHostedService<MessagingService>();
 
@@ -44,10 +61,13 @@ builder.Services.AddBusinessLogicLayer();
 builder.Host.UseLogging();
 builder.Host.UseMonitoring();
 
+
+
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
     options.AllowSynchronousIO = true;
 });
+
 
 
 var app = builder.Build();
@@ -66,7 +86,6 @@ app.UseRedisStreaming()
 
 //app.UseHttpsRedirection();
 app.UseAuthorization();
-
 app.MapControllers();
 //app.UseMiddleware<ErrorHandlingMiddleware>();
 

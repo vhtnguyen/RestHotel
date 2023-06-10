@@ -30,7 +30,7 @@ namespace Hotel.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CatagoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -41,7 +41,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatagoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("HotelService");
                 });
@@ -232,7 +232,7 @@ namespace Hotel.DataAccess.Migrations
                     b.ToTable("RoomRegulationRoomDetail");
                 });
 
-            modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCatagory", b =>
+            modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +245,7 @@ namespace Hotel.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceCatagory");
+                    b.ToTable("ServiceCategory");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.User", b =>
@@ -296,11 +296,11 @@ namespace Hotel.DataAccess.Migrations
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.HotelService", b =>
                 {
-                    b.HasOne("Hotel.DataAccess.Entities.ServiceCatagory", "Catagory")
+                    b.HasOne("Hotel.DataAccess.Entities.ServiceCategory", "Category")
                         .WithMany("HotelServices")
-                        .HasForeignKey("CatagoryId");
+                        .HasForeignKey("CategoryId");
 
-                    b.Navigation("Catagory");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.InvoiceHotelService", b =>
@@ -443,7 +443,7 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("RoomDetails");
                 });
 
-            modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCatagory", b =>
+            modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCategory", b =>
                 {
                     b.Navigation("HotelServices");
                 });

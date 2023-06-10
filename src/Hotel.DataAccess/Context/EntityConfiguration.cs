@@ -15,7 +15,7 @@ public class EntityConfiguration
     IEntityTypeConfiguration<Room>,
     IEntityTypeConfiguration<RoomRegulation>,
     IEntityTypeConfiguration<InvoiceHotelService>,
-    IEntityTypeConfiguration<ServiceCatagory>,
+    IEntityTypeConfiguration<ServiceCategory>,
     IEntityTypeConfiguration<RoomDetail>,
     IEntityTypeConfiguration<RoomRegulationRoomDetail>
 {
@@ -23,7 +23,7 @@ public class EntityConfiguration
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.HasMany(r => r.Roles);
+        builder.HasMany(r => r.Roles).WithMany(u=>u.Users);
     }
 
     public void Configure(EntityTypeBuilder<Invoice> builder)
@@ -47,14 +47,12 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.Property(b => b.Id).ValueGeneratedOnAdd();
-        builder.HasMany(b => b.Users);
+        builder.HasMany(b => b.Users).WithMany(r=>r.Roles);
     }
 
     public void Configure(EntityTypeBuilder<Room> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.Property(b => b.Id).ValueGeneratedOnAdd();
         builder.HasOne(b => b.RoomDetail);
         builder.HasMany(b => b.ReservationCards);
     }
@@ -62,7 +60,6 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<RoomRegulation> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.Property(b => b.Id).ValueGeneratedOnAdd();
         builder.HasMany(b => b.RoomDetails);
     }
 
@@ -78,7 +75,7 @@ public class EntityConfiguration
                 .HasForeignKey(c => c.InvoiceId);
     }
 
-    public void Configure(EntityTypeBuilder<ServiceCatagory> builder)
+    public void Configure(EntityTypeBuilder<ServiceCategory> builder)
     {
         builder.HasKey(c => c.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
@@ -110,6 +107,6 @@ public class EntityConfiguration
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
         builder.HasMany(b => b.Invoices);
-        builder.HasOne(b => b.Catagory);
+        builder.HasOne(b => b.Category);
     }
 }

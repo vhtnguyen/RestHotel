@@ -27,6 +27,7 @@ public class User
         TelephoneNumber = telephoneNumber;
         Avatar = avatar;
     }
+    public User() { }
 
     // some method
     public void AddRole(Role role)
@@ -58,4 +59,5 @@ public class User
 
         Roles.Remove(role);
     }
+    
 }

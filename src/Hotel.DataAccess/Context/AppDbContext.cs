@@ -6,9 +6,12 @@ namespace Hotel.DataAccess.Context;
 internal class AppDbContext : DbContext
 {
 	public DbSet<User> Users { get; set; }
-	public DbSet<Invoice> Invoices { get; set; }  
 	// datasets
 	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+    public DbSet<Role> Role { get; set; }
+    public DbSet<HotelService> HotelService { get; set; }
+    public DbSet<ServiceCategory> ServiceCategory { get; set; }
+    // datasets
 
 	// configured
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -21,7 +24,7 @@ internal class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration<Room>(configuration);
         modelBuilder.ApplyConfiguration<RoomRegulation>(configuration);
 		modelBuilder.ApplyConfiguration<InvoiceHotelService>(configuration);
-		modelBuilder.ApplyConfiguration<ServiceCatagory>(configuration);
+		modelBuilder.ApplyConfiguration<ServiceCategory>(configuration);
 		modelBuilder.ApplyConfiguration<Invoice>(configuration);
 		modelBuilder.ApplyConfiguration<RoomDetail>(configuration);
         modelBuilder.ApplyConfiguration<RoomRegulationRoomDetail>(configuration);

@@ -12,7 +12,8 @@ namespace Hotel.BusinessLogic.Profiles
     {
         public static IServiceCollection AddMapper(this IServiceCollection services)
         {
-            var assembly = Assembly.GetExecutingAssembly();
+
+            var assembly= Assembly.GetExecutingAssembly();
             services.AddAutoMapper(assembly);
             return services;
         }

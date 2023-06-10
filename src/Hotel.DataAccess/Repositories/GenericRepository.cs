@@ -1,4 +1,5 @@
 ﻿using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
@@ -18,15 +19,18 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         _collection = _context.Set<TEntity>();
     }
 
-    public Task<IEnumerable<TEntity>> BrowserAsync()
+    public async Task<IEnumerable<TEntity>> BrowserAsync()
     {
-        throw new NotImplementedException();
+
+        IEnumerable<TEntity> collection = _collection.ToList();
+        return collection;
     }
 
-    public async Task CreateAsync(TEntity entity)
+    public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        await _collection.AddAsync(entity);
+        var new_entity=await _collection.AddAsync(entity);
         await _context.SaveChangesAsync();
+        return new_entity.Entity;
     }
     public async Task DeleteAsync(TEntity entity)
     {
@@ -45,7 +49,11 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         var entity = await _collection.FindAsync(id);
         return entity;
     }
-
+    public async Task<List<TEntity>?> GetListAsync()
+    {
+        var list_entity = await _collection.ToListAsync();
+        return list_entity;
+    }
     public async Task UpdateAsync(TEntity entity)
     {
         _collection.Update(entity);
