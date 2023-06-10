@@ -6,17 +6,14 @@ namespace Hotel.DataAccess.Context;
 internal class AppDbContext : DbContext
 {
 	public DbSet<User> Users { get; set; }
-<<<<<<< HEAD
 	public DbSet<RoomRegulation> RoomRegulation {get;set;}
 	// datasets
 	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
-=======
+
     public DbSet<Role> Role { get; set; }
     public DbSet<HotelService> HotelService { get; set; }
     public DbSet<ServiceCategory> ServiceCategory { get; set; }
     // datasets
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
->>>>>>> Nguyen
 
 	// configured
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {

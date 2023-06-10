@@ -14,6 +14,6 @@ namespace Hotel.DataAccess.Repositories
         Task<RoomRegulation?> FindAsync(Guid id);
         Task CreateAsync(RoomRegulation entity);
         Task UpdateAsync(RoomRegulation entity);
-        Task DeleteAsync(RoomRegulation entity);
+        Task DeleteAsync(int id);
     }
 }

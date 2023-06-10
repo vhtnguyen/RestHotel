@@ -26,9 +26,11 @@ namespace Hotel.DataAccess.Repositories
               return _genericRepository.CreateAsync(entity);
         }
 
-        public Task DeleteAsync(RoomRegulation entity)
+        public async Task DeleteAsync(int id)
         {
-           return  _genericRepository.DeleteAsync(entity);
+            var entity = await _genericRepository.FindAsync(x=>x.Id == id);
+            await _genericRepository.DeleteAsync(entity);
+
         }
 
         public Task<RoomRegulation?> FindAsync(Expression<Func<RoomRegulation, bool>> predicate)

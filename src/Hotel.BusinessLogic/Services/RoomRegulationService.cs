@@ -35,10 +35,10 @@ namespace Hotel.BusinessLogic.Services
 
         }
 
-        public void RemoveRoomRegulation(RoomRegulation regulation)
+        public async Task RemoveRoomRegulation(int id)
         {
 
-            _userRepository.DeleteAsync( regulation);
+        await    _userRepository.DeleteAsync( id);
         }
 
         public void UpdateRoomRegulation(RoomRegulation regulation)

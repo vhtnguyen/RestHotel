@@ -21,6 +21,11 @@ namespace Hotel.API.Controllers
 
            return _roomRegulationServices.getAllRoomRegulation();
         }
+        [HttpDelete]
+        public async Task Delete(int id)
+        {
+          await  _roomRegulationServices.RemoveRoomRegulation(id); 
+        }
 
     }
 }

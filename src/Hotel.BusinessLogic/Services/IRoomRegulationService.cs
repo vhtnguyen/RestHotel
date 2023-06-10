@@ -12,7 +12,7 @@ namespace Hotel.BusinessLogic.Services
         Task<IEnumerable<RoomRegulation>> getAllRoomRegulation();
 
         void AddRoomRegulation(RoomRegulation regulation);
-        void RemoveRoomRegulation(RoomRegulation regulation);
+        Task RemoveRoomRegulation(int id);
         void UpdateRoomRegulation(RoomRegulation regulation);
 
 
