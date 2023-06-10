@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.DataAccess.Entities;
-using Hotel.DataAccess.Repositories;
+using Hotel.DataAccess.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

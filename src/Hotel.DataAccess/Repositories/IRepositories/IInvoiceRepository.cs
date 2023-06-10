@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.DataAccess.Repositories;
+namespace Hotel.DataAccess.Repositories.IRepositories;
 
 public interface IInvoiceRepository
 {
-    Task<Invoice> GetAllInvoice();
-    Task<Invoice> FindAsync(Expression<Func<Invoice, bool>> predicate);
+    Task<IEnumerable<Invoice>> GetAllInvoice();
+    Task<Invoice?> FindAsync(Expression<Func<Invoice, bool>> predicate);
 
 }

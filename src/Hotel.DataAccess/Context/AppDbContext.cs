@@ -11,6 +11,7 @@ internal class AppDbContext : DbContext
     public DbSet<Role> Role { get; set; }
     public DbSet<HotelService> HotelService { get; set; }
     public DbSet<ServiceCategory> ServiceCategory { get; set; }
+    public DbSet<Invoice> Invoice { get; set; }
     // datasets
 
 	// configured

@@ -11,4 +11,8 @@ public class invoiceGetAllDTO
     public int Id { get; set; }
     public int RoomId { get; set; }
     public DateTime Date { get; set; }
+    // public string? Status { get; set; }
+    // public double TotalSum { get; set; }
+    // public double DownPayment { get; set; }
+    // public string? Email { get; set; }
 }

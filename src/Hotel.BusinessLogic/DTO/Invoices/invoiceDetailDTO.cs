@@ -8,5 +8,5 @@ namespace Hotel.BusinessLogic.DTO.Invoices;
 
 public class invoiceDetailDTO
 {
-    public string BookingInfo;
+   // public string BookingInfo;
 }

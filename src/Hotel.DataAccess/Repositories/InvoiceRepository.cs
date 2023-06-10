@@ -1,5 +1,6 @@
 ﻿using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -23,13 +24,18 @@ internal class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> FindAsync(Expression<Func<Invoice, bool>> predicate) 
         => await _genericRepository.FindAsync(predicate);
 
-    public async Task<Invoice> GetAllInvoice()
+    public async Task<IEnumerable< Invoice>> GetAllInvoice()
     {
-        List<Invoice> result = _context.Invoices.Include(i => i.ReservationCards).ToList();
-        //if (result == null)
+       var result =  _context.Invoice
+            .Include(i => i.ReservationCards)
+            .ToList();
+        //if (result == null)  
         //{
         //    throw new Exception();
         //}
         return result;
+        // var result = await _genericRepository.BrowserAsync();
+        // return result;
     }
+
 }
