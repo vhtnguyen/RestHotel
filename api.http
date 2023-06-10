@@ -1,0 +1,71 @@
+@base_url=http://localhost/api
+
+#Search room
+POST {{base_url}}/search
+Content-Type: application/json
+
+{
+    "timeRest": "3/6/2023",
+    "typeRoom": ""
+}
+
+# Return
+# {
+#   "metadata":{
+#   {
+#     "id": "P102",
+#     "TenLoaiPhong": "don",
+    
+#   },
+#   {
+
+#   }
+# }
+# }
+
+
+
+
+#View list room
+GET {{base_url}}/listroom
+Content-Type: application/json
+
+#Return
+# {
+#     "metadata": {
+#         {
+#             "id": "P102",
+#             "TenLoaiPhong": "don",
+#             ...
+#         },
+#         {
+#             "id": "P102",
+#             "TenLoaiPhong": "don",
+#             ...
+#         }
+#     }
+# }
+
+#For user filter
+GET {{base_url}}/listroom?budget=xxx&....
+Content-Type: application/json
+
+
+
+#View room detail
+GET {{base_url}}/detailtoom?id=p102
+
+#Return
+# {
+#     "metadata": {
+#         {
+#             "id": "P102",
+#             "TenLoaiPhong": "don",
+#             ...
+#         }
+#     }
+# }
+
+#Update room
+
+#Tranfer room
