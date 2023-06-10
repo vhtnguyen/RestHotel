@@ -7,20 +7,26 @@ using System.Threading.Tasks;
 using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
+using Hotel.BusinessLogic.DTO.RoomRegulation;
+using AutoMapper;
+
 namespace Hotel.BusinessLogic.Services
 {
     internal class RoomRegulationService:IRoomRegulationService
     {
         private readonly IRoomRegulationRepository _userRepository;
-
-        public RoomRegulationService(IRoomRegulationRepository userRepository)
+        private readonly IMapper _mapper;
+        public RoomRegulationService(IRoomRegulationRepository userRepository, IMapper mapper)
         {
+            _mapper = mapper;
             _userRepository = userRepository;
         }
-
-        public void AddRoomRegulation(RoomRegulation regulation)
+            
+        public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
         {
-            _userRepository.CreateAsync(regulation);
+            var room = _mapper.Map<RoomRegulation>(roomRegulation);
+            Console.WriteLine(room.Id);
+            await _userRepository.CreateAsync(room);
         }
 
         public async Task<IEnumerable<RoomRegulation>> getAllRoomRegulation()
@@ -35,13 +41,18 @@ namespace Hotel.BusinessLogic.Services
 
         }
 
+        public async Task<RoomRegulation> getRoomByID(int id)
+        {
+          return   await _userRepository.FindAsync(x => x.Id == id);
+        }
+
         public async Task RemoveRoomRegulation(int id)
         {
 
         await    _userRepository.DeleteAsync( id);
         }
 
-        public void UpdateRoomRegulation(RoomRegulation regulation)
+        public Task UpdateRoomRegulation(RoomRegulation regulation)
         {
             throw new NotImplementedException();
         }
