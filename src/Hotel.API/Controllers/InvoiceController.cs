@@ -1,4 +1,5 @@
-﻿using Hotel.BusinessLogic.Services;
+﻿using Hotel.BusinessLogic.DTO.Invoices;
+using Hotel.BusinessLogic.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.API.Controllers;
@@ -15,15 +16,16 @@ public class InvoiceController : Controller
     }
 
     [HttpGet("allinvoice")]
-    public async Task<IActionResult> GetAllInvoice()
+    public async Task<ActionResult> GetAllInvoice()
     {
         return Ok(await _invoiceService.GetAllInvoiceAsync());
     }
 
-    //[HttpPost("allinvoice")]
-    //public Task<IActionResult> FilterById(invoiceDTO query)
-    //{
+    [HttpGet("allinvoice")]
+    public async Task<ActionResult> GetInvoiceBrowser([FromQuery]invoiceBrowserDTO query)
+    {
 
-    //}
+        return Ok( await _invoiceService.GetInvoiceBrowser(query));
+    }
 
 }

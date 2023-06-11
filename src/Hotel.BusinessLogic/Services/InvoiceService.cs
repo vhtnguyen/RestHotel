@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hotel.BusinessLogic.DTO.Invoices;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
 using System;
@@ -19,24 +20,32 @@ internal class InvoiceService : IInvoiceService
         _invoiceRepository = invoiceRepository;
     }
 
+    public Task CreateInvoice()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<List<Invoice>> GetAllInvoiceAsync()
     {
         var result = await _invoiceRepository.GetAllInvoice();
         return _mapper.Map<List<Invoice>>(result);
     }
 
-    public Task<Invoice> GetInoviceByRoomIdAsync(int roomId)
+    public Task<Invoice> GetInvoiceBrowser(invoiceBrowserDTO query)
+    {
+        //var req_query = _mapper.Cr;
+        throw new NotImplementedException();
+    }
+
+    public Task<Invoice> GetInvoiceByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Invoice> GetInvoiceByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Invoice> GetInvoiceByIdAsync(DateOnly dateOfInvoice)
+    public Task UpdateInvocie()
     {
         throw new NotImplementedException();
     }
 }
+
+

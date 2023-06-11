@@ -8,5 +8,7 @@ namespace Hotel.BusinessLogic.DTO.Invoices;
 
 public class invoiceBrowserDTO
 {
-    
+    public int Id { get; set; }
+    public int RoomId { get; set; }
+    public DateTime Date { get; set; }
 }
