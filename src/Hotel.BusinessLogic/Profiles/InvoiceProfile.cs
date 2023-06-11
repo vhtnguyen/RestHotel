@@ -13,10 +13,10 @@ public class InvoiceProfile : Profile
 {
     public InvoiceProfile() 
     {
-        CreateMap<Invoice, invoiceGetAllDTO>()
-            .ForMember(dest => dest.NameGuest, opt => opt.MapFrom(src => src.ReservationCards.FirstOrDefault().Guests.Name));
+        //CreateMap<Invoice, invoiceGetAllDTO>()
+        //    .ForMember(dest => dest.NameGuest, opt => opt.MapFrom(src => src.ReservationCards.FirstOrDefault().Guests.Name));
 
-        CreateMap<invoiceBrowserDTO, Invoice>()
-            .ForMember();
+        //CreateMap<invoiceBrowserDTO, Invoice>()
+        //    .ForMember();
     }
 }
