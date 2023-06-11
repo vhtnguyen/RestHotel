@@ -14,8 +14,9 @@ public class InvoiceProfile : Profile
     public InvoiceProfile() 
     {
         CreateMap<Invoice, invoiceGetAllDTO>()
-            .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => src.ReservationCards.FirstOrDefault().Room.Id));
+            .ForMember(dest => dest.NameGuest, opt => opt.MapFrom(src => src.ReservationCards.FirstOrDefault().Guests.Name));
 
-        //CreateMap<>
+        CreateMap<invoiceBrowserDTO, Invoice>()
+            .ForMember();
     }
 }

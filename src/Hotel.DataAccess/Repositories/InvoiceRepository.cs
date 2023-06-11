@@ -27,15 +27,13 @@ internal class InvoiceRepository : IInvoiceRepository
     public async Task<IEnumerable< Invoice>> GetAllInvoice()
     {
        var result =  _context.Invoice
-            .Include(i => i.ReservationCards)
+            .Include(i => i.ReservationCards).ThenInclude(ng => ng.Guests)
             .ToList();
         //if (result == null)  
         //{
         //    throw new Exception();
         //}
         return result;
-        // var result = await _genericRepository.BrowserAsync();
-        // return result;
     }
 
 }

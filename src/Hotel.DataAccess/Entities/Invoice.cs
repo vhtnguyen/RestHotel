@@ -11,6 +11,7 @@ public class Invoice
     public double TotalSum { get; set; }
     public double DownPayment { get; set; }
     public string? Email { get; set; }
+    public string NameCus { get; set; }
 
     // reference property
     public ICollection<ReservationCard> ReservationCards { get; set; } = new List<ReservationCard>();
