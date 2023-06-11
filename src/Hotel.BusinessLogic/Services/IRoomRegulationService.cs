@@ -10,8 +10,8 @@ namespace Hotel.BusinessLogic.Services
 {
     public interface IRoomRegulationService
     {
-        Task<IEnumerable<RoomRegulation>> getAllRoomRegulation();
-        Task<RoomRegulation> getRoomByID(int id);
+        Task<IEnumerable<RoomRegulationToReturnDTO>> getAllRoomRegulation();
+        Task<RoomRegulationToReturnDTO> getRoomByID(int id);
         Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation);
         Task RemoveRoomRegulation(int id);
         Task UpdateRoomRegulation(RoomRegulation regulation);

@@ -16,15 +16,15 @@ namespace Hotel.API.Controllers
             this._roomRegulationServices = roomRegulationServices;
         }
         [HttpGet("id")]
-        public async Task <RoomRegulation> Get(int id )
+        public async Task <RoomRegulationToReturnDTO> Get(int id )
         {
             return await _roomRegulationServices.getRoomByID(id);
         }
         [HttpGet]
-        public Task<IEnumerable<RoomRegulation>> Get()
+        public Task<IEnumerable<RoomRegulationToReturnDTO>> Get()
         {
 
-           return _roomRegulationServices.getAllRoomRegulation();
+           return  _roomRegulationServices.getAllRoomRegulation();
         }
         [HttpDelete]
         public async Task Delete(int id)

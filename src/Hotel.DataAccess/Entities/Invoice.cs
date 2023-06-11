@@ -70,8 +70,9 @@ public class Invoice
         ReservationCards.Remove(card);
     }
 
-    public static Revenue ViewRevenue(List<Invoice> invoices)
-    {
-        return new();
-    }
+    //public static Revenue ViewRevenue(List<Invoice> invoices)
+    //{
+  
+    //    return new();
+    //}
 }

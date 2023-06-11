@@ -25,25 +25,33 @@ namespace Hotel.BusinessLogic.Services
         public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
         {
             var room = _mapper.Map<RoomRegulation>(roomRegulation);
-            Console.WriteLine(room.Id);
+    
             await _userRepository.CreateAsync(room);
         }
 
-        public async Task<IEnumerable<RoomRegulation>> getAllRoomRegulation()
+        public async Task<IEnumerable<RoomRegulationToReturnDTO>> getAllRoomRegulation()
         {
             //Expression<Func<RoomRegulation, bool>> expression = x => true;
 
-            return await _userRepository.BrowserAsync();
+            var roomRegulationList= await _userRepository.BrowserAsync();
+            List<RoomRegulationToReturnDTO> result=new List<RoomRegulationToReturnDTO>();
             //await _userRepository.FindAsync(expression);
+            foreach (var x in roomRegulationList)
+            {
+          
+                result.Add(_mapper.Map<RoomRegulationToReturnDTO>(x));
 
+            }
+  
+            return result;
             //throw new NotImplementedException();
 
 
         }
 
-        public async Task<RoomRegulation> getRoomByID(int id)
+        public async Task<RoomRegulationToReturnDTO> getRoomByID(int id)
         {
-          return   await _userRepository.FindAsync(x => x.Id == id);
+          return    _mapper.Map< RoomRegulationToReturnDTO >(await _userRepository.FindAsync(x => x.Id == id));
         }
 
         public async Task RemoveRoomRegulation(int id)
