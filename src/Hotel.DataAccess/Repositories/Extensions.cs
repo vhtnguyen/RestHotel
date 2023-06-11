@@ -13,6 +13,8 @@ public static class Extensions
         services.AddScoped< IGenericRepository<RoomRegulation>, GenericRepository<RoomRegulation>>();
         services.AddScoped<IRoomRegulationRepository,RoomRegulationRepository>();
         services.AddScoped<IInvoiceRepository,InvoiceRepository>();
+        services.AddScoped<IGenericRepository<Invoice>, GenericRepository<Invoice>>();
+        services.AddScoped<IReservationRepository,ReservationRepository>();
         return services;
     }
 }

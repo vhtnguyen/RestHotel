@@ -74,4 +74,9 @@ public class Invoice
     {
         return new();
     }
+
+    public Invoice()
+    {
+
+    }
 }

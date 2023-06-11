@@ -17,6 +17,7 @@ public static class Extensions
         services.AddHandlers();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IHotelServicesService, HotelServicesService>();
+        services.AddScoped<IReservationService, ReservationService>();
 
         services.AddMapper();
         return services;
