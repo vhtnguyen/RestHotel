@@ -23,4 +23,5 @@ public class RoomRegulation
         MaxOverseaSurchargeRatio = maxOverseaSurchargeRatio;
         RoomExchangeFee = roomExchangeFee;  
     }
+    public RoomRegulation() { }
 }

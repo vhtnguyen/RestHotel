@@ -7,41 +7,60 @@ using System.Threading.Tasks;
 using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
+using Hotel.BusinessLogic.DTO.RoomRegulation;
+using AutoMapper;
+
 namespace Hotel.BusinessLogic.Services
 {
     internal class RoomRegulationService:IRoomRegulationService
     {
         private readonly IRoomRegulationRepository _userRepository;
-
-        public RoomRegulationService(IRoomRegulationRepository userRepository)
+        private readonly IMapper _mapper;
+        public RoomRegulationService(IRoomRegulationRepository userRepository, IMapper mapper)
         {
+            _mapper = mapper;
             _userRepository = userRepository;
         }
-
-        public void AddRoomRegulation(RoomRegulation regulation)
+            
+        public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
         {
-            _userRepository.CreateAsync(regulation);
+            var room = _mapper.Map<RoomRegulation>(roomRegulation);
+    
+            await _userRepository.CreateAsync(room);
         }
 
-        public async Task<IEnumerable<RoomRegulation>> getAllRoomRegulation()
+        public async Task<IEnumerable<RoomRegulationToReturnDTO>> getAllRoomRegulation()
         {
             //Expression<Func<RoomRegulation, bool>> expression = x => true;
 
-            return await _userRepository.BrowserAsync();
+            var roomRegulationList= await _userRepository.BrowserAsync();
+            List<RoomRegulationToReturnDTO> result=new List<RoomRegulationToReturnDTO>();
             //await _userRepository.FindAsync(expression);
+            foreach (var x in roomRegulationList)
+            {
+          
+                result.Add(_mapper.Map<RoomRegulationToReturnDTO>(x));
 
+            }
+  
+            return result;
             //throw new NotImplementedException();
 
 
         }
 
-        public void RemoveRoomRegulation(RoomRegulation regulation)
+        public async Task<RoomRegulationToReturnDTO> getRoomByID(int id)
         {
-
-            _userRepository.DeleteAsync( regulation);
+          return    _mapper.Map< RoomRegulationToReturnDTO >(await _userRepository.FindAsync(x => x.Id == id));
         }
 
-        public void UpdateRoomRegulation(RoomRegulation regulation)
+        public async Task RemoveRoomRegulation(int id)
+        {
+
+        await    _userRepository.DeleteAsync( id);
+        }
+
+        public Task UpdateRoomRegulation(RoomRegulation regulation)
         {
             throw new NotImplementedException();
         }
