@@ -80,4 +80,9 @@ public class Invoice
     {
 
     }
+    //public static Revenue ViewRevenue(List<Invoice> invoices)
+    //{
+  
+    //    return new();
+    //}
 }

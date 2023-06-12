@@ -2,6 +2,7 @@
 using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories;
+using Hotel.BusinessLogic.DTO.RoomRegulation;
 namespace Hotel.API.Controllers
 {
     [ApiController]
@@ -14,12 +15,27 @@ namespace Hotel.API.Controllers
         {
             this._roomRegulationServices = roomRegulationServices;
         }
-
+        [HttpGet("id")]
+        public async Task <RoomRegulationToReturnDTO> Get(int id )
+        {
+            return await _roomRegulationServices.getRoomByID(id);
+        }
         [HttpGet]
-        public Task<IEnumerable<RoomRegulation>> Get()
+        public Task<IEnumerable<RoomRegulationToReturnDTO>> Get()
         {
 
-           return _roomRegulationServices.getAllRoomRegulation();
+           return  _roomRegulationServices.getAllRoomRegulation();
+        }
+        [HttpDelete]
+        public async Task Delete(int id)
+        {
+          await  _roomRegulationServices.RemoveRoomRegulation(id); 
+        }
+        [HttpPost]
+        public async Task Post(int maxGuest, int defaultGuest, double maxSurchargeRatio, double maxOverseaSurchargeRatio, double roomExchangeFee)
+        {
+            RoomRegulationToCreateDTO roomRegulation=new(maxGuest,defaultGuest,maxOverseaSurchargeRatio,maxOverseaSurchargeRatio,roomExchangeFee);
+            await _roomRegulationServices.AddRoomRegulation( roomRegulation);
         }
 
     }

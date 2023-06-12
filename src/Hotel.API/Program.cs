@@ -3,9 +3,6 @@ using Hotel.API.Filters;
 using Hotel.BusinessLogic;
 using Hotel.BusinessLogic.Commands;
 using Hotel.BusinessLogic.Services;
-
-using Hotel.DataAccess;
-
 using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Repositories;
 using Hotel.Shared.Dispatchers;
@@ -36,7 +33,6 @@ builder.Services.AddSql();
 //test part
 builder.Services.AddRepositories();
 builder.Services.AddServices();
-//test part
 
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);

@@ -8,6 +8,9 @@ internal class AppDbContext : DbContext
 	public DbSet<User> Users { get; set; }
 	// datasets
 	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+
+	public DbSet<RoomRegulation> RoomRegulation {get;set;}
+
     public DbSet<Role> Role { get; set; }
     public DbSet<HotelService> HotelService { get; set; }
     public DbSet<ServiceCategory> ServiceCategory { get; set; }
