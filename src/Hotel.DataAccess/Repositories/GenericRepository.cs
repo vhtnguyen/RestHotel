@@ -22,7 +22,7 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
     public async Task<IEnumerable<TEntity>> BrowserAsync()
     {
 
-        IEnumerable<TEntity> collection = _collection.ToList();
+        IEnumerable<TEntity> collection = await _collection.ToListAsync();
         return collection;
     }
 
@@ -43,6 +43,13 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         var entity = _collection.SingleOrDefaultAsync(predicate);
         return entity;
     }
+
+    public async Task<IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        IEnumerable<TEntity> entity = await _collection.Where(predicate).ToListAsync();
+        return entity;
+    }
+
 
     public async Task<TEntity?> FindAsync(Guid id)
     {

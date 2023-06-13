@@ -8,6 +8,7 @@ using AutoMapper;
 using Hotel.DataAccess.Entities;
 using Hotel.BusinessLogic.Profiles;
 using Hotel.DataAccess.Repositories;
+using System.Linq.Expressions;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -52,6 +53,48 @@ namespace Hotel.BusinessLogic.Services
         {
              await _userRepository.DeleteByIDAsync(userId);
         }
+
+        public IUserRepository Get_userRepository()
+        {
+            return _userRepository;
+        }
+
+        public async Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent)
+        {
+            IEnumerable<User>? result;
+            switch (searchOption)
+            {
+                case "id":
+                    {
+                        Expression<Func<User, bool>> predicate = user => user.Id.ToString().Contains(searchContent);
+                        result = await _userRepository.FindAllAsync(predicate);
+                        break;
+                    }
+                case "name":
+                    {
+                        Expression<Func<User, bool>> predicate = user => user.FullName.Contains(searchContent);
+                        result = await _userRepository.FindAllAsync(predicate);
+                        break;
+                    }
+                case "email":
+                    {
+                        Expression<Func<User, bool>> predicate = user => user.Email.Contains(searchContent);
+                        result = await _userRepository.FindAllAsync(predicate);
+                        break;
+                    }
+                default:
+                    {
+                        throw new ArgumentException("Invalid search option.", nameof(searchOption));
+                    }
+
+
+
+            }
+
+            return  _mapper.Map<IEnumerable<UserToReturnDTO>>(result);
+
+        }
+       
 
     }
 }

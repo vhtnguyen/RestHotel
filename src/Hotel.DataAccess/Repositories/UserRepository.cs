@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using org.apache.zookeeper.data;
 using Hotel.DataAccess.Repositories;
+using System.Linq;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -62,6 +63,9 @@ internal class UserRepository : IUserRepository
         }
         
     }
+
+    public async Task<IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate)
+        => await _genericRepository.FindAllAsync(predicate);
     public Task SaveChangesAsync()
     {
         throw new NotImplementedException();
