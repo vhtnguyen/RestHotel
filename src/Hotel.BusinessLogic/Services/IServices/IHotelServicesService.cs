@@ -9,9 +9,9 @@ namespace Hotel.BusinessLogic.Services
 {
     public interface IHotelServicesService
     {
-        Task<List<ServiceToReturnDTO>> GetServicesAsync();
+        Task<IEnumerable<ServiceToReturnDTO>> GetServicesAsync();
         Task<ServiceToReturnDTO> CreateServiceAsync(ServiceToCreateDTO serviceDTO);
-
+        Task <IEnumerable<ServiceToReturnDTO>?> SearchSeviceAsync(string? value, string searchOption, int category);
         Task RemoveServiceAsync(int id);
 
 

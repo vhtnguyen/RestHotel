@@ -15,5 +15,6 @@ public interface IUserRepository
     Task UpdateAsync(User entity);
     Task DeleteByIDAsync(int id);
     Task SaveChangesAsync();
+    Task <IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate);
     Task<IDbContextTransaction> CreateTransaction();
 }

@@ -6,8 +6,9 @@ namespace Hotel.DataAccess.Repositories;
 
 public interface IHotelServiceRepository
 {
-    Task<List<HotelService>?> GetListAsync();
+    Task<IEnumerable<HotelService>?> GetListAsync();
     Task<HotelService?> CreateAsync(HotelService service, int categoryId);
+    Task<IEnumerable<HotelService>?> FindAllAsync(Expression<Func<HotelService, bool>> predicate);
     Task RemoveAsync(int id);
 
 }
