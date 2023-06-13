@@ -44,8 +44,9 @@ internal class HotelServiceRepository : IHotelServiceRepository
         if(category != null) 
         {
             service.Category = category;
+            //await _genericRepository.CreateAsync(service);
             category.HotelServices.Add(service);
-             _context.SaveChanges();
+            _context.SaveChanges();
             return   service;
 
         }

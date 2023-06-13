@@ -16,8 +16,8 @@ public class EntityConfiguration
     IEntityTypeConfiguration<RoomRegulation>,
     IEntityTypeConfiguration<InvoiceHotelService>,
     IEntityTypeConfiguration<ServiceCategory>,
-    IEntityTypeConfiguration<RoomDetail>,
-    IEntityTypeConfiguration<RoomRegulationRoomDetail>
+    IEntityTypeConfiguration<RoomDetail>
+   
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -42,6 +42,7 @@ public class EntityConfiguration
         builder.HasOne(b => b.Invoice);
         // https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/implement-value-objects
         builder.OwnsMany(b => b.Guests);
+        builder.HasOne(b => b.RoomRegulation);
     }
 
     public void Configure(EntityTypeBuilder<Role> builder)
@@ -53,6 +54,7 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<Room> builder)
     {
         builder.HasKey(b => b.Id);
+        builder.Property(c => c.Id).ValueGeneratedNever();
         builder.HasOne(b => b.RoomDetail);
         builder.HasMany(b => b.ReservationCards);
     }
@@ -60,7 +62,8 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<RoomRegulation> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasMany(b => b.RoomDetails);
+
+        //builder.HasMany(b => b.RoomDetails);
     }
 
     public void Configure(EntityTypeBuilder<InvoiceHotelService> builder)
@@ -86,21 +89,21 @@ public class EntityConfiguration
     {
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
-        builder.HasMany(b => b.RoomRegulations);
+        builder.HasOne(b => b.RoomRegulation);
     }
 
-    public void Configure(EntityTypeBuilder<RoomRegulationRoomDetail> builder)
-    {
-        builder.HasKey(b => new { b.RoomDetailId, b.RoomRegulationId });
-        builder.HasOne(b => b.RoomDetail)
-            .WithMany(b => b.RoomRegulations)
-            .HasForeignKey(b => b.RoomDetailId);
+    //public void Configure(EntityTypeBuilder<RoomRegulationRoomDetail> builder)
+    //{
+    //    builder.HasKey(b => new { b.RoomDetailId, b.RoomRegulationId });
+    //    builder.HasOne(b => b.RoomDetail)
+    //        .WithMany(b => b.RoomRegulations)
+    //        .HasForeignKey(b => b.RoomDetailId);
 
-        builder.HasOne(b => b.RoomRegulation)
-            .WithMany(b => b.RoomDetails)
-            .HasForeignKey(b => b.RoomRegulationId);
+    //    builder.HasOne(b => b.RoomRegulation)
+    //        .WithMany(b => b.RoomDetails)
+    //        .HasForeignKey(b => b.RoomRegulationId);
 
-    }
+    //}
 
     void IEntityTypeConfiguration<HotelService>.Configure(EntityTypeBuilder<HotelService> builder)
     {

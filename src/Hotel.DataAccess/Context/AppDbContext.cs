@@ -31,7 +31,7 @@ internal class AppDbContext : DbContext
 		modelBuilder.ApplyConfiguration<ServiceCategory>(configuration);
 		modelBuilder.ApplyConfiguration<Invoice>(configuration);
 		modelBuilder.ApplyConfiguration<RoomDetail>(configuration);
-        modelBuilder.ApplyConfiguration<RoomRegulationRoomDetail>(configuration);
+        //modelBuilder.ApplyConfiguration<RoomRegulationRoomDetail>(configuration);
     }
 
 }
