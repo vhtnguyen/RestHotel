@@ -23,7 +23,7 @@ internal class HotelServiceRepository : IHotelServiceRepository
 
    
 
-    public async Task<List<HotelService>?> GetListAsync()
+    public async Task<IEnumerable<HotelService>?> GetListAsync()
     {
         var result = await _context.HotelService
            .Include(u => u.Category)
@@ -44,8 +44,9 @@ internal class HotelServiceRepository : IHotelServiceRepository
         if(category != null) 
         {
             service.Category = category;
+            //await _genericRepository.CreateAsync(service);
             category.HotelServices.Add(service);
-             _context.SaveChanges();
+            _context.SaveChanges();
             return   service;
 
         }
@@ -66,6 +67,11 @@ internal class HotelServiceRepository : IHotelServiceRepository
         {
 
         }
+    }
+
+    public async Task<IEnumerable<HotelService>?> FindAllAsync(Expression<Func<HotelService, bool>> predicate)
+    {
+        return await _genericRepository.FindAllAsync(predicate);
     }
 
 

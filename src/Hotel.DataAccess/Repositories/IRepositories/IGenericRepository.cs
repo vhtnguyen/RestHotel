@@ -14,6 +14,7 @@ public interface IGenericRepository<TEntity>
     Task<TEntity> CreateAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);
+    Task <IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
     Task SaveChangesAsync();
     //https://learn.microsoft.com/en-us/ef/core/saving/transactions
     Task<IDbContextTransaction> CreateTransaction();

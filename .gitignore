@@ -1,3 +1,5 @@
 **/.vs
 **/bin
 **/obj
+**/.vscode
+src/Hotel.API/appsettings.json
