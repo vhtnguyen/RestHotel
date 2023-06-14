@@ -11,7 +11,7 @@ public class Invoice
     public double TotalSum { get; set; }
     public double DownPayment { get; set; }
     public string? Email { get; set; }
-    public string? CusName { get; set; }
+    public string? NameCus { get; set; }
     
     // reference property
     public ICollection<ReservationCard> ReservationCards { get; set; } = new List<ReservationCard>();
@@ -26,7 +26,7 @@ public class Invoice
         TotalSum = totalSum;
         DownPayment = downPayment;
         Email = email;
-        CusName = nameCus;
+        NameCus = nameCus;
     }
 
     public void AddHotelService(HotelService service)

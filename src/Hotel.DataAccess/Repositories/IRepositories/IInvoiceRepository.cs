@@ -13,5 +13,7 @@ public interface IInvoiceRepository
     Task<IEnumerable<Invoice>> GetAllInvoice();
     Task<Invoice?> FindAsync(Expression<Func<Invoice, bool>> predicate);
     Task<Invoice?> CreateAsync(Invoice invoice);
+    Task<Invoice?> GetInvoiceDetail(int id);
+    Task<Invoice?> GetInvoiceQuery(Invoice query);
 
 }

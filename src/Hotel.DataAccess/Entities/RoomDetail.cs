@@ -9,8 +9,7 @@ public class RoomDetail
     public string? Image { get; set; }
     
     // reference ky
-    public ICollection<RoomRegulationRoomDetail> RoomRegulations { get; set; } = new List<RoomRegulationRoomDetail>();
-
+    public RoomRegulation? RoomRegulation { get; set; }
     public RoomDetail(int id, double price, string? roomType, string? description, string? image)
     {
         Id = id;

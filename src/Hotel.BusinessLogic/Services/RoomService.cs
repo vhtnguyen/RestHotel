@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.BusinessLogic.DTO.Invoices;
-
-public class InvoiceBrowserDTO
+namespace Hotel.BusinessLogic.Services
 {
-    public int Id { get; set; }
+    internal class RoomService
+    {
+    }
 }

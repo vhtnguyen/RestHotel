@@ -4,16 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Hotel.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-    public class StaffsController : Controller
+    public class StaffController : Controller
     {
     private readonly IUserService _userService;
 
-    public StaffsController(IUserService userService)
+    public StaffController(IUserService userService)
     {
         _userService = userService;
     }
@@ -22,8 +23,18 @@ namespace Hotel.API.Controllers;
     public async Task<ActionResult> Get() {
         return Ok(await _userService.GetUsersAsync());
     }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<UserToReturnDTO>> Search([FromQuery] string value, string option = "id")
+    {
+       
+        if (option.IsNullOrEmpty()|| value.IsNullOrEmpty()) return BadRequest();
+
+        return Ok(await _userService.SearchUserAsync(option, value));
+    }
+
     [HttpPost("")]
-    public async Task<ActionResult> CreateUser(UserToCreateDTO userToCreateDTO)
+    public async Task<ActionResult> CreateUser([FromBody] UserToCreateDTO userToCreateDTO)
     {
         return Ok(await _userService.CreateUserAsync(userToCreateDTO));
     }

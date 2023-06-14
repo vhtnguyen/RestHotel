@@ -13,10 +13,31 @@ public class InvoiceProfile : Profile
 {
     public InvoiceProfile() 
     {
-        //CreateMap<Invoice, invoiceGetAllDTO>()
-        //    .ForMember(dest => dest.NameGuest, opt => opt.MapFrom(src => src.ReservationCards.FirstOrDefault().Guests.Name));
+        CreateMap<Invoice, InvoiceToGetAllDTO>();
 
-        //CreateMap<invoiceBrowserDTO, Invoice>()
-        //    .ForMember();
+        // CreateMap<invoiceBrowserDTO, Invoice>()
+        //     .ForMember();
+
+        CreateMap<InvoiceToReadDetailDTO, Invoice>()
+        .ForMember(dest => dest.Date, opt => opt.Ignore())
+        // .ForMember(dest => dest.Status, opt => opt.Ignore())
+        .ForMember(dest => dest.TotalSum, opt => opt.Ignore())
+        .ForMember(dest => dest.DownPayment, opt => opt.Ignore())
+        // .ForMember(dest => dest.Email, opt => opt.Ignore())
+        .ForMember(dest => dest.NameCus, opt => opt.Ignore())
+        .ConstructUsing((dto, context) => new Invoice(0, DateTime.MinValue, null, 0, 0, null, string.Empty));
+
+        CreateMap<Invoice, InvoiceToDetailDTO>()
+        .ForMember(dest => dest.ReservationCards, opt => opt.MapFrom( i => i.ReservationCards))
+        .ForMember(dest => dest.HotelServices, opt => opt.MapFrom( i => i.HotelServices.Select(a => a.HotelService)));
+
+        CreateMap<InvoiceBrowserDTO, Invoice>()
+        .ForMember(dest => dest.Date, opt => opt.Ignore())
+        .ForMember(dest => dest.Status, opt => opt.Ignore())
+        .ForMember(dest => dest.TotalSum, opt => opt.Ignore())
+        .ForMember(dest => dest.DownPayment, opt => opt.Ignore())
+        .ForMember(dest => dest.Email, opt => opt.Ignore())
+        .ForMember(dest => dest.NameCus, opt => opt.Ignore())
+        .ConstructUsing((dto, context) => new Invoice(0, DateTime.MinValue, null, 0, 0, null, string.Empty));
     }
 }

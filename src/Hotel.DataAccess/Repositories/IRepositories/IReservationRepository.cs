@@ -1,4 +1,4 @@
-﻿using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;

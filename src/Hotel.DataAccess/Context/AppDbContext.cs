@@ -17,6 +17,7 @@ internal class AppDbContext : DbContext
     public DbSet<Invoice> Invoice { get; set; }
     public DbSet<ReservationCard> ReservationCard { get; set; }
     public DbSet<Room> Room {get; set;}
+    public DbSet<InvoiceHotelService> InvoiceHotelService {get; set;}
     // datasets
 
 	// configured
@@ -33,7 +34,7 @@ internal class AppDbContext : DbContext
 		modelBuilder.ApplyConfiguration<ServiceCategory>(configuration);
 		modelBuilder.ApplyConfiguration<Invoice>(configuration);
 		modelBuilder.ApplyConfiguration<RoomDetail>(configuration);
-        modelBuilder.ApplyConfiguration<RoomRegulationRoomDetail>(configuration);
+        //modelBuilder.ApplyConfiguration<RoomRegulationRoomDetail>(configuration);
     }
 
 }

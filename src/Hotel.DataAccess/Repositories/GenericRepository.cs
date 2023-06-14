@@ -2,6 +2,7 @@
 using Hotel.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Polly;
 using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories;
@@ -22,13 +23,22 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
     public async Task<IEnumerable<TEntity>> BrowserAsync()
     {
 
-        IEnumerable<TEntity> collection = _collection.ToList();
+        IEnumerable<TEntity> collection = await _collection.ToListAsync();
         return collection;
     }
 
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        var new_entity=await _collection.AddAsync(entity);
+        // var entityType = _context.Model.FindEntityType(typeof(TEntity));
+        // var tableName = entityType.GetTableName();
+        // var schema = entityType.GetSchema();
+
+        //await  _context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {schema}.{tableName} ON");
+        // var new_entity = await _collection.AddAsync(entity);
+        // await _context.SaveChangesAsync();
+        // await _context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {schema}.{tableName} OFF");
+
+        var new_entity = await _collection.AddAsync(entity);
         await _context.SaveChangesAsync();
         return new_entity.Entity;
     }
@@ -43,6 +53,13 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         var entity = _collection.SingleOrDefaultAsync(predicate);
         return entity;
     }
+
+    public async Task<IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        IEnumerable<TEntity> entity = await _collection.Where(predicate).ToListAsync();
+        return entity;
+    }
+
 
     public async Task<TEntity?> FindAsync(Guid id)
     {

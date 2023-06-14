@@ -13,6 +13,7 @@ public class ReservationCard
     // reference key
     public Invoice? Invoice { get; set; }
     public Room? Room { get; set; }
+    public RoomRegulation? RoomRegulation { get; set; }
     public virtual ICollection<Guest> Guests { get; set; } = new List<Guest>();
 
     [JsonConstructor]

@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.DTO.Invoices;
 
-public class invoiceDetailDTO
+public class InvoiceToReadDetailDTO
 {
-   // public string BookingInfo;
+    public int Id {get; set;}
 }
