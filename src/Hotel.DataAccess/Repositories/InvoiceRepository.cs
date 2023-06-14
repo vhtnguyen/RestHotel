@@ -45,9 +45,8 @@ internal class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceDetail(int id)
     {
         var result = await _context.Invoice
-                        .Include(i => i.ReservationCards)
-                        .Include(i => i.HotelServices)
-                        .ThenInclude(i => i.HotelService)
+                        .Include(i => i.ReservationCards).ThenInclude(card => card.Guests)
+                        .Include(i => i.HotelServices).ThenInclude(i => i.HotelService)
                         .FirstOrDefaultAsync(i => i.Id == id);
                         
         return result;
@@ -56,5 +55,10 @@ internal class InvoiceRepository : IInvoiceRepository
     public Task<Invoice?> GetInvoiceQuery(Invoice query)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task RemoveInvoice(Invoice invoice)
+    {
+        await _genericRepository.DeleteAsync(invoice);
     }
 }

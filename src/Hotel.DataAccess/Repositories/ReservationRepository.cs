@@ -89,11 +89,5 @@ namespace Hotel.DataAccess.Repositories
                                 .ToListAsync();
             return result;
         }
-
-        public async Task<Invoice?> GetInvoiceByID(int id)
-        {
-            var result = await _genericInvoiceRepository.FindAsyncById(id);
-            return result;
-        }
     }
 }

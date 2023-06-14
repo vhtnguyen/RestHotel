@@ -65,7 +65,6 @@ namespace Hotel.BusinessLogic.Services
                     Room RoomByID = await _reservationRepository.GetRoomById(reservationDTO.ReservationCards.ElementAt(i).RoomId);
                     if (RoomByID == null)
                     {
-                        Console.WriteLine("Room doesn't exist");
                         return null;
                     }
                     createInvoice.ReservationCards.ElementAt(i).SetRoom(RoomByID);
@@ -80,12 +79,11 @@ namespace Hotel.BusinessLogic.Services
                 }
             }
             
-            // Invoice Result = await _invoiceRepository.CreateAsync(createInvoice);
+            Invoice Result = await _invoiceRepository.CreateAsync(createInvoice);
 
             //_reservationRepository.CommitTranasction(transaction);
 
-            //return _mapper.Map<InvoiceReturnDTO>(Result);
-            return null;
+            return _mapper.Map<InvoiceReturnDTO>(Result);
         }
     }
 }

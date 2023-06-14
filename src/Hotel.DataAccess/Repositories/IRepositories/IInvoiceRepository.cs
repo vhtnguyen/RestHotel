@@ -15,5 +15,5 @@ public interface IInvoiceRepository
     Task<Invoice?> CreateAsync(Invoice invoice);
     Task<Invoice?> GetInvoiceDetail(int id);
     Task<Invoice?> GetInvoiceQuery(Invoice query);
-
+    Task RemoveInvoice(Invoice invoice);
 }
