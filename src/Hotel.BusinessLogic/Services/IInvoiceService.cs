@@ -10,11 +10,9 @@ namespace Hotel.BusinessLogic.Services;
 
 public interface IInvoiceService 
 {
-    Task<List<Invoice>> GetAllInvoiceAsync();
-    Task<Invoice> GetInvoiceBrowser(invoiceBrowserDTO query);
-
-    Task<Invoice> GetInvoiceByIdAsync(Guid id);
+    Task<List<InvoiceToGetAllDTO>> GetAllInvoiceAsync();
+    Task<Invoice> GetInvoiceBrowser(InvoiceBrowserDTO query);
+    Task<InvoiceToDetailDTO> GetDetailDTO(int orderId);
     Task UpdateInvocie();
-    Task CreateInvoice();
     
 }

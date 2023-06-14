@@ -20,25 +20,24 @@ internal class InvoiceService : IInvoiceService
         _invoiceRepository = invoiceRepository;
     }
 
-    public Task CreateInvoice()
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<List<Invoice>> GetAllInvoiceAsync()
+    public async Task<List<InvoiceToGetAllDTO>> GetAllInvoiceAsync()
     {
         var result = await _invoiceRepository.GetAllInvoice();
-        return _mapper.Map<List<Invoice>>(result);
+        return _mapper.Map<List<InvoiceToGetAllDTO>>(result);
     }
 
-    public Task<Invoice> GetInvoiceBrowser(invoiceBrowserDTO query)
+    public async Task<InvoiceToDetailDTO> GetDetailDTO(int orderId)
     {
-        //var req_query = _mapper.Cr;
-        throw new NotImplementedException();
+        //var conditionQuery = _mapper.Map<Invoice>(invoiceDetailDTO);
+        //var result = await _invoiceRepository.GetInvoiceDetail(conditionQuery.Id);
+        var result = await _invoiceRepository.GetInvoiceDetail(orderId);
+        return _mapper.Map<InvoiceToDetailDTO>(result);
     }
 
-    public Task<Invoice> GetInvoiceByIdAsync(Guid id)
+    public Task<Invoice> GetInvoiceBrowser(InvoiceBrowserDTO query)
     {
+        //var req_query = _mapper.Map<Invoice>(query);
+        //var result = _invoiceRepository.
         throw new NotImplementedException();
     }
 

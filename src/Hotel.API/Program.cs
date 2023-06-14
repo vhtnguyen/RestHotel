@@ -34,8 +34,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
 builder.Services.AddSql();
 //test part
-builder.Services.AddRepositories();
-builder.Services.AddServices();
+// builder.Services.AddRepositories();
+// builder.Services.AddServices();
 //test part
 
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

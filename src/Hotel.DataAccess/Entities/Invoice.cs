@@ -18,7 +18,7 @@ public class Invoice
     public ICollection<InvoiceHotelService> HotelServices { get; set; } = new List<InvoiceHotelService>();
 
     [JsonConstructor]
-    public Invoice(int id, DateTime date, string? status, double totalSum, double downPayment, string? email)
+    public Invoice(int id, DateTime date, string? status, double totalSum, double downPayment, string? email, string nameCus)
     {
         Id = id;
         Date = date;
@@ -26,6 +26,7 @@ public class Invoice
         TotalSum = totalSum;
         DownPayment = downPayment;
         Email = email;
+        NameCus = nameCus;
     }
 
     public void AddHotelService(HotelService service)

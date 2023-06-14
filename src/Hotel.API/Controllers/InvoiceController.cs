@@ -21,11 +21,18 @@ public class InvoiceController : Controller
         return Ok(await _invoiceService.GetAllInvoiceAsync());
     }
 
-    [HttpGet("allinvoice")]
-    public async Task<ActionResult> GetInvoiceBrowser([FromQuery]invoiceBrowserDTO query)
+    //[HttpGet("allinvoice")]
+    //public async Task<ActionResult> GetInvoiceBrowser([FromQuery]invoiceBrowserDTO query)
+    //{
+
+    //    return Ok( await _invoiceService.GetInvoiceBrowser(query));
+    //}
+
+    // public async Task<ActionResult> GetInvoiceBrowser([FromQuery]string id, [FromQuery] DateOnly date)
+
+    [HttpGet("{orderId}")]
+    public async Task<ActionResult> DetailInvoice(int orderId)
     {
-
-        return Ok( await _invoiceService.GetInvoiceBrowser(query));
+        return Ok(await _invoiceService.GetDetailDTO(orderId));
     }
-
 }
