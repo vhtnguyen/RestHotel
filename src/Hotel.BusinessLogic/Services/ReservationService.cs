@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.BusinessLogic.Services
 {

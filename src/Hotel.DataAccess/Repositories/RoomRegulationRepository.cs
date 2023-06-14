@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.Repositories.IRepositories;
+
 namespace Hotel.DataAccess.Repositories
 {
-    internal class RoomRegulationRepository: IRoomRegulationRepository
+    internal class RoomRegulationRepository : IRoomRegulationRepository
     {
         private readonly IGenericRepository<RoomRegulation> _genericRepository;
 
@@ -23,12 +21,12 @@ namespace Hotel.DataAccess.Repositories
 
         public Task CreateAsync(RoomRegulation entity)
         {
-              return _genericRepository.CreateAsync(entity);
+            return _genericRepository.CreateAsync(entity);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _genericRepository.FindAsync(x=>x.Id == id);
+            var entity = await _genericRepository.FindAsync(x => x.Id == id);
             await _genericRepository.DeleteAsync(entity);
 
         }
@@ -45,7 +43,7 @@ namespace Hotel.DataAccess.Repositories
 
         public Task UpdateAsync(RoomRegulation entity)
         {
-           return _genericRepository.UpdateAsync(entity);
+            return _genericRepository.UpdateAsync(entity);
         }
     }
 }

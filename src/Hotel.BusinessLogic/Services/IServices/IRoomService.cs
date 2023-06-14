@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.BusinessLogic.Services.IServices
+﻿namespace Hotel.BusinessLogic.Services.IServices
 {
     internal interface IRoomService
     {

@@ -1,18 +1,12 @@
-﻿using Hotel.DataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hotel.DataAccess.Repositories;
-using Hotel.DataAccess.Entities;
-using System.Linq.Expressions;
+﻿using Hotel.DataAccess.Entities;
 using Hotel.BusinessLogic.DTO.RoomRegulation;
 using AutoMapper;
+using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.BusinessLogic.Services
 {
-    internal class RoomRegulationService:IRoomRegulationService
+    internal class RoomRegulationService : IRoomRegulationService
     {
         private readonly IRoomRegulationRepository _userRepository;
         private readonly IMapper _mapper;
@@ -21,11 +15,11 @@ namespace Hotel.BusinessLogic.Services
             _mapper = mapper;
             _userRepository = userRepository;
         }
-            
+
         public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
         {
             var room = _mapper.Map<RoomRegulation>(roomRegulation);
-    
+
             await _userRepository.CreateAsync(room);
         }
 
@@ -33,16 +27,16 @@ namespace Hotel.BusinessLogic.Services
         {
             //Expression<Func<RoomRegulation, bool>> expression = x => true;
 
-            var roomRegulationList= await _userRepository.BrowserAsync();
-            List<RoomRegulationToReturnDTO> result=new List<RoomRegulationToReturnDTO>();
+            var roomRegulationList = await _userRepository.BrowserAsync();
+            List<RoomRegulationToReturnDTO> result = new List<RoomRegulationToReturnDTO>();
             //await _userRepository.FindAsync(expression);
             foreach (var x in roomRegulationList)
             {
-          
+
                 result.Add(_mapper.Map<RoomRegulationToReturnDTO>(x));
 
             }
-  
+
             return result;
             //throw new NotImplementedException();
 
@@ -51,13 +45,13 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<RoomRegulationToReturnDTO> getRoomByID(int id)
         {
-          return    _mapper.Map< RoomRegulationToReturnDTO >(await _userRepository.FindAsync(x => x.Id == id));
+            return _mapper.Map<RoomRegulationToReturnDTO>(await _userRepository.FindAsync(x => x.Id == id));
         }
 
         public async Task RemoveRoomRegulation(int id)
         {
 
-        await    _userRepository.DeleteAsync( id);
+            await _userRepository.DeleteAsync(id);
         }
 
         public Task UpdateRoomRegulation(RoomRegulation regulation)

@@ -1,17 +1,15 @@
 ﻿
 using Hotel.BusinessLogic.DTO.Users;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Hotel.BusinessLogic.Services;
-using Hotel.DataAccess.Entities;
 using Microsoft.IdentityModel.Tokens;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-    public class StaffController : Controller
-    {
+public class StaffController : Controller
+{
     private readonly IUserService _userService;
 
     public StaffController(IUserService userService)
@@ -20,15 +18,16 @@ namespace Hotel.API.Controllers;
     }
     [HttpGet("")]
 
-    public async Task<ActionResult> Get() {
+    public async Task<ActionResult> Get()
+    {
         return Ok(await _userService.GetUsersAsync());
     }
 
     [HttpGet("search")]
     public async Task<ActionResult<UserToReturnDTO>> Search([FromQuery] string value, string option = "id")
     {
-       
-        if (option.IsNullOrEmpty()|| value.IsNullOrEmpty()) return BadRequest();
+
+        if (option.IsNullOrEmpty() || value.IsNullOrEmpty()) return BadRequest();
 
         return Ok(await _userService.SearchUserAsync(option, value));
     }
@@ -43,7 +42,7 @@ namespace Hotel.API.Controllers;
     public async Task<ActionResult> RemoveUser(int userId)
     {
         await _userService.RemoveUserAsync(userId);
-            return Ok($"Removed user #'{userId}'.");
+        return Ok($"Removed user #'{userId}'.");
     }
 }
 

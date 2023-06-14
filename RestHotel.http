@@ -1,0 +1,31 @@
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+### Rest hotel
+@base_url = http://localhost:5000/api
+@access_token= ""
+
+###
+GET {{base_url}}
+
+//note
+
+###
+# Đăng nhập
+POST {{base_url}}/auth/login
+Content-Type: 
+{
+    "Username": "",
+    "Password": ""
+}
+###
+# Tạo tài khoản
+POST  {{base_url}}/auth
+
+Content-Type: 
+{
+
+}
+###
+POST {{base_url}}/student
+
+###

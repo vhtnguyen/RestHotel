@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
-namespace Hotel.DataAccess.Repositories;
+namespace Hotel.DataAccess.Repositories.IRepositories;
 
 public interface IUserRepository
 {
@@ -15,6 +15,6 @@ public interface IUserRepository
     Task UpdateAsync(User entity);
     Task DeleteByIDAsync(int id);
     Task SaveChangesAsync();
-    Task <IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate);
+    Task<IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate);
     Task<IDbContextTransaction> CreateTransaction();
 }

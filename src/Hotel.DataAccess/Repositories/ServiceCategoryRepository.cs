@@ -1,10 +1,5 @@
-﻿using Hotel.DataAccess.Context;
-using Hotel.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using org.apache.zookeeper.data;
-using Hotel.DataAccess.Repositories;
+﻿using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.Repositories.IRepositories;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -27,6 +22,6 @@ internal class ServiceCategoryRepository : IServiceCategoryRepository
     {
         throw new NotImplementedException();
     }
- 
+
 }
 

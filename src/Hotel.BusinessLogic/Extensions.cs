@@ -1,6 +1,7 @@
 ﻿using Hotel.BusinessLogic.Handlers;
 using Hotel.BusinessLogic.Profiles;
 using Hotel.BusinessLogic.Services;
+using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

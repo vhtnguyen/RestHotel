@@ -1,5 +1,5 @@
 ﻿using Hotel.DataAccess.Entities;
-using Hotel.DataAccess.Repositories;
+using Hotel.DataAccess.Repositories.IRepositories;
 using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories;
@@ -16,13 +16,13 @@ public class RoleRepository : IRoleRepository
 
     public async Task<List<Role>?> FindAllAsync(Expression<Func<Role, bool>> predicate)
     {
-        var list_role=new List<Role>();
+        var list_role = new List<Role>();
         List<Role>? all_roles = await _genericRepository.GetListAsync();
-        if (all_roles!=null)
+        if (all_roles != null)
         {
-            list_role=all_roles.Where(predicate.Compile()).ToList();
+            list_role = all_roles.Where(predicate.Compile()).ToList();
         }
-       else
+        else
         {
 
         }

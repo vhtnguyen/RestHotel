@@ -1,4 +1,5 @@
 ﻿using Hotel.DataAccess.ObjectValues;
+using Hotel.Shared.Exceptions;
 using Newtonsoft.Json;
 
 namespace Hotel.DataAccess.Entities;
@@ -35,9 +36,10 @@ public class Invoice
         if (isExist)
         {
             // throw exception here
+            throw new DomainBadRequestException($"Service has exist at id '{service.Id}'", "has_existed_service");
         }
 
-        HotelServices.Add(new InvoiceHotelService { InvoiceId = Id, HotelServiceId = service.Id, CreateOn = DateTime.Now});
+        HotelServices.Add(new InvoiceHotelService { InvoiceId = Id, HotelServiceId = service.Id, CreateOn = DateTime.Now });
     }
 
     public void RemoveHotelService(HotelService service)
@@ -45,7 +47,7 @@ public class Invoice
         var isExist = HotelServices.Any(s => s.HotelServiceId == service.Id);
         if (!isExist)
         {
-            // throw exception here
+            throw new DomainBadRequestException($"Not found hotel service on id '{service.Id}'", "not_found_hotel_service");
         }
 
         HotelServices.Remove(HotelServices.First(c => c.HotelServiceId == service.Id));
@@ -57,6 +59,7 @@ public class Invoice
         if (isExist)
         {
             // throw exception here
+            throw new DomainBadRequestException($"Card has exist at id '{card.Id}'", "has_existed_card");
         }
 
         ReservationCards.Add(card);
@@ -67,14 +70,9 @@ public class Invoice
         if (!isExist)
         {
             // throw exception here
+            throw new DomainBadRequestException($"Not found hotel card on id '{card.Id}'", "not_found_card");
         }
 
         ReservationCards.Remove(card);
     }
-
-    //public static Revenue ViewRevenue(List<Invoice> invoices)
-    //{
-  
-    //    return new();
-    //}
 }

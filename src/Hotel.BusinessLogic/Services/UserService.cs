@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hotel.BusinessLogic.DTO.Users;
+﻿using Hotel.BusinessLogic.DTO.Users;
 using AutoMapper;
 using Hotel.DataAccess.Entities;
-using Hotel.BusinessLogic.Profiles;
-using Hotel.DataAccess.Repositories;
 using System.Linq.Expressions;
+using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.BusinessLogic.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
@@ -33,10 +28,10 @@ namespace Hotel.BusinessLogic.Services
         {
             var new_user = _mapper.Map<User>(userToCreateDTO);
             List<Role>? new_roles = await _roleRepository.FindAllAsync(r => r.Id >= userToCreateDTO.Role);
-            
-            if(new_roles != null) 
-            { 
-                foreach(var role in new_roles)
+
+            if (new_roles != null)
+            {
+                foreach (var role in new_roles)
                 {
                     new_user.AddRole(role);
                 }
@@ -51,7 +46,7 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task RemoveUserAsync(int userId)
         {
-             await _userRepository.DeleteByIDAsync(userId);
+            await _userRepository.DeleteByIDAsync(userId);
         }
 
         public IUserRepository Get_userRepository()
@@ -91,10 +86,10 @@ namespace Hotel.BusinessLogic.Services
 
             }
 
-            return  _mapper.Map<IEnumerable<UserToReturnDTO>>(result);
+            return _mapper.Map<IEnumerable<UserToReturnDTO>>(result);
 
         }
-       
+
 
     }
 }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hotel.DataAccess.Repositories
+namespace Hotel.DataAccess.Repositories.IRepositories
 {
-    internal interface IReservationRepository
+    public interface IReservationRepository
     {
-        
+
     }
 }

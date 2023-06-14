@@ -1,13 +1,12 @@
 ﻿using Hotel.DataAccess.Context;
-using Hotel.DataAccess.Repositories;
+using Hotel.DataAccess.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Polly;
 using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories;
 
-internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEntity : class
+internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
 {
     private readonly AppDbContext _context;
     private readonly DbSet<TEntity> _collection;
@@ -16,7 +15,7 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
     public GenericRepository(
         AppDbContext context)
     {
-        _context= context;
+        _context = context;
         _collection = _context.Set<TEntity>();
     }
 
@@ -66,7 +65,7 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         var entity = await _collection.FindAsync(id);
         return entity;
     }
-    public async Task<List<TEntity>?> GetListAsync()
+    public async Task<List<TEntity>> GetListAsync()
     {
         var list_entity = await _collection.ToListAsync();
         return list_entity;

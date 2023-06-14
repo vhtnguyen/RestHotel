@@ -1,7 +1,6 @@
 ﻿
 using Hotel.BusinessLogic.DTO.HotelServices;
-using Hotel.BusinessLogic.DTO.Users;
-using Hotel.BusinessLogic.Services;
+using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,15 +21,15 @@ public class ServiceController : Controller
 
     public async Task<ActionResult> Get()
     {
-        return Ok( await _hotelServicesService.GetServicesAsync());
+        return Ok(await _hotelServicesService.GetServicesAsync());
     }
     [HttpGet("search")]
-    public async Task<ActionResult<ServiceToReturnDTO>> Search([FromQuery] string? value,string option="all",int category=0)
+    public async Task<ActionResult<ServiceToReturnDTO>> Search([FromQuery] string? value, string option = "all", int category = 0)
     {
 
-        if (value.IsNullOrEmpty()&& option!="all") return BadRequest();
+        if (value.IsNullOrEmpty() && option != "all") return BadRequest();
 
-        return Ok(await _hotelServicesService.SearchSeviceAsync(value,option,category));
+        return Ok(await _hotelServicesService.SearchSeviceAsync(value, option, category));
     }
 
     [HttpPost("")]

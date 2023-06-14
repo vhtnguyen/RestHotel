@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Hosting;
 using Hotel.BusinessLogic.Profiles;
 using Hotel.DataAccess;
+using Hotel.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,7 @@ builder.Services.AddHostedService<AppInitializer>();
 //builder.Services.AddHostedService<StreamingService>();
 //builder.Services.AddHostedService<MessagingService>();
 
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 // custom logging
 builder.Host.UseLogging();
 builder.Host.UseMonitoring();
@@ -82,6 +84,6 @@ app.UseRedisStreaming()
 //app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-//app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.Run();

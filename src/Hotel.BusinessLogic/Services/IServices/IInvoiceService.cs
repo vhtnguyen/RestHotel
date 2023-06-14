@@ -1,18 +1,13 @@
 ﻿using Hotel.BusinessLogic.DTO.Invoices;
-using Hotel.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Hotel.BusinessLogic.Services;
+namespace Hotel.BusinessLogic.Services.IServices;
 
-public interface IInvoiceService 
+public interface IInvoiceService
 {
-    Task<List<InvoiceToGetAllDTO>> GetAllInvoiceAsync();
-    Task<Invoice> GetInvoiceBrowser(InvoiceBrowserDTO query);
+    Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync();
     Task<InvoiceToDetailDTO> GetDetailDTO(int orderId);
-    Task UpdateInvocie();
-    
+    Task AddService(int invoiceId, int serviceId);
+    Task RemoveService(int invoiceId, int serviceId);
+    Task AddReservationCard(int invoiceId, int cardId);
+    Task RemoveReservationCard(int invoiceId, int cardId);
 }

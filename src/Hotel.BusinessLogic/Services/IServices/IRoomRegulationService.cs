@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hotel.BusinessLogic.DTO.RoomRegulation;
+﻿using Hotel.BusinessLogic.DTO.RoomRegulation;
 using Hotel.DataAccess.Entities;
-using Hotel.DataAccess.Repositories;
-namespace Hotel.BusinessLogic.Services
+namespace Hotel.BusinessLogic.Services.IServices
 {
     public interface IRoomRegulationService
     {

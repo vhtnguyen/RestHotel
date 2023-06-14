@@ -8,10 +8,9 @@ namespace Hotel.DataAccess.ObjectValues
 {
     public class RoomRevenue
     {
-     
+
 
         public RoomRevenue(ICollection<Room> roomLists)
-
         {
             //roomLists.Any(x=>x.)
         }
