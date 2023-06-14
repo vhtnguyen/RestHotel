@@ -13,7 +13,7 @@ namespace Hotel.DataAccess.Repositories
 {
     internal class ReservationRepository : IReservationRepository
     {
-        private readonly IGenericRepository<Invoice> _genericRepository;
+        private readonly IGenericRepository<Invoice> _genericInvoiceRepository;
         private readonly IGenericRepository<Room> _genericRoomRepository;
         private readonly IGenericRepository<ReservationCard> _genericCardRepository;
         private readonly AppDbContext _context;
@@ -22,7 +22,7 @@ namespace Hotel.DataAccess.Repositories
             IGenericRepository<ReservationCard> genericCardRepository, 
             AppDbContext context, IGenericRepository<Room> genericRoomRepository) 
         {
-            _genericRepository = genericRepository;
+            _genericInvoiceRepository = genericRepository;
             _genericRoomRepository = genericRoomRepository;
             _genericCardRepository = genericCardRepository;
             _context = context;
@@ -57,11 +57,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<Room> GetRoomById(int roomId)
         {
-            var result = await _context.Room.FindAsync(roomId);
-            if (result == null)
-            {
-                throw new NotImplementedException();
-            }
+            var result = await _genericRoomRepository.FindAsyncById(roomId);
             return result;
         }
 
@@ -91,6 +87,12 @@ namespace Hotel.DataAccess.Repositories
                                 .Where(card => ((card.ArrivalDate >= from && to >= card.DepartureDate) ||
                                 (card.ArrivalDate == card.DepartureDate && (card.ArrivalDate == from || card.ArrivalDate == to))))
                                 .ToListAsync();
+            return result;
+        }
+
+        public async Task<Invoice?> GetInvoiceByID(int id)
+        {
+            var result = await _genericInvoiceRepository.FindAsyncById(id);
             return result;
         }
     }

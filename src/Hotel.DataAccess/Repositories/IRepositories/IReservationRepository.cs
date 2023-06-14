@@ -25,5 +25,6 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         Task<Object> CommitTranasction(Object transaction);
 
         Task<List<ReservationCard>> GetListReservationCardsByTime(DateTime from, DateTime to);
+        Task<Invoice?> GetInvoiceByID(int id);
     }
 }

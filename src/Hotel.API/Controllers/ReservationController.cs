@@ -9,10 +9,12 @@ namespace Hotel.API.Controllers;
 public class ReservationController : Controller
 {
     private readonly IReservationService _reservationService;
+    private readonly IReservationCancellationService _reservationCancellationService;
 
-    public ReservationController(IReservationService reservationService)
+    public ReservationController(IReservationService reservationService, IReservationCancellationService reservationCancellationService)
     {
         _reservationService = reservationService;
+        _reservationCancellationService = reservationCancellationService;
     }
 
     [HttpGet("page")]
@@ -30,7 +32,23 @@ public class ReservationController : Controller
         {
             return BadRequest("Wrong input date format");
         }
-        return Ok(await _reservationService.CreateReservation(reservation));
+        InvoiceReturnDTO result = await _reservationService.CreateReservation(reservation);
+        
+        try
+        {
+            return Ok(result);
+        }
+        finally
+        {
+            Response.OnCompleted(async () => 
+            {
+                //await _reservationCancellationService.CheckConfirmedReservation(0);
+                if (result != null)
+                {
+                    await _reservationCancellationService.CheckConfirmedReservation(result.Id);
+                }
+            });
+        }
     }
 
     [HttpGet("by-period-time")]

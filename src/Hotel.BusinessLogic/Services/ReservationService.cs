@@ -12,6 +12,7 @@ using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.ObjectValues;
 using System.Globalization;
+using Microsoft.Extensions.Hosting;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -28,7 +29,7 @@ namespace Hotel.BusinessLogic.Services
             _reservationRepository = reservationRepository;
             _invoiceRepository = invoiceRepository;
         }
-
+        
         public async Task<List<ReservationCardReturnDTO>> GetAll(int page, int entries)
         {
             List<ReservationCard> CardsList = await _reservationRepository.GetListAsyncWithPagination(page, entries);
@@ -48,6 +49,8 @@ namespace Hotel.BusinessLogic.Services
             //create invoice
             Invoice createInvoice = _mapper.Map<Invoice>(reservationDTO);
 
+            createInvoice.Status = "Pending";
+
             //var transaction = _reservationRepository.CreateTransaction();
             List<ReservationCard> CardsListByTime = await _reservationRepository
                 .GetListReservationCardsByTime(reservationDTO.ArrivalDate, reservationDTO.DepartureDate);
@@ -60,12 +63,12 @@ namespace Hotel.BusinessLogic.Services
                     createInvoice.ReservationCards.ElementAt(i).DepartureDate = reservationDTO.DepartureDate;
                     createInvoice.ReservationCards.ElementAt(i).SetInvoice(createInvoice);
                     Room RoomByID = await _reservationRepository.GetRoomById(reservationDTO.ReservationCards.ElementAt(i).RoomId);
+                    if (RoomByID == null)
+                    {
+                        Console.WriteLine("Room doesn't exist");
+                        return null;
+                    }
                     createInvoice.ReservationCards.ElementAt(i).SetRoom(RoomByID);
-                    // if (RoomByID.Status == "active")
-                    // {
-                    //     //_reservationRepository.RollBackTranasction(transaction);
-                    //     return null;
-                    // }
                     //check conflict
                     foreach (ReservationCard card in CardsListByTime)
                     {
@@ -77,11 +80,12 @@ namespace Hotel.BusinessLogic.Services
                 }
             }
             
-            Invoice Result = await _invoiceRepository.CreateAsync(createInvoice);
+            // Invoice Result = await _invoiceRepository.CreateAsync(createInvoice);
 
             //_reservationRepository.CommitTranasction(transaction);
 
-            return _mapper.Map<InvoiceReturnDTO>(Result);
+            //return _mapper.Map<InvoiceReturnDTO>(Result);
+            return null;
         }
     }
 }

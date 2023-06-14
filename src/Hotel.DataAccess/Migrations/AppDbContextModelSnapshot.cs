@@ -54,9 +54,6 @@ namespace Hotel.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CusName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -67,7 +64,6 @@ namespace Hotel.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameCus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -122,11 +118,16 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RoomRegulationId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("RoomRegulationId");
 
                     b.ToTable("ReservationCard");
                 });
@@ -150,10 +151,7 @@ namespace Hotel.DataAccess.Migrations
             modelBuilder.Entity("Hotel.DataAccess.Entities.Room", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
@@ -188,10 +186,15 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int?>("RoomRegulationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RoomType")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomRegulationId");
 
                     b.ToTable("RoomDetail");
                 });
@@ -222,24 +225,6 @@ namespace Hotel.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RoomRegulation");
-                });
-
-            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulationRoomDetail", b =>
-                {
-                    b.Property<int>("RoomDetailId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomRegulationId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsValid")
-                        .HasColumnType("bit");
-
-                    b.HasKey("RoomDetailId", "RoomRegulationId");
-
-                    b.HasIndex("RoomRegulationId");
-
-                    b.ToTable("RoomRegulationRoomDetail");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCategory", b =>
@@ -342,6 +327,10 @@ namespace Hotel.DataAccess.Migrations
                         .WithMany("ReservationCards")
                         .HasForeignKey("RoomId");
 
+                    b.HasOne("Hotel.DataAccess.Entities.RoomRegulation", "RoomRegulation")
+                        .WithMany()
+                        .HasForeignKey("RoomRegulationId");
+
                     b.OwnsMany("Hotel.DataAccess.ObjectValues.Guest", "Guests", b1 =>
                         {
                             b1.Property<int>("ReservationCardId")
@@ -381,6 +370,8 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("Invoice");
 
                     b.Navigation("Room");
+
+                    b.Navigation("RoomRegulation");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.Room", b =>
@@ -392,21 +383,11 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("RoomDetail");
                 });
 
-            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulationRoomDetail", b =>
+            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomDetail", b =>
                 {
-                    b.HasOne("Hotel.DataAccess.Entities.RoomDetail", "RoomDetail")
-                        .WithMany("RoomRegulations")
-                        .HasForeignKey("RoomDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Hotel.DataAccess.Entities.RoomRegulation", "RoomRegulation")
-                        .WithMany("RoomDetails")
-                        .HasForeignKey("RoomRegulationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoomDetail");
+                        .WithMany()
+                        .HasForeignKey("RoomRegulationId");
 
                     b.Navigation("RoomRegulation");
                 });
@@ -441,16 +422,6 @@ namespace Hotel.DataAccess.Migrations
             modelBuilder.Entity("Hotel.DataAccess.Entities.Room", b =>
                 {
                     b.Navigation("ReservationCards");
-                });
-
-            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomDetail", b =>
-                {
-                    b.Navigation("RoomRegulations");
-                });
-
-            modelBuilder.Entity("Hotel.DataAccess.Entities.RoomRegulation", b =>
-                {
-                    b.Navigation("RoomDetails");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.ServiceCategory", b =>
