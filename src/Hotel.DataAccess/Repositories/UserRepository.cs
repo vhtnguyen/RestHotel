@@ -59,6 +59,7 @@ internal class UserRepository : IUserRepository
         }
         else
         {
+            throw new NotImplementedException();
 
         }
         

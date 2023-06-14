@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.BusinessLogic.DTO.HotelReservation;
-using Hotel.BusinessLogic.Services.IServices;
+using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Microsoft.Extensions.Hosting;

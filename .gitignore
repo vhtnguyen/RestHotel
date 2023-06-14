@@ -3,3 +3,4 @@
 **/obj
 **/.vscode
 src/Hotel.API/appsettings.json
+src/Hotel.DataAccess/Migrations/**
