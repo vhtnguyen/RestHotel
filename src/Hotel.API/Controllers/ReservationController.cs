@@ -16,16 +16,30 @@ public class ReservationController : Controller
     }
 
     [HttpGet("page")]
-    public ActionResult<string> Get(int page, int entries)
+    public async Task<ActionResult> Get(int page, int entries)
     {
         //Console.WriteLine("Page: " + page + ", entries: " + entries);
-        return Ok("Hotel API");
+        return Ok(await _reservationService.GetAll(page, entries));
     }
 
     [HttpPost("")]
-    public ActionResult<string> Post(ReservationCreateDTO reservation)
+    public async Task<ActionResult> Post(ReservationCreateDTO reservation)
     {
         //Console.WriteLine("Page: " + page + ", entries: " + entries);
-        return Ok(_reservationService.CreateReservation(reservation));
+        if (!reservation.ParseDate())
+        {
+            return BadRequest("Wrong input date format");
+        }
+        return Ok(await _reservationService.CreateReservation(reservation));
+    }
+
+    [HttpGet("by-period-time")]
+    public async Task<ActionResult> GetReservationCardsByTime(PeriodTimeDTO periodTimeDTO)
+    {
+        if (!periodTimeDTO.ParseDate())
+        {
+            return BadRequest("Wrong input date format");
+        }
+        return Ok(await _reservationService.GetReservationCardsByTime(periodTimeDTO));
     }
 }

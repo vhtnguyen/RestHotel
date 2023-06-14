@@ -12,6 +12,7 @@ namespace Hotel.BusinessLogic.Services
     {
         Task<List<ReservationCardReturnDTO>> GetAll(int page, int entries);
 
-        Task<invoiceBrowserDTO> CreateReservation(ReservationCreateDTO reservation);
+        Task<List<ReservationCardReturnDTO>> GetReservationCardsByTime(PeriodTimeDTO periodTimeDTO);
+        Task<InvoiceReturnDTO> CreateReservation(ReservationCreateDTO reservation);
     }
 }
