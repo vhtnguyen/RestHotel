@@ -14,7 +14,7 @@ public class User
     public string? Avatar { get; set; }
 
     // some reference field
-    public ICollection<Role> Roles { get; set; } = new List<Role>();
+    public Role? Role { get; set; }
 
     [JsonConstructor]
     public User(int id, string? account, string? password, string? fullName, string? email, string? telephoneNumber, string? avatar)
@@ -30,34 +30,34 @@ public class User
     public User() { }
 
     // some method
-    public void AddRole(Role role)
-    {
-        // find and add role
-        var isExistRole = Roles.Any(r => r.Id == role.Id);
-        if(isExistRole)
-        {
-            // throw exception here
-            throw new DomainBadRequestException(
-                "role_has_existed",
-                $"role '{role.NameType}' has existed on user {FullName}");
-        }
+    //public void AddRole(Role role)
+    //{
+    //    // find and add role
+    //    var isExistRole = Roles.Any(r => r.Id == role.Id);
+    //    if(isExistRole)
+    //    {
+    //        // throw exception here
+    //        throw new DomainBadRequestException(
+    //            "role_has_existed",
+    //            $"role '{role.NameType}' has existed on user {FullName}");
+    //    }
 
-        Roles.Add(role);
-    }
+    //    Roles.Add(role);
+    //}
 
-    public void RemoveRole(Role role)
-    {
-        // find and add role
-        var isExistRole = Roles.Any(r => r.Id == role.Id);
-        if (!isExistRole)
-        {
-            // throw exception here
-            throw new DomainBadRequestException(
-                "role_dosen't_exist",
-                $"role '{role.NameType}' doesn't exist on user {FullName}");
-        }
+    //public void RemoveRole(Role role)
+    //{
+    //    // find and add role
+    //    var isExistRole = Roles.Any(r => r.Id == role.Id);
+    //    if (!isExistRole)
+    //    {
+    //        // throw exception here
+    //        throw new DomainBadRequestException(
+    //            "role_dosen't_exist",
+    //            $"role '{role.NameType}' doesn't exist on user {FullName}");
+    //    }
 
-        Roles.Remove(role);
-    }
+    //    Roles.Remove(role);
+    //}
     
 }

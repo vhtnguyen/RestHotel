@@ -266,27 +266,17 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TelephoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.HotelService", b =>
@@ -392,19 +382,15 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("RoomRegulation");
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
+            modelBuilder.Entity("Hotel.DataAccess.Entities.User", b =>
                 {
-                    b.HasOne("Hotel.DataAccess.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
+                    b.HasOne("Hotel.DataAccess.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hotel.DataAccess.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.HotelService", b =>
@@ -417,6 +403,11 @@ namespace Hotel.DataAccess.Migrations
                     b.Navigation("HotelServices");
 
                     b.Navigation("ReservationCards");
+                });
+
+            modelBuilder.Entity("Hotel.DataAccess.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.Room", b =>
