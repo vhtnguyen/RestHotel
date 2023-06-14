@@ -23,7 +23,7 @@ public class EntityConfiguration
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.HasMany(r => r.Roles).WithMany(u=>u.Users);
+        builder.HasOne(u => u.Role).WithMany(r => r.Users);
     }
 
     public void Configure(EntityTypeBuilder<Invoice> builder)
@@ -48,7 +48,7 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasMany(b => b.Users).WithMany(r=>r.Roles);
+        builder.HasMany(b => b.Users).WithOne(r=>r.Role).IsRequired();
     }
 
     public void Configure(EntityTypeBuilder<Room> builder)
