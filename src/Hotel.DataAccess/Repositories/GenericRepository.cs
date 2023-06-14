@@ -1,6 +1,8 @@
 ﻿using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Polly;
 using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories;
@@ -18,15 +20,27 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         _collection = _context.Set<TEntity>();
     }
 
-    public Task<IEnumerable<TEntity>> BrowserAsync()
+    public async Task<IEnumerable<TEntity>> BrowserAsync()
     {
-        throw new NotImplementedException();
+
+        IEnumerable<TEntity> collection = await _collection.ToListAsync();
+        return collection;
     }
 
-    public async Task CreateAsync(TEntity entity)
+    public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        await _collection.AddAsync(entity);
+        // var entityType = _context.Model.FindEntityType(typeof(TEntity));
+        // var tableName = entityType.GetTableName();
+        // var schema = entityType.GetSchema();
+
+        //await  _context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {schema}.{tableName} ON");
+        // var new_entity = await _collection.AddAsync(entity);
+        // await _context.SaveChangesAsync();
+        // await _context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {schema}.{tableName} OFF");
+
+        var new_entity = await _collection.AddAsync(entity);
         await _context.SaveChangesAsync();
+        return new_entity.Entity;
     }
     public async Task DeleteAsync(TEntity entity)
     {
@@ -40,12 +54,23 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         return entity;
     }
 
+    public async Task<IEnumerable<TEntity>?> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        IEnumerable<TEntity> entity = await _collection.Where(predicate).ToListAsync();
+        return entity;
+    }
+
+
     public async Task<TEntity?> FindAsync(Guid id)
     {
         var entity = await _collection.FindAsync(id);
         return entity;
     }
-
+    public async Task<List<TEntity>?> GetListAsync()
+    {
+        var list_entity = await _collection.ToListAsync();
+        return list_entity;
+    }
     public async Task UpdateAsync(TEntity entity)
     {
         _collection.Update(entity);
