@@ -25,30 +25,43 @@ public class ReservationController : Controller
     }
 
     [HttpPost("")]
-    public async Task<ActionResult> Post(ReservationCreateDTO reservation)
+    public async Task<ActionResult> CreateReservation(ReservationCreateDTO reservation)
     {
         //Console.WriteLine("Page: " + page + ", entries: " + entries);
         if (!reservation.ParseDate())
         {
             return BadRequest("Wrong input date format");
         }
-        InvoiceReturnDTO result = await _reservationService.CreateReservation(reservation);
-        
+        PendingInvoiceReturnDTO Invoice = await _reservationService.CreatePendingReservation(reservation);
+
         try
         {
-            return Ok(result);
+            return Ok(Invoice);
         }
         finally
         {
-            Response.OnCompleted(async () => 
-            {
-                //await _reservationCancellationService.CheckConfirmedReservation(0);
-                if (result != null)
-                {
-                    await _reservationCancellationService.CheckConfirmedReservation(result.Id);
-                }
-            });
+            // Response.OnCompleted(async () => 
+            // {
+            //     if (Invoice != null)
+            //     {
+            //         await _reservationCancellationService.CheckConfirmedReservation(Invoice.InvoiceId);
+            //     }
+            // });
+            
         }
+    }
+
+    
+    [HttpPost("confirm")]
+    public async Task<ActionResult> ConfirmReservation(ReservationConfirmedDTO reservation)
+    {
+        //Console.WriteLine("Page: " + page + ", entries: " + entries);
+        if (!reservation.ParseDate())
+        {
+            return BadRequest("Wrong input date format");
+        }
+        InvoiceReturnDTO Invoice = await _reservationService.ConfirmReservation(reservation);
+        return Ok(Invoice);
     }
 
     [HttpGet("by-period-time")]

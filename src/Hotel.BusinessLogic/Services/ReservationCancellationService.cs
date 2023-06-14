@@ -21,8 +21,9 @@ namespace Hotel.BusinessLogic.Services
         private readonly IMapper _mapper;
         IReservationRepository _reservationRepository;
         IInvoiceRepository _invoiceRepository;
+        IInvoiceHotelServiceRepository _invoiceHotelServiceRepository;
 
-        public ReservationCancellationService(IMapper mapper,
+        public ReservationCancellationService(IMapper mapper, IInvoiceHotelServiceRepository invoiceHotelServiceRepository, 
             IReservationRepository reservationRepository, IInvoiceRepository invoiceRepository)
         {
             _cancellationDelay = TimeSpan.FromMinutes(_cancellationTimeoutByMinutes);
@@ -30,6 +31,7 @@ namespace Hotel.BusinessLogic.Services
             _mapper = mapper;
             _reservationRepository = reservationRepository;
             _invoiceRepository = invoiceRepository;
+            _invoiceHotelServiceRepository = invoiceHotelServiceRepository;
         }
 
         public async Task CheckConfirmedReservation(int InvoiceId)
@@ -50,6 +52,10 @@ namespace Hotel.BusinessLogic.Services
             Invoice? invoice = await _invoiceRepository.FindAsync(invoice => invoice.Id == InvoiceId);
             if (invoice != null)
             {
+                foreach (InvoiceHotelService service in invoice.HotelServices)
+                {
+                    await _invoiceHotelServiceRepository.RemoveInvoiceHotelService(service);
+                }
                 await _invoiceRepository.RemoveInvoice(invoice);
             }
         }

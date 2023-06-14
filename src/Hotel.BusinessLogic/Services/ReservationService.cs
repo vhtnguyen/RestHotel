@@ -44,12 +44,12 @@ namespace Hotel.BusinessLogic.Services
             return result;
         }
 
-        public async Task<InvoiceReturnDTO> CreateReservation(ReservationCreateDTO reservationDTO)
+        public async Task<PendingInvoiceReturnDTO> CreatePendingReservation(ReservationCreateDTO reservationDTO)
         {
             //create invoice
             Invoice createInvoice = _mapper.Map<Invoice>(reservationDTO);
 
-            createInvoice.Status = "Pending";
+            createInvoice.Status = "pending";
 
             //var transaction = _reservationRepository.CreateTransaction();
             List<ReservationCard> CardsListByTime = await _reservationRepository
@@ -68,6 +68,7 @@ namespace Hotel.BusinessLogic.Services
                         return null;
                     }
                     createInvoice.ReservationCards.ElementAt(i).SetRoom(RoomByID);
+                    createInvoice.ReservationCards.ElementAt(i).RoomRegulation = RoomByID.RoomDetail.RoomRegulation;
                     //check conflict
                     foreach (ReservationCard card in CardsListByTime)
                     {
@@ -83,7 +84,46 @@ namespace Hotel.BusinessLogic.Services
 
             //_reservationRepository.CommitTranasction(transaction);
 
-            return _mapper.Map<InvoiceReturnDTO>(Result);
+            //return _mapper.Map<InvoiceReturnDTO>(Result);
+            return new PendingInvoiceReturnDTO(Result.Id);
+        }
+
+        public async Task<InvoiceReturnDTO> ConfirmReservation(ReservationConfirmedDTO reservationDTO)
+        {
+            //create invoice
+            Invoice invoice = await _invoiceRepository.GetInvoiceDetail(reservationDTO.InvoiceId);
+            
+            if (invoice != null)
+            {
+                invoice.Status = "partlydeposited";
+                invoice.Email = reservationDTO.Email;
+                invoice.TotalSum = reservationDTO.TotalSum;
+                invoice.DownPayment = reservationDTO.DownPayment;
+                invoice.NameCus = reservationDTO.NameCus;
+                await _invoiceRepository.UpdateInvoice(invoice);
+                
+                ICollection<ReservationCard> availableCards = await _reservationRepository.FindAsyncByInvoiceID(invoice.Id);
+                foreach (GuestRoomInfoDTO card in reservationDTO.ReservationCards)
+                {
+                    foreach (ReservationCard aCard in availableCards)
+                    {
+                        if (aCard.Room.Id == card.RoomId)
+                        {
+                            aCard.Guests = _mapper.Map<List<Guest>>(card.Guests);
+                            aCard.Notes = card.Notes;
+                            await _reservationRepository.UpdateAsync(aCard);
+                        }
+                    }
+                }
+                invoice.ReservationCards = availableCards;
+            }
+            else
+            {
+                return null;
+            }
+    
+
+            return _mapper.Map<InvoiceReturnDTO>(invoice);
         }
     }
 }

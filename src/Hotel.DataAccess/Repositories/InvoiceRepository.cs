@@ -61,4 +61,9 @@ internal class InvoiceRepository : IInvoiceRepository
     {
         await _genericRepository.DeleteAsync(invoice);
     }
+
+    public async Task UpdateInvoice(Invoice invoice)
+    {
+        await _genericRepository.UpdateAsync(invoice);
+    }
 }

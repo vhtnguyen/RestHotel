@@ -31,7 +31,7 @@ public class EntityConfiguration
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.HasMany(b => b.ReservationCards).WithOne().OnDelete(DeleteBehavior.Cascade);
-        builder.HasMany(b => b.HotelServices).WithOne().OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(b => b.HotelServices);
     }
 
     public void Configure(EntityTypeBuilder<ReservationCard> builder)
