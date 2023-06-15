@@ -29,8 +29,14 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         
         Task UpdateAsync(ReservationCard card);
 
+        Task RemoveAsync(ReservationCard card);
+
         Task<ReservationCard?> FindAsync(Expression<Func<ReservationCard, bool>> predicate);
     
         Task<List<ReservationCard>> FindAsyncByInvoiceID(int id);
+
+        Task<ReservationCard?> GetReservationCardByID(int id);
+
+        Task RemoveReservationCardByID(ReservationCard card);
     }
 }

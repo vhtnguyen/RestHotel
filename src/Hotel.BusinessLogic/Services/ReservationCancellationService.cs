@@ -49,9 +49,13 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task RemoveReservation(int InvoiceId)
         {
-            Invoice? invoice = await _invoiceRepository.FindAsync(invoice => invoice.Id == InvoiceId);
+            Invoice? invoice = await _invoiceRepository.GetInvoiceDetail(InvoiceId);
             if (invoice != null)
             {
+                // foreach (ReservationCard card in invoice.ReservationCards)
+                // {
+                //     await _reservationRepository.RemoveAsync(card);
+                // }
                 foreach (InvoiceHotelService service in invoice.HotelServices)
                 {
                     await _invoiceHotelServiceRepository.RemoveInvoiceHotelService(service);

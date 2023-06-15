@@ -88,10 +88,10 @@ namespace Hotel.BusinessLogic.Services
             return new PendingInvoiceReturnDTO(Result.Id);
         }
 
-        public async Task<InvoiceReturnDTO> ConfirmReservation(ReservationConfirmedDTO reservationDTO)
+        public async Task<InvoiceReturnDTO?> ConfirmReservation(ReservationConfirmedDTO reservationDTO)
         {
             //create invoice
-            Invoice invoice = await _invoiceRepository.GetInvoiceDetail(reservationDTO.InvoiceId);
+            Invoice? invoice = await _invoiceRepository.GetInvoiceDetail(reservationDTO.InvoiceId);
             
             if (invoice != null)
             {
@@ -121,9 +121,112 @@ namespace Hotel.BusinessLogic.Services
             {
                 return null;
             }
-    
 
-            return _mapper.Map<InvoiceReturnDTO>(invoice);
+            InvoiceReturnDTO result = _mapper.Map<InvoiceReturnDTO>(invoice);
+            result.ArrivalDate = reservationDTO.ArrivalDateStr;
+            result.DepartureDate = reservationDTO.DepartureDateStr;
+
+            return _mapper.Map<InvoiceReturnDTO>(result);
+        }
+
+        public async Task<ReservationCardReturnDTO?> GetReservationCardByID(int id)
+        {
+            ReservationCard? card = await _reservationRepository.GetReservationCardByID(id);
+            if (card == null)
+            {
+                return null;
+            }
+            var result = _mapper.Map<ReservationCardReturnDTO>(card);
+            return result;
+        }
+
+        public async Task<List<ReservationCardReturnDTO>?> GetReservationCardByInvoiceID(int id)
+        {
+            List<ReservationCard> cards = await _reservationRepository.FindAsyncByInvoiceID(id);
+            var result = _mapper.Map<List<ReservationCardReturnDTO>>(cards);
+            return result;
+        }
+
+        public async Task<List<ReservationCardReturnDTO>?> ChangeRoom(ChangeRoomDTO changeRoomDTO)
+        {
+            List<ReservationCard> handledCards = new List<ReservationCard>();
+            //get revcards by invoice id
+            List<ReservationCard> cards = await _reservationRepository.FindAsyncByInvoiceID(changeRoomDTO.InvoiceId);
+            
+            if (cards.Count() == 0)
+            {
+                var result = _mapper.Map<List<ReservationCardReturnDTO>>(cards);
+                return result;
+            }
+            foreach (ReservationCard oldCard in cards)
+            {
+                if (oldCard.Room.Id == changeRoomDTO.OldRoomId)
+                {
+                    //just extend time of stay
+                    if (changeRoomDTO.OldRoomId == changeRoomDTO.NewRoomId)
+                    {
+                        oldCard.DepartureDate = changeRoomDTO.To;
+                    }
+                    else
+                    {
+                        Room RoomByID = await _reservationRepository.GetRoomById(changeRoomDTO.NewRoomId);
+                        if (RoomByID == null)
+                        {
+                            return null;
+                        }
+                        Invoice invoice = await _invoiceRepository.FindAsync(i => i.Id == oldCard.Invoice.Id);
+                        oldCard.DepartureDate = DateTime.UtcNow;
+                        ReservationCard newCard = new ReservationCard();
+                        newCard.ArrivalDate = DateTime.UtcNow;
+                        newCard.DepartureDate = changeRoomDTO.To;
+                        newCard.SetInvoice(invoice);
+                        newCard.SetRoom(RoomByID);
+                        foreach (Guest guest in oldCard.Guests)
+                        {
+                            newCard.AddGuest(new Guest(guest.Name, guest.TelephoneNumber, 
+                                    guest.Address, guest.Type, guest.PersonIdentification));
+                        }
+                        newCard.Notes = oldCard.Notes;
+                        newCard.RoomRegulation = RoomByID.RoomDetail.RoomRegulation;
+                        ReservationCard createdCard =  await _reservationRepository.CreateAsync(newCard);
+                        handledCards.Add(createdCard);
+                    }
+                    await _reservationRepository.UpdateAsync(oldCard);
+                    handledCards.Add(oldCard);
+                }
+            }
+            
+            return _mapper.Map<List<ReservationCardReturnDTO>>(handledCards);
+        }
+
+        public async Task<ReservationCardReturnDTO?> EditReservationCard(ReservationCardEditDTO reservationCardEditDTO)
+        {
+            ReservationCard? card = await _reservationRepository.GetReservationCardByID(reservationCardEditDTO.Id);
+            if (card == null)
+            {
+                return null;
+            }
+
+            card.Guests = _mapper.Map<List<Guest>>(reservationCardEditDTO.Guests);
+            card.Notes = card.Notes;
+            await _reservationRepository.UpdateAsync(card);
+
+            var result = _mapper.Map<ReservationCardReturnDTO>(card);
+            return result;
+        }
+
+        public async Task<ReservationCardReturnDTO?> RemoveReservationCard(IdDTO idDTO)
+        {
+            ReservationCard? card = await _reservationRepository.GetReservationCardByID(idDTO.Id);
+            if (card == null)
+            {
+                return null;
+            }
+
+            await _reservationRepository.RemoveAsync(card);
+
+            var result = _mapper.Map<ReservationCardReturnDTO>(card);
+            return result;
         }
     }
 }

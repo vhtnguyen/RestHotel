@@ -73,4 +73,67 @@ public class ReservationController : Controller
         }
         return Ok(await _reservationService.GetReservationCardsByTime(periodTimeDTO));
     }
+
+    [HttpGet("by-card-id")]
+    public async Task<ActionResult> GetReservationCardsById(IdDTO idDTO)
+    {
+        ReservationCardReturnDTO? card = await _reservationService.GetReservationCardByID(idDTO.Id);
+        if (card == null)
+        {
+            return Ok("Card doesn't exist");
+        }
+        return Ok(card);
+    }
+
+    [HttpGet("by-card-invoice-id")]
+    public async Task<ActionResult> GetReservationCardsByInvoiceId(IdDTO idDTO)
+    {
+        List<ReservationCardReturnDTO>? cards = await _reservationService.GetReservationCardByInvoiceID(idDTO.Id);
+        if (cards.Count() == 0)
+        {
+            return Ok("Invoice doesn't exist");
+        }
+        return Ok(cards);
+    }
+
+    [HttpPost("change-room")]
+    public async Task<ActionResult> ChaneRoom(ChangeRoomDTO changeRoomDTO)
+    {
+        if (!changeRoomDTO.ParseDate())
+        {
+            return BadRequest("Wrong input date format");
+        }
+
+        List<ReservationCardReturnDTO>? handledCards = await _reservationService.ChangeRoom(changeRoomDTO);
+        if (handledCards.Count() == 0)
+        {
+            return BadRequest("Wrong room id");
+        }
+
+        return Ok(handledCards);
+    }
+
+    [HttpPost("edit")]
+    public async Task<ActionResult> EditReservationCard(ReservationCardEditDTO reservationCardEditDTO)
+    {
+        ReservationCardReturnDTO card = await _reservationService.EditReservationCard(reservationCardEditDTO);
+        if (card == null)
+        {
+            return BadRequest("Wrong reservation card id");
+        }
+
+        return Ok(card);
+    }
+
+    [HttpDelete("")]
+    public async Task<ActionResult> RemoveReservationCard(IdDTO idDTO)
+    {
+        ReservationCardReturnDTO? card = await _reservationService.RemoveReservationCard(idDTO);
+        if (card == null)
+        {
+            return BadRequest("Wrong reservation card id");
+        }
+
+        return Ok("Delete successful");
+    }
 }

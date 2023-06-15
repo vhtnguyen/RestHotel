@@ -112,9 +112,6 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<int?>("InvoiceId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InvoiceId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
@@ -127,8 +124,6 @@ namespace Hotel.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
-
-                    b.HasIndex("InvoiceId1");
 
                     b.HasIndex("RoomId");
 
@@ -314,14 +309,10 @@ namespace Hotel.DataAccess.Migrations
 
             modelBuilder.Entity("Hotel.DataAccess.Entities.ReservationCard", b =>
                 {
-                    b.HasOne("Hotel.DataAccess.Entities.Invoice", null)
+                    b.HasOne("Hotel.DataAccess.Entities.Invoice", "Invoice")
                         .WithMany("ReservationCards")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Hotel.DataAccess.Entities.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceId1");
 
                     b.HasOne("Hotel.DataAccess.Entities.Room", "Room")
                         .WithMany("ReservationCards")
