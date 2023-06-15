@@ -27,10 +27,22 @@ namespace Hotel.BusinessLogic.Services
             _mapper = mapper;
             _roleRepository = roleRepository;
         }
-        public async Task<List<UserToReturnDTO>> GetUsersAsync()
+        public async Task<List<UserToReturnDTO>> GetUserListAsync()
         {
             var usersToReturn = await _userRepository.GetListAsync();
             return _mapper.Map<List<UserToReturnDTO>>(usersToReturn);
+        }
+        public async Task<UserToReturnDTO> GetUserByIDAsync(int userId)
+        {
+            var user = await _userRepository.FindAsync(userId);
+            if (user == null)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                return _mapper.Map<UserToReturnDTO>(user);
+            }
         }
         public async Task<UserToReturnDTO> CreateUserAsync(UserToCreateDTO userToCreateDTO)
         {
@@ -143,17 +155,6 @@ namespace Hotel.BusinessLogic.Services
             }
         }
 
-        public async Task<UserToReturnDTO> GetUserByIDAsync(int userId)
-        {
-            var user = await _userRepository.FindAsync(userId);
-            if(user == null)
-            {
-                throw new NotImplementedException();
-            }
-            else
-            {
-                return _mapper.Map<UserToReturnDTO>(user);
-            }
-        }
+       
     }
 }

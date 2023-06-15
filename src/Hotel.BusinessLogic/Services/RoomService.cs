@@ -30,10 +30,15 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {
+            if(await _roomRepository.FindAsync(roomToCreateDTO.Id) != null)
+            {
+                // room id is existed
+                throw new NotImplementedException();
+            }
             Room new_room = new Room(roomToCreateDTO.Id, roomToCreateDTO.Status, roomToCreateDTO.Note);
 
             // fake data for testing purpose
-            // right code:  RoomDetail detail=_roomDetailRepository.FindByID(roomToCreateDTO.RoomDetailID);
+            // right code:  RoomDetail detail=_roomDetailRepository.FindAsync(roomToCreateDTO.RoomDetailID);
 
             RoomDetail detail = new RoomDetail(
               0, 999, "Double", "A haunted room", null
@@ -51,6 +56,16 @@ namespace Hotel.BusinessLogic.Services
                 throw new NotImplementedException();
             }
 
+        }
+
+        public async Task<RoomToReturnDetailDTO> GetRoomByIDAsync(int id)
+        {
+            var room = await _roomRepository.FindAsync(id);
+            return _mapper.Map<RoomToReturnDetailDTO>(room);
+        }
+        public async Task RemoveRoomByIDAsync(int id)
+        {
+             await _roomRepository.RemoveByIDAsync(id);
         }
     }
 }

@@ -49,19 +49,21 @@ internal class UserRepository : IUserRepository
   
     public async Task<User> CreateAsync(User entity)
         => await _genericRepository.CreateAsync(entity);
+
     public async Task UpdateAsync(User entity)
     => await _genericRepository.UpdateAsync(entity);
+
     public async Task DeleteByIDAsync(int userId)
     { 
         var user_to_remove= await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        if(user_to_remove != null)
+        if(user_to_remove == null)
         {
-            _context.Users.Remove(user_to_remove);
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
         }
         else
         {
-            throw new NotImplementedException();
+            _context.Users.Remove(user_to_remove);
+            await _context.SaveChangesAsync();
 
         }
         

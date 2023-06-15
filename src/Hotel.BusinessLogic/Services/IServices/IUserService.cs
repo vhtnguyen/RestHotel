@@ -9,7 +9,7 @@ namespace Hotel.BusinessLogic.Services
 {
     public interface IUserService
     {
-        Task<List<UserToReturnDTO>> GetUsersAsync();
+        Task<List<UserToReturnDTO>> GetUserListAsync();
         Task<UserToReturnDTO>CreateUserAsync(UserToCreateDTO userToCreateDTO);
         Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent);
         Task RemoveUserAsync(int userId);

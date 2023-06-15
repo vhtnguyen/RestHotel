@@ -13,7 +13,8 @@ namespace Hotel.BusinessLogic.Services
     {
         Task<List<RoomToReturnListDTO>> GetRoomListAsync();
         Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO);
-        //Task<IEnumerable<RoomToReturnListDTO>> SearchUserAsync(string searchOption, string searchContent);
-        //Task RemoveRoomAsync(int roomId);
+        Task<RoomToReturnDetailDTO> GetRoomByIDAsync(int id);
+        Task RemoveRoomByIDAsync(int id);
+        
     }
 }

@@ -31,7 +31,19 @@ public class RoomController : Controller
     {
         return Ok(await _roomService.CreateRoomAsync(roomToCreateDTO));
     }
+    [HttpDelete("")]
 
+    public async Task<ActionResult<List<RoomToReturnListDTO>>> RemoveRoom([FromQuery] int id)
+    {
+        await _roomService.RemoveRoomByIDAsync(id);
+        return Ok($"Removed room #{id}");
+    }
+
+    [HttpGet("detail")]
+    public async Task<ActionResult<RoomToReturnDetailDTO>> Get([FromQuery]int id)
+    {
+        return Ok(await _roomService.GetRoomByIDAsync(id));
+    }
 }
 
 

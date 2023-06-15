@@ -21,7 +21,7 @@ namespace Hotel.API.Controllers;
     [HttpGet("")]
 
     public async Task<ActionResult> Get() {
-        return Ok(await _userService.GetUsersAsync());
+        return Ok(await _userService.GetUserListAsync());
     }
 
     [HttpGet("search")]
@@ -47,7 +47,7 @@ namespace Hotel.API.Controllers;
         return Ok(result);
     }
 
-    [HttpPut("profile")]
+    [HttpPut("")]
     public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody] string newPassWord)
     {
         await _userService.ChangeUserPassWordAsync(id, newPassWord);
@@ -55,10 +55,10 @@ namespace Hotel.API.Controllers;
     }
 
     [HttpDelete("")]
-    public async Task<ActionResult> RemoveUser(int userId)
+    public async Task<ActionResult> RemoveUser([FromQuery] int id)
     {
-        await _userService.RemoveUserAsync(userId);
-            return Ok($"Removed user #'{userId}'.");
+        await _userService.RemoveUserAsync(id);
+            return Ok($"Removed user #'{id}'.");
     }
 }
 
