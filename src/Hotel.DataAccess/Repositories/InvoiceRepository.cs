@@ -37,6 +37,11 @@ internal class InvoiceRepository : IInvoiceRepository
         return result;
     }
 
+    public async Task<Invoice?> CreateAsync(Invoice invoice)
+    {
+        var result = await _genericRepository.CreateAsync(invoice);
+        return result;
+    }
     public async Task<Invoice?> GetInvoiceDetail(int id)
     {
         var result = await _context.Invoice
