@@ -11,7 +11,7 @@ namespace Hotel.DataAccess.Repositories
     {
         Task<IEnumerable<RoomRegulation>> BrowserAsync();
         Task<RoomRegulation?> FindAsync(Expression<Func<RoomRegulation, bool>> predicate);
-        Task<RoomRegulation?> FindAsync(Guid id);
+        Task<RoomRegulation?> FindAsync(int id);
         Task CreateAsync(RoomRegulation entity);
         Task UpdateAsync(RoomRegulation entity);
         Task DeleteAsync(int id, RoomRegulation entity);

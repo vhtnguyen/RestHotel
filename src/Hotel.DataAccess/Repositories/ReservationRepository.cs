@@ -57,7 +57,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<Room> GetRoomById(int roomId)
         {
-            var result = await _genericRoomRepository.FindAsyncById(roomId);
+            var result = await _genericRoomRepository.FindAsync(roomId);
             return result;
         }
 
@@ -92,7 +92,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<Invoice?> GetInvoiceByID(int id)
         {
-            var result = await _genericInvoiceRepository.FindAsyncById(id);
+            var result = await _genericInvoiceRepository.FindAsync(id);
             return result;
         }
     }

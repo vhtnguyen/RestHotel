@@ -10,6 +10,8 @@ using Hotel.BusinessLogic.Profiles;
 using Hotel.DataAccess.Repositories;
 using System.Linq.Expressions;
 using StackExchange.Redis;
+using Hotel.Shared.Exceptions;
+
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -35,16 +37,23 @@ namespace Hotel.BusinessLogic.Services
             var new_user = _mapper.Map<User>(userToCreateDTO);
             var new_role = await _roleRepository.FindAsync(r => r.Id == userToCreateDTO.Role);
 
-            if (new_role != null)
+            if (new_role == null)
             {
-                new_user.Role = new_role;
-                //new_role.Users.Add(new_user);
-                var new_user_with_role = await _userRepository.CreateAsync(new_user);
-                return _mapper.Map<UserToReturnDTO>(new_user);
+                throw new NotImplementedException();
             }
             else
             {
-                throw new NotImplementedException();
+                new_user.Role = new_role;
+
+                // hashing password
+                var encryptPassword = new_user.Password;
+
+                // change password
+                new_user.Password = encryptPassword;
+
+                // create new user
+                var new_user_with_role = await _userRepository.CreateAsync(new_user);
+                return _mapper.Map<UserToReturnDTO>(new_user);
             }
 
         }
@@ -52,12 +61,6 @@ namespace Hotel.BusinessLogic.Services
         {
              await _userRepository.DeleteByIDAsync(userId);
         }
-
-        public IUserRepository Get_userRepository()
-        {
-            return _userRepository;
-        }
-
         public async Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent)
         {
             IEnumerable<User>? result;
@@ -93,7 +96,64 @@ namespace Hotel.BusinessLogic.Services
             return  _mapper.Map<IEnumerable<UserToReturnDTO>>(result);
 
         }
-       
 
+        public async Task ChangeUserPassWordAsync(int userID, string newPassWord)
+        {
+            // this function is only used by admin -> no need to check current password
+
+            var user = await _userRepository.FindAsync(u=>u.Id== userID);
+            if (user == null)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                // hashing new password
+                var encryptPassword = newPassWord;
+
+                // change password
+                user.Password = encryptPassword;
+                await _userRepository.UpdateAsync(user);
+               
+            }
+        }
+        public async Task ChangeUserPassWordAsync(int userID,string currentPassWord, string newPassWord)
+        {
+            var user = await _userRepository.FindAsync(u => u.Id == userID);
+            if (user == null)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                // check password
+                var isMatch = true;
+                if (!isMatch)
+                {
+                    throw new NotImplementedException();
+                }
+
+                // hashing password
+                var encryptPassword = newPassWord;
+
+                // change password
+                user.Password = encryptPassword;
+                await _userRepository.UpdateAsync(user);
+
+            }
+        }
+
+        public async Task<UserToReturnDTO> GetUserByIDAsync(int userId)
+        {
+            var user = await _userRepository.FindAsync(userId);
+            if(user == null)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                return _mapper.Map<UserToReturnDTO>(user);
+            }
+        }
     }
 }

@@ -29,15 +29,6 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
 
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        // var entityType = _context.Model.FindEntityType(typeof(TEntity));
-        // var tableName = entityType.GetTableName();
-        // var schema = entityType.GetSchema();
-
-        //await  _context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {schema}.{tableName} ON");
-        // var new_entity = await _collection.AddAsync(entity);
-        // await _context.SaveChangesAsync();
-        // await _context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {schema}.{tableName} OFF");
-
         var new_entity = await _collection.AddAsync(entity);
         await _context.SaveChangesAsync();
         return new_entity.Entity;
@@ -60,11 +51,8 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         return entity;
     }
 
-    public async Task<TEntity?> FindAsyncById(int id)
-    {
-        return await _collection.FindAsync(id); 
-    }
-    public async Task<TEntity?> FindAsync(Guid id)
+ 
+    public async Task<TEntity?> FindAsync(int id)
     {
         var entity = await _collection.FindAsync(id);
         return entity;

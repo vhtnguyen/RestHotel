@@ -13,9 +13,12 @@ namespace Hotel.BusinessLogic.Services
         Task<UserToReturnDTO>CreateUserAsync(UserToCreateDTO userToCreateDTO);
         Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent);
         Task RemoveUserAsync(int userId);
-        //Task<UserDTO> GetUserAsync(int userId, CancellationToken cancellationToken = default);
-        //Task<UserDTO> AddUserAsync(UserToAddDTO userToAddDTO);
-        //Task<UserDTO> UpdateUserAsync(UserToUpdateDTO userToUpdateDTO);
+
+        Task<UserToReturnDTO> GetUserByIDAsync(int userId);
+     
+        Task ChangeUserPassWordAsync(int userID, string newPassWord);
+        Task ChangeUserPassWordAsync(int userID,string currentPassWord,string newPassWord);
+        
     }
 }
     

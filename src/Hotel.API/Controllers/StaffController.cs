@@ -39,6 +39,21 @@ namespace Hotel.API.Controllers;
         return Ok(await _userService.CreateUserAsync(userToCreateDTO));
     }
 
+
+    [HttpGet("profile")]
+    public async Task<ActionResult> GetUserDetailByID([FromQuery] int id)
+    {
+        var result = await _userService.GetUserByIDAsync(id);
+        return Ok(result);
+    }
+
+    [HttpPut("profile")]
+    public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody] string newPassWord)
+    {
+        await _userService.ChangeUserPassWordAsync(id, newPassWord);
+        return Ok("ok");
+    }
+
     [HttpDelete("")]
     public async Task<ActionResult> RemoveUser(int userId)
     {
