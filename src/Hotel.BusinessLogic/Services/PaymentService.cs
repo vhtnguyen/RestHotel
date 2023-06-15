@@ -74,7 +74,9 @@ public class PaymentService : IPaymentService
 
         if (String.IsNullOrWhiteSpace(invoiceId))
         {
-            // throw exception
+            throw new DomainBadRequestException(
+                $"Not found invoice id associate payment id '{paymentIntentId}'",
+                "not_found_invoice");
         }
 
         Int32.TryParse(invoiceId, out var id);
@@ -82,12 +84,10 @@ public class PaymentService : IPaymentService
         var invoice = await _invoiceRepository.GetInvoiceDetail(id);
         if (invoice == null)
         {
-            // throw exception
-            return;
+            throw new DomainBadRequestException($"Not found invoice at id '{invoiceId}'", "not_found_invoice");
         }
-
-        invoice.PayFailed();
-        await _invoiceRepository.SaveChangesAsync();
+        await _invoiceRepository.RemoveInvoice(invoice);
+        await _cacheService.DeleteAsync($"payment:{paymentIntentId}");
     }
 
     public async Task PaySucceed(string paymentIntentId)
@@ -96,7 +96,9 @@ public class PaymentService : IPaymentService
 
         if (String.IsNullOrWhiteSpace(invoiceId))
         {
-            // throw exception
+            throw new DomainBadRequestException(
+                $"Not found invoice id associate payment id '{paymentIntentId}'",
+                "not_found_invoice");
         }
 
         Int32.TryParse(invoiceId, out var id);
@@ -104,11 +106,11 @@ public class PaymentService : IPaymentService
         var invoice = await _invoiceRepository.GetInvoiceDetail(id);
         if (invoice == null)
         {
-            // throw exception
-            return;
+            throw new DomainBadRequestException($"Not found invoice at id '{invoiceId}'", "not_found_invoice");
         }
 
         invoice.PaySucceed();
         await _invoiceRepository.SaveChangesAsync();
+        await _cacheService.DeleteAsync($"payment:{paymentIntentId}");
     }
 }

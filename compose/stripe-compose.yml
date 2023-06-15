@@ -4,7 +4,7 @@ services:
   stripe:
     container_name: stripe
     image: stripe/stripe-cli
-    command: listen --forward-to localhost:5000/api/Payment/stripe
+    command: listen --forward-to roomee.eastasia.cloudapp.azure.com/api/payment/stripe
     environment:
       STRIPE_API_KEY: sk_test_51M3OAAKXzHdAkH9yLzjgAtWoxzlQo1b8FPgTiEPso5OaIlD3JuUErErX9CCx3yoh6yIcrVSDcHcpP7PzJ60DZKpd00ucFNZDao
       STRIPE_DEVICE_NAME: phuc

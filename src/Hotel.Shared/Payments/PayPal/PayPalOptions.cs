@@ -7,4 +7,5 @@ public class PayPalOptions
     public string ClientId { get; set; } = null!;
     public string ClientSecret { get; set; } = null!;
     public string ReturnUrl { get; set; } = null!;
+    public string WebhookSecretKey { get; set; } = null!;
 }

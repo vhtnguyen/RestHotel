@@ -53,4 +53,10 @@ public class InvoiceController : ControllerBase
         await _invoiceService.RemoveReservationCard(invoiceId, cardId);
         return NoContent();
     }
+    [HttpDelete("{invoiceId}")]
+    public async Task<ActionResult> Delete(int invoiceId)
+    {
+        await _invoiceService.Delete(invoiceId);
+        return NoContent();
+    }
 }

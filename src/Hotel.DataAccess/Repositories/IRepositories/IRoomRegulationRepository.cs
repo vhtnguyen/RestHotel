@@ -9,6 +9,6 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         Task<RoomRegulation?> FindAsync(Guid id);
         Task CreateAsync(RoomRegulation entity);
         Task UpdateAsync(RoomRegulation entity);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(int id, RoomRegulation entity);
     }
 }

@@ -23,15 +23,19 @@ public class EntityConfiguration
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.HasMany(r => r.Roles).WithMany(u => u.Users);
+        builder.HasOne(u => u.Role).WithMany(r => r.Users);
     }
 
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.HasMany(b => b.ReservationCards);
-        builder.HasMany(b => b.HotelServices);
+        builder.HasMany(b => b.ReservationCards)
+                .WithOne(c => c.Invoice)
+                .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(b => b.HotelServices)
+                .WithOne(i => i.Invoice)
+                .OnDelete(DeleteBehavior.Cascade);
     }
 
     public void Configure(EntityTypeBuilder<ReservationCard> builder)
@@ -48,7 +52,7 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasMany(b => b.Users).WithMany(r => r.Roles);
+        builder.HasMany(b => b.Users).WithOne(r => r.Role).IsRequired();
     }
 
     public void Configure(EntityTypeBuilder<Room> builder)

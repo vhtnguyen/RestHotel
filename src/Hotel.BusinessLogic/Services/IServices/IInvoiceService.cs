@@ -10,4 +10,5 @@ public interface IInvoiceService
     Task RemoveService(int invoiceId, int serviceId);
     Task AddReservationCard(int invoiceId, int cardId);
     Task RemoveReservationCard(int invoiceId, int cardId);
+    Task Delete(int invoiceId);
 }

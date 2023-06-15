@@ -5,7 +5,7 @@ using Hotel.BusinessLogic.Services.IServices;
 namespace Hotel.API.Controllers
 {
     [ApiController]
-    [Route("/reg")]
+    [Route("api/[controller]")]
     public class RegulationController : ControllerBase
     {
 

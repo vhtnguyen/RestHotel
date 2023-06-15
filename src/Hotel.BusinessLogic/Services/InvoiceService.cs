@@ -63,6 +63,16 @@ internal class InvoiceService : IInvoiceService
         await _invoiceRepository.SaveChangesAsync();
     }
 
+    public async Task Delete(int invoiceId)
+    {
+        var invoice = await _invoiceRepository.GetInvoiceDetail(invoiceId);
+        if (invoice == null)
+        {
+            throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
+        }
+        await _invoiceRepository.RemoveInvoice(invoice);
+    }
+
     public async Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync()
     {
         var result = await _invoiceRepository.GetAllInvoice();

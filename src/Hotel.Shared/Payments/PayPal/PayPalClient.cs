@@ -52,8 +52,8 @@ internal class PayPalClient : IPayPalClient
         // create redirect url
         var redirectUrl = new RedirectUrls
         {
-            cancel_url = _options.ReturnUrl + $"/paypal?error=1&requestId={resource.RequestId}",
-            return_url = _options.ReturnUrl + $"/paypal?error=0&requestId={resource.RequestId}"
+            cancel_url = _options.ReturnUrl + $"?error=1&requestId={resource.RequestId}",
+            return_url = _options.ReturnUrl + $"?error=0&requestId={resource.RequestId}"
         };
 
         // create transaction

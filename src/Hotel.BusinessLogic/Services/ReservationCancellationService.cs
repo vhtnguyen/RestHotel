@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.BusinessLogic.DTO.HotelReservation;
-using Hotel.BusinessLogic.Services.IServices;
+using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.Services
 {
-    public class ReservationCancellationService : BackgroundService, IReservationCancellationService
+    public class ReservationCancellationService : IReservationCancellationService
     {
         private readonly int _invoiceId;
         private readonly TimeSpan _cancellationDelay;
@@ -21,38 +21,46 @@ namespace Hotel.BusinessLogic.Services
         private readonly IMapper _mapper;
         IReservationRepository _reservationRepository;
         IInvoiceRepository _invoiceRepository;
+        IInvoiceHotelServiceRepository _invoiceHotelServiceRepository;
 
-        public ReservationCancellationService(IMapper mapper,
+        public ReservationCancellationService(IMapper mapper, IInvoiceHotelServiceRepository invoiceHotelServiceRepository, 
             IReservationRepository reservationRepository, IInvoiceRepository invoiceRepository)
         {
-            //_cancellationDelay = TimeSpan.FromMinutes(_cancellationTimeout);
-            _cancellationDelay = TimeSpan.FromSeconds(10);
+            _cancellationDelay = TimeSpan.FromMinutes(_cancellationTimeoutByMinutes);
+            //_cancellationDelay = TimeSpan.FromSeconds(10);
             _mapper = mapper;
             _reservationRepository = reservationRepository;
             _invoiceRepository = invoiceRepository;
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                //check invoice status
-                await CheckConfirmedReservation(_invoiceId);
-                //wait a time for recheck
-                await Task.Delay(_cancellationDelay, cancellationToken);
-            }
+            _invoiceHotelServiceRepository = invoiceHotelServiceRepository;
         }
 
         public async Task CheckConfirmedReservation(int InvoiceId)
         {
             await Task.Delay(_cancellationDelay);
-            Invoice invoice = await _reservationRepository.GetInvoiceByID(InvoiceId);
+            Invoice? invoice = await _invoiceRepository.FindAsync(invoice => invoice.Id == InvoiceId);
             if (invoice != null)
             {
                 if (invoice.Status == "pending")
                 {
-                    //delete rev cards, invoice
+                    await RemoveReservation(InvoiceId);
                 }
+            }
+        }
+
+        public async Task RemoveReservation(int InvoiceId)
+        {
+            Invoice? invoice = await _invoiceRepository.GetInvoiceDetail(InvoiceId);
+            if (invoice != null)
+            {
+                // foreach (ReservationCard card in invoice.ReservationCards)
+                // {
+                //     await _reservationRepository.RemoveAsync(card);
+                // }
+                foreach (InvoiceHotelService service in invoice.HotelServices)
+                {
+                    await _invoiceHotelServiceRepository.RemoveInvoiceHotelService(service);
+                }
+                await _invoiceRepository.RemoveInvoice(invoice);
             }
         }
     }

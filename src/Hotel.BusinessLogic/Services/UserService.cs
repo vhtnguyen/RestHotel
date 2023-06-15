@@ -2,6 +2,7 @@
 using AutoMapper;
 using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
+using StackExchange.Redis;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.BusinessLogic.Services.IServices;
 
@@ -27,16 +28,14 @@ namespace Hotel.BusinessLogic.Services
         public async Task<UserToReturnDTO> CreateUserAsync(UserToCreateDTO userToCreateDTO)
         {
             var new_user = _mapper.Map<User>(userToCreateDTO);
-            List<Role>? new_roles = await _roleRepository.FindAllAsync(r => r.Id >= userToCreateDTO.Role);
+            var new_role = await _roleRepository.FindAsync(r => r.Id == userToCreateDTO.Role);
 
-            if (new_roles != null)
+            if (new_role != null)
             {
-                foreach (var role in new_roles)
-                {
-                    new_user.AddRole(role);
-                }
+                new_user.Role = new_role;
+                //new_role.Users.Add(new_user);
                 var new_user_with_role = await _userRepository.CreateAsync(new_user);
-                return _mapper.Map<UserToReturnDTO>(new_user_with_role);
+                return _mapper.Map<UserToReturnDTO>(new_user);
             }
             else
             {

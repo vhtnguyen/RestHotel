@@ -11,6 +11,7 @@ namespace Hotel.BusinessLogic.Profiles
         {
             //guests
             CreateMap<GuestDTO, Guest>();
+            CreateMap<Guest, GuestDTO>();
 
             CreateMap<GuestRoomInfoDTO, ReservationCard>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
@@ -26,6 +27,7 @@ namespace Hotel.BusinessLogic.Profiles
             .ForMember(dest => dest.InvoiceId, opt => opt.MapFrom(card => card.Invoice.Id))
             .ForMember(dest => dest.RoomId, opt => opt.MapFrom(card => card.Room.Id))
             .ForMember(dest => dest.GuestName, opt => opt.MapFrom(card => card.Invoice.NameCus))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(card => card.Invoice.Status))
             .ForMember(dest => dest.GuestsNumber, opt => opt.MapFrom(card => card.Guests.Count()))
             .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(card => card.ArrivalDate.ToString("dd/MM/yyyy")))
             .ForMember(dest => dest.DepartureDate, opt => opt.MapFrom(card => card.DepartureDate.ToString("dd/MM/yyyy")));

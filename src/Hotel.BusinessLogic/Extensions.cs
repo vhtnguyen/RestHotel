@@ -23,7 +23,7 @@ public static class Extensions
         services.AddScoped<IReservationCancellationService, ReservationCancellationService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IRoomRegulationService, RoomRegulationService>();
-        // services.AddScoped<IRoomService, RoomService>();
+        services.AddScoped<IRoomService, RoomService>();
 
 
         services.AddMapper();

@@ -1,4 +1,11 @@
-﻿using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Hotel.DataAccess.Entities;
+using System.Linq.Expressions;
 using Hotel.BusinessLogic.DTO.RoomRegulation;
 using AutoMapper;
 using Hotel.DataAccess.Repositories.IRepositories;
@@ -50,8 +57,16 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task RemoveRoomRegulation(int id)
         {
+            var entity = await _userRepository.FindAsync(x => x.Id == id);
+            if (entity != null)
+            {
+                await _userRepository.DeleteAsync(id, entity);
 
-            await _userRepository.DeleteAsync(id);
+            }
+            else
+            {
+                //throw exception here
+            }
         }
 
         public Task UpdateRoomRegulation(RoomRegulation regulation)

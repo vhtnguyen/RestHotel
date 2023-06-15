@@ -68,6 +68,7 @@ app.UseRedisStreaming()
     .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommandRejected
     { Code = e.Code, Message = e.Message, Email = c.Email });
 
+app.UseHttpsRedirection();
 app.UseJwtAuthentication();
 // app.UseAuthorization();
 app.MapControllers();

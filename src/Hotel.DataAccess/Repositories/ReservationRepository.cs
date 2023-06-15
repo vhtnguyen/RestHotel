@@ -3,6 +3,12 @@ using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories
 {
@@ -43,16 +49,18 @@ namespace Hotel.DataAccess.Repositories
             return result;
         }
 
-        public Task<ReservationCard> CreateAsync(ReservationCard card)
+        public async Task<ReservationCard> CreateAsync(ReservationCard card)
         {
-            Console.WriteLine("hehe");
-
-            return null;
+            return await _genericCardRepository.CreateAsync(card);
         }
 
         public async Task<Room> GetRoomById(int roomId)
         {
-            var result = await _genericRoomRepository.FindAsyncById(roomId);
+            // Room room = await _context.Room.Fin
+            var result = await _context.Room
+                                .Include(room => room.RoomDetail)
+                                .ThenInclude(rD => rD.RoomRegulation)
+                                .FirstOrDefaultAsync(room => room.Id == roomId);
             return result;
         }
 
@@ -79,16 +87,48 @@ namespace Hotel.DataAccess.Repositories
         public async Task<List<ReservationCard>> GetListReservationCardsByTime(DateTime from, DateTime to)
         {
             var result = await _context.ReservationCard
+                                .Include(card => card.Invoice)
+                                .Include(card => card.Room)
                                 .Where(card => ((card.ArrivalDate >= from && to >= card.DepartureDate) ||
                                 (card.ArrivalDate == card.DepartureDate && (card.ArrivalDate == from || card.ArrivalDate == to))))
                                 .ToListAsync();
             return result;
         }
 
-        public async Task<Invoice?> GetInvoiceByID(int id)
+        public async Task UpdateAsync(ReservationCard card)
         {
-            var result = await _genericInvoiceRepository.FindAsyncById(id);
-            return result;
+            await _genericCardRepository.UpdateAsync(card);
+        }
+
+        public async Task RemoveAsync(ReservationCard card)
+        {
+            await _genericCardRepository.DeleteAsync(card);
+        }
+
+        public async Task<ReservationCard?> FindAsync(Expression<Func<ReservationCard, bool>> predicate)
+        => await _genericCardRepository.FindAsync(predicate);
+
+        public async Task<List<ReservationCard>> FindAsyncByInvoiceID(int id)
+        {
+            return await _context.ReservationCard
+                            .Include(c => c.Room)
+                            .Include(c => c.Invoice)
+                            .Where(c => c.Invoice.Id == id)
+                            .ToListAsync();
+        }
+
+        public async Task<ReservationCard?> GetReservationCardByID(int id)
+        {
+            return await _context.ReservationCard
+                            .Include(c => c.Room)
+                            .Include(c => c.Invoice)
+                            .Where(c => c.Id == id)
+                            .FirstOrDefaultAsync();
+        }
+
+        public async Task RemoveReservationCardByID(ReservationCard card)
+        {
+            await _genericCardRepository.DeleteAsync(card);
         }
 
         public async Task<ReservationCard?> GetAsync(int id)
