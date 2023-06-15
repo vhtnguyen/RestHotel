@@ -56,8 +56,16 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task RemoveRoomRegulation(int id)
         {
+            var entity = await _userRepository.FindAsync(x => x.Id == id);
+            if(entity != null)
+            {
+                await _userRepository.DeleteAsync(id, entity);
 
-        await    _userRepository.DeleteAsync( id);
+            }
+            else
+            {
+                //throw exception here
+            }
         }
 
         public Task UpdateRoomRegulation(RoomRegulation regulation)
