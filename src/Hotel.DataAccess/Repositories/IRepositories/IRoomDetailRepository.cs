@@ -12,7 +12,7 @@ namespace Hotel.DataAccess.Repositories.IRepositories
     {
         Task<IEnumerable<RoomDetail>> BrowserAsync();
         Task<RoomDetail?> FindAsync(Expression<Func<RoomDetail, bool>> predicate);
-        Task<RoomDetail?> FindAsync(Guid id);
+        Task<RoomDetail?> FindAsync(int id);
         Task CreateAsync(RoomDetail entity);
         Task UpdateAsync(RoomDetail entity);
         Task DeleteAsync( RoomDetail entity);

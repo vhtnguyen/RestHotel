@@ -40,7 +40,7 @@ namespace Hotel.DataAccess.Repositories
             return  await _genericRepository.FindAsync(predicate);
         }
 
-        public async Task<RoomDetail?> FindAsync(Guid id)
+        public async Task<RoomDetail?> FindAsync(int id)
         {
             return await _genericRepository.FindAsync(id);
         }
