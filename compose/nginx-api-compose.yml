@@ -2,8 +2,7 @@ version: "3"
 services:
   rest_hotel:
     # container_name: rest_hotel
-    build:
-      context: ../
+    image: 12082002/resthotel:latest
     environment:
       # https://learn.microsoft.com/vi-vn/aspnet/core/security/docker-compose-https?view=aspnetcore-6.0
       # 80 for http, 443 for https

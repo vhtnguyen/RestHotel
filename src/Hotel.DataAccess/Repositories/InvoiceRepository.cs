@@ -25,10 +25,17 @@ internal class InvoiceRepository : IInvoiceRepository
         return result;
     }
 
+    public async Task<Invoice?> CreateAsync(Invoice invoice)
+    {
+        var result = await _genericRepository.CreateAsync(invoice);
+        return result;
+    }
     public async Task<Invoice?> GetInvoiceDetail(int id)
     {
         var result = await _context.Invoice
                         .Include(i => i.ReservationCards)
+                        .ThenInclude(i => i.Room)
+                        .ThenInclude(i => i.RoomDetail)
                         .Include(i => i.HotelServices)
                         .ThenInclude(i => i.HotelService)
                         .FirstOrDefaultAsync(i => i.Id == id);

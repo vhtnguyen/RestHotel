@@ -10,14 +10,18 @@ internal class InvoiceService : IInvoiceService
 {
     private readonly IMapper _mapper;
     private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IReservationRepository _reservationRepository;
+    private readonly IHotelServiceRepository _serviceRepository;
     public InvoiceService(
         IMapper mapper,
         IInvoiceRepository invoiceRepository,
-        IReservationService reservationRepository,
+        IReservationRepository reservationRepository,
         IHotelServiceRepository serviceRepository)
     {
         _mapper = mapper;
         _invoiceRepository = invoiceRepository;
+        _reservationRepository = reservationRepository;
+        _serviceRepository = serviceRepository;
     }
 
     public async Task AddReservationCard(int invoiceId, int cardId)
@@ -28,6 +32,14 @@ internal class InvoiceService : IInvoiceService
             throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
         }
 
+        var card = await _reservationRepository.GetAsync(cardId);
+
+        if (card == null)
+        {
+            throw new DomainBadRequestException($"Card doen't exist on id '{cardId}'", "not_found_card");
+        }
+
+        invoice.AddReservationCard(card);
         // get reservation card
         await _invoiceRepository.SaveChangesAsync();
     }
@@ -39,6 +51,16 @@ internal class InvoiceService : IInvoiceService
         {
             throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
         }
+
+        var service = await _serviceRepository.GetAsync(serviceId);
+
+        if (service == null)
+        {
+            throw new DomainBadRequestException($"service doen't exist on id '{serviceId}'", "not_found_service");
+        }
+
+        invoice.AddHotelService(service);
+        await _invoiceRepository.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync()
@@ -60,6 +82,17 @@ internal class InvoiceService : IInvoiceService
         {
             throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
         }
+
+        var card = await _reservationRepository.GetAsync(cardId);
+
+        if (card == null)
+        {
+            throw new DomainBadRequestException($"Card doen't exist on id '{cardId}'", "not_found_card");
+        }
+
+        invoice.RemoveReservationCard(card);
+        // get reservation card
+        await _invoiceRepository.SaveChangesAsync();
     }
 
     public async Task RemoveService(int invoiceId, int serviceId)
@@ -69,6 +102,16 @@ internal class InvoiceService : IInvoiceService
         {
             throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
         }
+
+        var service = await _serviceRepository.GetAsync(serviceId);
+
+        if (service == null)
+        {
+            throw new DomainBadRequestException($"service doen't exist on id '{serviceId}'", "not_found_service");
+        }
+
+        invoice.RemoveHotelService(service);
+        await _invoiceRepository.SaveChangesAsync();
     }
 }
 

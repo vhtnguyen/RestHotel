@@ -71,6 +71,9 @@ internal class HotelServiceRepository : IHotelServiceRepository
         return await _genericRepository.FindAllAsync(predicate);
     }
 
-
+    public async Task<HotelService?> GetAsync(int id)
+    {
+        return await _genericRepository.FindAsync(service => service.Id == id);
+    }
 }
 

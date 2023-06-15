@@ -1,6 +1,9 @@
-﻿using Hotel.Shared.Payments.Stripe;
+﻿using Hotel.BusinessLogic.DTO.Payment;
+using Hotel.BusinessLogic.Services.IServices;
+using Hotel.Shared.Payments.Stripe;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Stripe;
 
 namespace Hotel.API.Controllers;
@@ -9,44 +12,52 @@ namespace Hotel.API.Controllers;
 [ApiController]
 public class PaymentController : ControllerBase
 {
+    private readonly IPaymentService _paymentService;
     private readonly StripeOptions _options;
     public PaymentController(
-        IOptions<StripeOptions> options)
+        IOptions<StripeOptions> options,
+        IPaymentService paymentService)
     {
+        _paymentService = paymentService;
         _options = options.Value;
     }
-    [HttpGet("stripe")]
-    public IActionResult Get() => Ok(_options.WebhookSecretKey);
-    
+
+    [HttpPost("{invoiceId}")]
+    public async Task<ActionResult> Create(int invoiceId, CreatePaymentDto payment)
+    {
+        return Ok(await _paymentService.CreatePaymentLink(invoiceId, payment));
+    }
+
     [HttpPost("stripe")]
-    public async Task<IActionResult> WebhookEndpoint()
+    public async Task<ActionResult> StripeWebhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
         var stripeEvent = EventUtility.ConstructEvent(json,
-                Request.Headers["Stripe-Signature"], _options.WebhookSecretKey);
+                    Request.Headers["Stripe-Signature"], _options.WebhookSecretKey);
 
-        if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+        var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(json)!;
+        var id = data["id"];
+        // Handle the event
+        if (stripeEvent.Type == Events.CheckoutSessionCompleted)
         {
-            Console.WriteLine($"handling event {stripeEvent.Type}");
+
+        }
+        else if (stripeEvent.Type == Events.CheckoutSessionExpired)
+        {
+
         }
         else
         {
             Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
         }
-        // Handle the event
-        Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
 
-        return Ok("test success");
+        throw new NotImplementedException();
     }
 
-    // mỗi lần giao dịch thành công, sẽ trả về trang webhook này
-    // cập nhật dữ liệu trên post method thay vì success url 
 
-    [HttpPost("paypal")]
-    public IActionResult Webhook()
+    [HttpGet("stripe")]
+    public ActionResult StripeRedirect()
     {
-        // -> sent from paypal with deploy link
-        
-        return Ok("test success");
+        throw new NotImplementedException();
     }
 }

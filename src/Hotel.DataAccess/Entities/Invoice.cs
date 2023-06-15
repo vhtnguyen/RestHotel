@@ -12,14 +12,14 @@ public class Invoice
     public double TotalSum { get; set; }
     public double DownPayment { get; set; }
     public string? Email { get; set; }
-    public string NameCus { get; set; }
+    public string? NameCus { get; set; }
 
     // reference property
     public ICollection<ReservationCard> ReservationCards { get; set; } = new List<ReservationCard>();
     public ICollection<InvoiceHotelService> HotelServices { get; set; } = new List<InvoiceHotelService>();
 
     [JsonConstructor]
-    public Invoice(int id, DateTime date, string? status, double totalSum, double downPayment, string? email, string nameCus)
+    public Invoice(int id, DateTime date, string? status, double totalSum, double downPayment, string? email, string? nameCus)
     {
         Id = id;
         Date = date;
@@ -28,6 +28,16 @@ public class Invoice
         DownPayment = downPayment;
         Email = email;
         NameCus = nameCus;
+    }
+
+    public void PaySucceed()
+    {
+        Status = "succeed_paying";
+    }
+
+    public void PayFailed()
+    {
+        Status = "failed_paying";
     }
 
     public void AddHotelService(HotelService service)

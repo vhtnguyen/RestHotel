@@ -6,7 +6,7 @@ namespace Hotel.API.Controllers
 {
     [ApiController]
     [Route("/reg")]
-    public class RegulationController : Controller
+    public class RegulationController : ControllerBase
     {
 
         IRoomRegulationService _roomRegulationServices { get; set; }

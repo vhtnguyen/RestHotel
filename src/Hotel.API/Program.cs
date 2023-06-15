@@ -6,20 +6,15 @@ using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Repositories;
 using Hotel.Shared.Dispatchers;
-using Hotel.Shared.Lock;
 using Hotel.Shared.Logging;
 using Hotel.Shared.MailKit;
-using Hotel.Shared.Messaging;
 using Hotel.Shared.Monitoring;
-using Hotel.Shared.Payments.Momo;
-using Hotel.Shared.Payments.PayPal;
-using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Hosting;
-using Hotel.BusinessLogic.Profiles;
 using Hotel.DataAccess;
 using Hotel.API.Middleware;
+using Hotel.Shared.Payments;
+using Hotel.Shared.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,28 +25,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFilters();
-builder.Services.AddSql();
-//test part
-builder.Services.AddRepositories();
-builder.Services.AddServices();
-
-//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-//builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
-//builder.Services.AddSql();
 
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
 //builder.Services.AddMailKit();
 //builder.Services.AddMessaging();
 //builder.Services.AddDistributedLock();
-//builder.Services.AddMomoCheckout();
-//builder.Services.AddPayPalCheckout();
-//builder.Services.AddStripeCheckout();
+builder.Services.AddPayment();
 builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
 builder.Services.AddHostedService<AppInitializer>();
 //builder.Services.AddHostedService<StreamingService>();
 //builder.Services.AddHostedService<MessagingService>();
+builder.Services.AddJwtAuthentication();
+builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 // custom logging
@@ -81,8 +68,8 @@ app.UseRedisStreaming()
     .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommandRejected
     { Code = e.Code, Message = e.Message, Email = c.Email });
 
-//app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseJwtAuthentication();
+// app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 

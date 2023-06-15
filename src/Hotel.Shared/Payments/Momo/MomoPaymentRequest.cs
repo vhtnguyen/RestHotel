@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Net;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Json;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
 
 namespace Hotel.Shared.Payments.Momo;
 
@@ -14,10 +12,12 @@ internal class MomoPaymentRequest : IMomoPaymentRequest
     {
         _client = client;
     }
-    public async Task<JObject> SendPaymentRequest(string endpoint, JObject data)
+    public async Task<Dictionary<string, string>> SendPaymentRequest(string endpoint, MomoPayload data)
     {
-        using var response = await _client.PostAsJsonAsync<JObject>(endpoint, data);
-        var result = await response.Content.ReadFromJsonAsync<JObject>();
-        return result!;
+        var response = await _client.PostAsJsonAsync(endpoint, data);
+        var result = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(result);
+
+        return JsonConvert.DeserializeObject<Dictionary<string, string>>(result)!;
     }
 }

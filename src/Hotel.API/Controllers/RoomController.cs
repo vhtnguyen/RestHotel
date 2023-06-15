@@ -2,11 +2,7 @@
 
 namespace Hotel.API.Controllers
 {
-    public class RoomController : Controller
+    public class RoomController : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
     }
 }

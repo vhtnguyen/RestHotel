@@ -1,6 +1,7 @@
-﻿namespace Hotel.Shared.Payments.Momo;
+﻿namespace Hotel.Shared.Payments;
 
 public record CreateSessionResource(
-    string OrderId, 
+    string OrderId,
     string RequestId,
+    string? Currency,
     List<CreateSessionItemResouce> Items);

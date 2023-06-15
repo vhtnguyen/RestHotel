@@ -8,7 +8,7 @@ namespace Hotel.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class StaffController : Controller
+public class StaffController : ControllerBase
 {
     private readonly IUserService _userService;
 

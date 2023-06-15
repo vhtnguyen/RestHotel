@@ -17,13 +17,13 @@ public class EntityConfiguration
     IEntityTypeConfiguration<InvoiceHotelService>,
     IEntityTypeConfiguration<ServiceCategory>,
     IEntityTypeConfiguration<RoomDetail>
-   
+
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-        builder.HasMany(r => r.Roles).WithMany(u=>u.Users);
+        builder.HasMany(r => r.Roles).WithMany(u => u.Users);
     }
 
     public void Configure(EntityTypeBuilder<Invoice> builder)
@@ -48,7 +48,7 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasMany(b => b.Users).WithMany(r=>r.Roles);
+        builder.HasMany(b => b.Users).WithMany(r => r.Roles);
     }
 
     public void Configure(EntityTypeBuilder<Room> builder)

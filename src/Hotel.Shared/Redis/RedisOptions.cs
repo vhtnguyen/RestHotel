@@ -4,5 +4,5 @@ public class RedisOptions
 {
     public string ConnectionString { get; set; } = null!;
     public int RetryPolicy { get; set; }
-    public bool MultiWorkerEnable { get; set; }
+    public int ExpirationAt { get; set; }
 }

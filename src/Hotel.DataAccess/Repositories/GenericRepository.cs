@@ -59,7 +59,10 @@ internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TE
         return entity;
     }
 
-
+    public async Task<TEntity?> FindAsyncById(int id)
+    {
+        return await _collection.FindAsync(id); 
+    }
     public async Task<TEntity?> FindAsync(Guid id)
     {
         var entity = await _collection.FindAsync(id);

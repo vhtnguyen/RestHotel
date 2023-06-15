@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Globalization;
+using Microsoft.Extensions.Options;
 using PayPal.Api;
 
 namespace Hotel.Shared.Payments.PayPal;
@@ -15,7 +16,7 @@ internal class PayPalClient : IPayPalClient
         _context = context;
         _options = options.Value;
     }
-    public async Task<SessionResource> CreateSession(CreateSessionResouce resource)
+    public async Task<SessionResource> CreateSession(CreateSessionResource resource)
     {
         // get api context
         var apiContext = await _context.GetApiContext();
@@ -30,22 +31,29 @@ internal class PayPalClient : IPayPalClient
             {
                 quantity = i.Quantity.ToString(),
                 name = i.Name,
-                price = i.Price.ToString()
-            }).ToList()            
+                price = i.Price.ToString(),
+                currency = resource.Currency
+            }).ToList()
         };
 
+        var total = resource.Items.Sum(i => i.Quantity * i.Price);
+        var details = new Details()
+        {
+            subtotal = total.ToString()
+        };
         // create amount
         var amount = new Amount()
         {
             currency = resource.Currency,
-            total = resource.Items.Sum(i => i.Quantity * i.Price).ToString()
+            total = total.ToString("F"),
+            details = details
         };
 
         // create redirect url
         var redirectUrl = new RedirectUrls
         {
-            cancel_url = _options.CancelUrl,
-            return_url = _options.SuccessUrl + $":requestId={resource.RequestId}"
+            cancel_url = _options.ReturnUrl + $"/paypal?error=1&requestId={resource.RequestId}",
+            return_url = _options.ReturnUrl + $"/paypal?error=0&requestId={resource.RequestId}"
         };
 
         // create transaction
@@ -69,19 +77,19 @@ internal class PayPalClient : IPayPalClient
         };
 
         // send post request to paypal
-        var createPayment = payment.Create(apiContext);
+        var createPayment = await Task.Run(() => payment.Create(apiContext));
 
         // get link with approve url
         var links = createPayment.links.GetEnumerator();
 
-        while(links.MoveNext())
+        while (links.MoveNext())
         {
             var link = links.Current;
             if (link.rel.ToLower().Trim().Equals("approval_url"))
             {
-                return new SessionResource(link.href);
-            }    
+                return new SessionResource(link.href, createPayment.id);
+            }
         }
-        return new SessionResource("");
+        return new SessionResource("", createPayment.id);
     }
 }

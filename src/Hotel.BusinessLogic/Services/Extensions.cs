@@ -10,7 +10,6 @@ namespace Hotel.BusinessLogic.Services
         {
             // add normally\
             services.AddScoped<IInvoiceService, InvoiceService>();
-            services.AddScoped<IRoomRegulationService, RoomRegulationService>();
             return services;
         }
     }
