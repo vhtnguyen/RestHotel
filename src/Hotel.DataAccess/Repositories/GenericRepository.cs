@@ -48,9 +48,9 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         await _context.SaveChangesAsync();
     }
 
-    public Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        var entity = _collection.SingleOrDefaultAsync(predicate);
+        var entity =await  _collection.SingleOrDefaultAsync(predicate);
         return entity;
     }
 
@@ -60,7 +60,10 @@ internal class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
         return entity;
     }
 
-
+    public async Task<TEntity?> FindAsyncById(int id)
+    {
+        return await _collection.FindAsync(id); 
+    }
     public async Task<TEntity?> FindAsync(Guid id)
     {
         var entity = await _collection.FindAsync(id);

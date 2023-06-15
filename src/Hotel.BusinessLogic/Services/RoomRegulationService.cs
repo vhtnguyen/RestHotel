@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
 using Hotel.BusinessLogic.DTO.RoomRegulation;

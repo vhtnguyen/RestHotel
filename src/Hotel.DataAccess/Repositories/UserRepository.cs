@@ -27,7 +27,7 @@ internal class UserRepository : IUserRepository
     public async Task<IEnumerable<User>?> GetListAsync()
     {
         var result = await _context.Users
-           .Include(u => u.Roles)
+           .Include(u => u.Role)
            .ToListAsync();
         return result;
     }
@@ -59,6 +59,7 @@ internal class UserRepository : IUserRepository
         }
         else
         {
+            throw new NotImplementedException();
 
         }
         
