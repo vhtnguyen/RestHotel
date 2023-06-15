@@ -21,26 +21,28 @@ namespace Hotel.DataAccess.Repositories
             return _genericRepository.BrowserAsync();
         }
 
-        public Task CreateAsync(RoomRegulation entity)
+        public async Task  CreateAsync(RoomRegulation entity)
         {
-              return _genericRepository.CreateAsync(entity);
+            await _genericRepository.CreateAsync(entity);
+            await _genericRepository.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id, RoomRegulation entity)
         {
 
             await _genericRepository.DeleteAsync(entity);
+            await _genericRepository.SaveChangesAsync();
 
         }
 
-        public Task<RoomRegulation?> FindAsync(Expression<Func<RoomRegulation, bool>> predicate)
+        public async Task<RoomRegulation?> FindAsync(Expression<Func<RoomRegulation, bool>> predicate)
         {
-            return _genericRepository.FindAsync(predicate);
+            return await _genericRepository.FindAsync(predicate);
         }
 
-        public Task<RoomRegulation?> FindAsync(int id)
+        public async Task<RoomRegulation?> FindAsync(Guid id)
         {
-            return _genericRepository.FindAsync(id);
+            return await _genericRepository.FindAsync(id);
         }
 
         public Task UpdateAsync(RoomRegulation entity)

@@ -13,9 +13,9 @@ namespace Hotel.BusinessLogic.DTO.HotelReservation
         public string? Email { get; set; }
         public float TotalSum { get; set; }
         public float DownPayment { get; set;}
-        public string? CusName { get; set; }
-        public string? ArrivalDateStr { get; set; }
-        public string? DepartureDateStr { get; set; }
+        public string? NameCus { get; set; }
+        public string? ArrivalDate { get; set; }
+        public string? DepartureDate { get; set; }
         public DateTime Date {get; set;}
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Hotel.DataAccess.Repositories.IRepositories
 {
@@ -25,6 +26,17 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         Task<Object> CommitTranasction(Object transaction);
 
         Task<List<ReservationCard>> GetListReservationCardsByTime(DateTime from, DateTime to);
-        Task<Invoice?> GetInvoiceByID(int id);
+        
+        Task UpdateAsync(ReservationCard card);
+
+        Task RemoveAsync(ReservationCard card);
+
+        Task<ReservationCard?> FindAsync(Expression<Func<ReservationCard, bool>> predicate);
+    
+        Task<List<ReservationCard>> FindAsyncByInvoiceID(int id);
+
+        Task<ReservationCard?> GetReservationCardByID(int id);
+
+        Task RemoveReservationCardByID(ReservationCard card);
     }
 }

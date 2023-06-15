@@ -17,6 +17,7 @@ namespace Hotel.BusinessLogic.DTO.HotelReservation
         public string? DepartureDate { get; set; }
         public string? Status { get; set; }
         public string? Notes { get; set; }
+        public ICollection<GuestDTO> Guests { get; set; } = new List<GuestDTO>();
 
         // public ReservationCardReturnDTO(int id, int invoiceID, string? guestName, 
         //     int roomId, int guestsNumber, DateTime from, DateTime to, 

@@ -40,7 +40,7 @@ public class ReservationCard
 
     public void AddGuest(Guest guest)
     {
-        //TODO: implement method
+        Guests.Add(guest);
     }
 
     public void RemoveGuest(Guest guest)
