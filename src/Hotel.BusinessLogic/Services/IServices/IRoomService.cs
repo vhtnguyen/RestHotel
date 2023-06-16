@@ -15,6 +15,6 @@ namespace Hotel.BusinessLogic.Services
         Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO);
         Task<RoomToReturnDetailDTO> GetRoomByIDAsync(int id);
         Task RemoveRoomByIDAsync(int id);
-        
+        Task<List<RoomFreeToReturnDTO>?> FindFreeByDateAsync(RoomToFindFreeDTO roomToFindFreelDTO);
     }
 }

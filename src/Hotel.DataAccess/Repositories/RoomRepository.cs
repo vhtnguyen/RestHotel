@@ -66,5 +66,13 @@ internal class RoomRepository : IRoomRepository
     {
         throw new NotImplementedException();
     }
+    public async Task<IEnumerable<Room>?> FindFreeByDateAsync(Expression<Func<Room, bool>> predicate)
+    {
+        return await _context.Room
+                    .Include(r=>r.RoomDetail)
+                    .ThenInclude(rD=>rD.RoomRegulation)
+                    .Where(predicate)
+                    .ToListAsync();
+    }
 }
 

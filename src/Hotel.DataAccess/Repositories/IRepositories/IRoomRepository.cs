@@ -14,5 +14,5 @@ public interface IRoomRepository
     Task UpdateAsync(Room entity);
     Task RemoveByIDAsync(int id);
     Task SaveChangesAsync();
-   
+    Task<IEnumerable<Room>?> FindFreeByDateAsync(Expression<Func<Room, bool>> predicate);
 }

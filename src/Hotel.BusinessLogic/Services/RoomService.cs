@@ -2,6 +2,7 @@
 using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories;
+using Hotel.DataAccess.Repositories.IRepositories;
 using org.apache.zookeeper.data;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,15 @@ namespace Hotel.BusinessLogic.Services
     {
         private readonly IMapper _mapper;
         private readonly IRoomRepository _roomRepository;
+        private readonly IReservationRepository _reservationRepository;
         //private readonly IRoomDetail _roleRepository;
 
-        public RoomService(IRoomRepository roomRepository, IMapper mapper)
+        public RoomService(IRoomRepository roomRepository, 
+                            IMapper mapper, IReservationRepository reservationRepository)
         {
             _mapper = mapper;
             _roomRepository = roomRepository;
+            _reservationRepository = reservationRepository;
         }
 
         public async Task<List<RoomToReturnListDTO>> GetRoomListAsync()
@@ -66,6 +70,23 @@ namespace Hotel.BusinessLogic.Services
         public async Task RemoveRoomByIDAsync(int id)
         {
              await _roomRepository.RemoveByIDAsync(id);
+        }
+        public async Task<List<RoomFreeToReturnDTO>?> FindFreeByDateAsync(RoomToFindFreeDTO roomToFindFreeDTO)
+        {
+            List<ReservationCard> CardsListByTime = await _reservationRepository
+                .GetListReservationCardsByTime(roomToFindFreeDTO.From, roomToFindFreeDTO.To);
+
+            List<int> idBookedRoomsList = new List<int>();
+            
+            foreach (ReservationCard card in CardsListByTime)
+            {
+                idBookedRoomsList.Add(card.Room.Id);
+            }
+
+            IEnumerable<Room>? freeRoomsList = await _roomRepository
+                            .FindFreeByDateAsync(r => !idBookedRoomsList.Contains(r.Id) && r.RoomDetail.RoomType == roomToFindFreeDTO.Type);
+
+            return _mapper.Map<List<RoomFreeToReturnDTO>>(freeRoomsList);
         }
     }
 }

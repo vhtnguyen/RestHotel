@@ -1,4 +1,5 @@
 using Hotel.BusinessLogic.DTO.HotelReservation;
+using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.BusinessLogic.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,12 +10,16 @@ namespace Hotel.API.Controllers;
 public class ReservationController : Controller
 {
     private readonly IReservationService _reservationService;
+    private readonly IRoomService _roomService;
     private readonly IReservationCancellationService _reservationCancellationService;
 
-    public ReservationController(IReservationService reservationService, IReservationCancellationService reservationCancellationService)
+    public ReservationController(IReservationService reservationService, 
+            IReservationCancellationService reservationCancellationService,
+            IRoomService roomService)
     {
         _reservationService = reservationService;
         _reservationCancellationService = reservationCancellationService;
+        _roomService = roomService;
     }
 
     [HttpGet("page")]
@@ -36,6 +41,10 @@ public class ReservationController : Controller
 
         try
         {
+            if (Invoice == null)
+            {
+                return BadRequest("Some room has been booked before!");
+            }
             return Ok(Invoice);
         }
         finally
@@ -61,6 +70,10 @@ public class ReservationController : Controller
             return BadRequest("Wrong input date format");
         }
         InvoiceReturnDTO Invoice = await _reservationService.ConfirmReservation(reservation);
+        if (Invoice == null)
+        {
+            return BadRequest("Reservation doesn't exist");
+        }
         return Ok(Invoice);
     }
 
@@ -135,5 +148,18 @@ public class ReservationController : Controller
         }
 
         return Ok("Delete successful");
+    }
+
+    [HttpGet("free-rooms-list")]
+    public async Task<ActionResult> GetFreeRoomList(RoomToFindFreeDTO roomToFindFreeDTO)
+    {
+        if (!roomToFindFreeDTO.ParseDate())
+        {
+            return BadRequest("Wrong input date format");
+        }
+
+        List<RoomFreeToReturnDTO>? rooms = await _roomService.FindFreeByDateAsync(roomToFindFreeDTO);
+
+        return Ok(rooms);
     }
 }

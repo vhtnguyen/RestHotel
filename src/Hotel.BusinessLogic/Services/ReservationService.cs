@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hotel.BusinessLogic.DTO.Invoices;
+using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.DataAccess.Entities;
@@ -21,13 +22,15 @@ namespace Hotel.BusinessLogic.Services
         private readonly IMapper _mapper;
         IReservationRepository _reservationRepository;
         IInvoiceRepository _invoiceRepository;
+        IRoomRepository _roomRepository;
         
-        public ReservationService(IMapper mapper, 
+        public ReservationService(IMapper mapper, IRoomRepository roomRepository, 
             IReservationRepository reservationRepository, IInvoiceRepository invoiceRepository)
         {
             _mapper = mapper;
             _reservationRepository = reservationRepository;
             _invoiceRepository = invoiceRepository;
+            _roomRepository = roomRepository;
         }
         
         public async Task<List<ReservationCardReturnDTO>> GetAll(int page, int entries)
