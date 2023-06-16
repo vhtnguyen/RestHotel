@@ -106,6 +106,16 @@ services:
     networks:
       - resthotel
 
+  influx:
+    # container_name: influx
+    image: influxdb:latest
+    ports:
+      - "8086"
+    volumes:
+      - fluent:/var/lib/influxdb2
+    networks:
+      - resthotel
+
   seq:
     # container_name: seq
     image: datalust/seq
@@ -155,6 +165,7 @@ volumes:
   redis_stored: {}
   mssqlsystem: {}
   mssqluser: {}
+  influx: {}
 
 networks:
   resthotel:
