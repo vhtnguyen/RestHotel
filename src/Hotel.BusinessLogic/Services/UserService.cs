@@ -1,31 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hotel.BusinessLogic.DTO.Users;
+﻿using Hotel.BusinessLogic.DTO.Users;
 using AutoMapper;
 using Hotel.DataAccess.Entities;
-using Hotel.BusinessLogic.Profiles;
-using Hotel.DataAccess.Repositories;
 using System.Linq.Expressions;
-using StackExchange.Redis;
 using Hotel.Shared.Exceptions;
-
+using Hotel.BusinessLogic.Services.IServices;
+using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.Shared.Authentication;
 
 namespace Hotel.BusinessLogic.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IStringHasher _stringHasher;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository)
+        public UserService(
+            ITokenGenerator tokenGenerator,
+            IUserRepository userRepository,
+            IMapper mapper,
+            IRoleRepository roleRepository,
+            IStringHasher stringHasher)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _roleRepository = roleRepository;
+            _stringHasher = stringHasher;
+            _tokenGenerator = tokenGenerator;
         }
         public async Task<List<UserToReturnDTO>> GetUserListAsync()
         {
@@ -46,32 +49,33 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task<UserToReturnDTO> CreateUserAsync(UserToCreateDTO userToCreateDTO)
         {
-            var new_user = _mapper.Map<User>(userToCreateDTO);
+            var user = await _userRepository.FindAsync(u => u.Account == userToCreateDTO.Account);
+            if (user != null)
+            {
+                throw new DomainBadRequestException("", "");
+            }
             var new_role = await _roleRepository.FindAsync(r => r.Id == userToCreateDTO.Role);
 
             if (new_role == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("", "");
             }
-            else
-            {
-                new_user.Role = new_role;
+            var new_user = _mapper.Map<User>(userToCreateDTO);
+            // change password
+            new_user.Password = _stringHasher.Hash(new_user.Password!);
 
-                // hashing password
-                var encryptPassword = new_user.Password;
-
-                // change password
-                new_user.Password = encryptPassword;
-
-                // create new user
-                var new_user_with_role = await _userRepository.CreateAsync(new_user);
-                return _mapper.Map<UserToReturnDTO>(new_user);
-            }
-
+            // add role
+            new_user.Role = new_role;
+            // create new user
+            var new_user_with_role = await _userRepository.CreateAsync(new_user);
+            return _mapper.Map<UserToReturnDTO>(new_user);
         }
         public async Task RemoveUserAsync(int userId)
         {
-             await _userRepository.DeleteByIDAsync(userId);
+            // finduser
+            // if(user)
+            // delete user
+            await _userRepository.DeleteByIDAsync(userId);
         }
         public async Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent)
         {
@@ -105,7 +109,7 @@ namespace Hotel.BusinessLogic.Services
 
             }
 
-            return  _mapper.Map<IEnumerable<UserToReturnDTO>>(result);
+            return _mapper.Map<IEnumerable<UserToReturnDTO>>(result);
 
         }
 
@@ -113,7 +117,7 @@ namespace Hotel.BusinessLogic.Services
         {
             // this function is only used by admin -> no need to check current password
 
-            var user = await _userRepository.FindAsync(u=>u.Id== userID);
+            var user = await _userRepository.FindAsync(u => u.Id == userID);
             if (user == null)
             {
                 throw new NotImplementedException();
@@ -126,10 +130,10 @@ namespace Hotel.BusinessLogic.Services
                 // change password
                 user.Password = encryptPassword;
                 await _userRepository.UpdateAsync(user);
-               
+
             }
         }
-        public async Task ChangeUserPassWordAsync(int userID,string currentPassWord, string newPassWord)
+        public async Task ChangeUserPassWordAsync(int userID, string currentPassWord, string newPassWord)
         {
             var user = await _userRepository.FindAsync(u => u.Id == userID);
             if (user == null)
@@ -155,6 +159,31 @@ namespace Hotel.BusinessLogic.Services
             }
         }
 
-       
+        public async Task<(string, UserToReturnDTO)> Login(UserCreateDto userLoginDto)
+        {
+            var user = await _userRepository.FindAsync(u => u.Account == userLoginDto.Username);
+            if (user == null)
+            {
+                throw new DomainBadRequestException("", "");
+            }
+
+            var isMatch = _stringHasher.Verify(user.Password!, userLoginDto.Password);
+            if (isMatch == false)
+            {
+                throw new DomainBadRequestException("", "");
+            }
+
+            var roles = new List<string>();
+            roles.Add(user.Role!.NameType!);
+            var tokenPayload = new TokenPayload
+            {
+                Id = user.Id,
+                Username = user.Account!,
+                Roles = roles
+            };
+            var token = await _tokenGenerator.GenerateToken(tokenPayload);
+
+            return (token, _mapper.Map<UserToReturnDTO>(user));
+        }
     }
 }

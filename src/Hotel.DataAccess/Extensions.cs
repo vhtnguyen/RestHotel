@@ -18,11 +18,6 @@ public static class Extensions
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
-        // scan repositories which extend Generic Repository
-        //services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        //// execute extension method addSql
-        //services.AddScoped<IUserRepository, UserRepository>();
-        //services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddSql();
         return services;
     }

@@ -1,13 +1,14 @@
 using Hotel.BusinessLogic.DTO.HotelReservation;
 using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.BusinessLogic.Services;
+using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.API.Controllers;
 
 [ApiController]
-[Route("reservation-cards")]
-public class ReservationController : Controller
+[Route("api/[controller]")]
+public class ReservationController : ControllerBase
 {
     private readonly IReservationService _reservationService;
     private readonly IRoomService _roomService;
@@ -56,11 +57,11 @@ public class ReservationController : Controller
             //         await _reservationCancellationService.CheckConfirmedReservation(Invoice.InvoiceId);
             //     }
             // });
-            
+
         }
     }
 
-    
+
     [HttpPost("confirm")]
     public async Task<ActionResult> ConfirmReservation(ReservationConfirmedDTO reservation)
     {

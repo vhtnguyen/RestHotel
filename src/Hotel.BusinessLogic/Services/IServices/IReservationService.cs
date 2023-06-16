@@ -1,12 +1,5 @@
 ﻿using Hotel.BusinessLogic.DTO.HotelReservation;
-using Hotel.BusinessLogic.DTO.Invoices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hotel.BusinessLogic.Services
+namespace Hotel.BusinessLogic.Services.IServices
 {
     public interface IReservationService
     {

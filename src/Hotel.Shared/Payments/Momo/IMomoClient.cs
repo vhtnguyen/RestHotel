@@ -1,6 +1,5 @@
 ﻿namespace Hotel.Shared.Payments.Momo;
 
-public interface IMomoClient
+public interface IMomoClient : IPayment
 {
-    Task<SessionResource> CreateSession(CreateSessionResource resouce);
 }

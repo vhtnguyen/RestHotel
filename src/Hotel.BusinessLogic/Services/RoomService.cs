@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.Services
 {
-    public class RoomService:IRoomService
+    public class RoomService : IRoomService
     {
         private readonly IMapper _mapper;
         private readonly IRoomRepository _roomRepository;
         private readonly IReservationRepository _reservationRepository;
         //private readonly IRoomDetail _roleRepository;
 
-        public RoomService(IRoomRepository roomRepository, 
+        public RoomService(IRoomRepository roomRepository,
                             IMapper mapper, IReservationRepository reservationRepository)
         {
             _mapper = mapper;
@@ -29,12 +29,12 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<List<RoomToReturnListDTO>> GetRoomListAsync()
         {
-            var result= await _roomRepository.GetListAsync();
-            return _mapper.Map< List< RoomToReturnListDTO >>(result);
+            var result = await _roomRepository.GetListAsync();
+            return _mapper.Map<List<RoomToReturnListDTO>>(result);
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {
-            if(await _roomRepository.FindAsync(roomToCreateDTO.Id) != null)
+            if (await _roomRepository.FindAsync(roomToCreateDTO.Id) != null)
             {
                 // room id is existed
                 throw new NotImplementedException();
@@ -45,11 +45,11 @@ namespace Hotel.BusinessLogic.Services
             // right code:  RoomDetail detail=_roomDetailRepository.FindAsync(roomToCreateDTO.RoomDetailID);
 
             RoomDetail detail = new RoomDetail(
-              0, 999, "Double", "A haunted room", null
+              0, 10000, "Double", "A haunted room", null
             );
-            detail.RoomRegulation = new RoomRegulation(0,5,4,90,10,10);
+            detail.RoomRegulation = new RoomRegulation(0, 5, 4, 90, 10, 10);
 
-            if (detail !=null)
+            if (detail != null)
             {
                 new_room.RoomDetail = detail;
                 await _roomRepository.CreateAsync(new_room);
@@ -69,7 +69,7 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task RemoveRoomByIDAsync(int id)
         {
-             await _roomRepository.RemoveByIDAsync(id);
+            await _roomRepository.RemoveByIDAsync(id);
         }
         public async Task<List<RoomFreeToReturnDTO>?> FindFreeByDateAsync(RoomToFindFreeDTO roomToFindFreeDTO)
         {
@@ -77,7 +77,7 @@ namespace Hotel.BusinessLogic.Services
                 .GetListReservationCardsByTime(roomToFindFreeDTO.From, roomToFindFreeDTO.To);
 
             List<int> idBookedRoomsList = new List<int>();
-            
+
             foreach (ReservationCard card in CardsListByTime)
             {
                 idBookedRoomsList.Add(card.Room.Id);

@@ -4,5 +4,5 @@ namespace Hotel.Shared.Payments.Momo;
 
 public interface IMomoPaymentRequest
 {
-    Task<JObject> SendPaymentRequest(string endpoint, JObject data);
+    Task<Dictionary<string, string>> SendPaymentRequest(string endpoint, MomoPayload data);
 }

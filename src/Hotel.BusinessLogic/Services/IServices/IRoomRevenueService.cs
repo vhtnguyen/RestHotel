@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Hotel.BusinessLogic.DTO.RoomRevenue;
+using Hotel.DataAccess.ObjectValues;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,7 @@ namespace Hotel.BusinessLogic.Services.IServices
 {
     public interface IRoomRevenueService
     {
+
+        public Task<IEnumerable<RoomRevenueToReturnDTO>> getAll();
     }
 }

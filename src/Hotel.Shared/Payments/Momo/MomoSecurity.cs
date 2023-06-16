@@ -117,7 +117,6 @@ internal class MoMoSecurity : IMomoSecurity
             string hex = BitConverter.ToString(hashmessage);
             hex = hex.Replace("-", "").ToLower();
             return hex;
-
         }
     }
 }

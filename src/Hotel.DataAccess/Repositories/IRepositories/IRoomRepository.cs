@@ -1,8 +1,8 @@
-﻿using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
-namespace Hotel.DataAccess.Repositories;
+namespace Hotel.DataAccess.Repositories.IRepositories;
 
 public interface IRoomRepository
 {

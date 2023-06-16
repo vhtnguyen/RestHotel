@@ -1,6 +1,5 @@
 ﻿namespace Hotel.Shared.Payments.Stripe.Link;
 
-public interface IStripeCheckoutClient
+public interface IStripeCheckoutClient : IPayment
 {
-    Task<SessionResource> CreateSession(CreateSessionResource resource);
 }

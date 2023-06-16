@@ -3,9 +3,7 @@ using Hotel.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using org.apache.zookeeper.data;
-using Hotel.DataAccess.Repositories;
-using System.Linq;
+using Hotel.DataAccess.Repositories.IRepositories;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -22,7 +20,9 @@ internal class UserRepository : IUserRepository
     }
 
     public async Task<User?> FindAsync(Expression<Func<User, bool>> predicate)
-        => await _genericRepository.FindAsync(predicate);
+        => await _context.Users
+            .Include(c => c.Role)
+            .FirstOrDefaultAsync(predicate);
 
     public async Task<IEnumerable<User>?> GetListAsync()
     {
@@ -33,12 +33,12 @@ internal class UserRepository : IUserRepository
     }
     public async Task<User?> FindAsync(int id)
     {
-        var user = await _context.Users.Where(u=>u.Id==id)
+        var user = await _context.Users.Where(u => u.Id == id)
            .Include(u => u.Role).FirstOrDefaultAsync();
 
         return user;
     }
-     
+
 
     //// some delegate method
 
@@ -46,7 +46,7 @@ internal class UserRepository : IUserRepository
     {
         throw new NotImplementedException();
     }
-  
+
     public async Task<User> CreateAsync(User entity)
         => await _genericRepository.CreateAsync(entity);
 
@@ -54,9 +54,9 @@ internal class UserRepository : IUserRepository
     => await _genericRepository.UpdateAsync(entity);
 
     public async Task DeleteByIDAsync(int userId)
-    { 
-        var user_to_remove= await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        if(user_to_remove == null)
+    {
+        var user_to_remove = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user_to_remove == null)
         {
             throw new NotImplementedException();
         }
@@ -66,14 +66,13 @@ internal class UserRepository : IUserRepository
             await _context.SaveChangesAsync();
 
         }
-        
     }
 
     public async Task<IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate)
     {
-        return await _context.Users.Include(u=>u.Role).Where(predicate).ToListAsync();
+        return await _context.Users.Include(u => u.Role).Where(predicate).ToListAsync();
     }
-        
+
     public Task SaveChangesAsync()
     {
         throw new NotImplementedException();
@@ -84,4 +83,3 @@ internal class UserRepository : IUserRepository
     }
 }
 
-   

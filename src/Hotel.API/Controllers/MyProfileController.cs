@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Entities;
 using Microsoft.IdentityModel.Tokens;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.API.Controllers;
 
@@ -27,7 +28,7 @@ public class MyProfileController : Controller
         return Ok(result);
     }
     [HttpPut("")]
-    public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody]string currentPassWord, string newPassWord)
+    public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody] string currentPassWord, string newPassWord)
     {
         await _userService.ChangeUserPassWordAsync(id, currentPassWord, newPassWord);
         return Ok("ok");

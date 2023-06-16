@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Hotel.DataAccess.Entities;
 using Hotel.BusinessLogic.DTO.HotelReservation;
 using Hotel.DataAccess.ObjectValues;
@@ -23,7 +18,7 @@ namespace Hotel.BusinessLogic.Profiles
 
             CreateMap<ReservationCreateDTO, Invoice>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ConstructUsing(src => new Invoice(0, src.Date, null, src.TotalSum, 
+            .ConstructUsing(src => new Invoice(0, src.Date, null, src.TotalSum,
                 src.DownPayment, src.Email, src.NameCus));
 
             CreateMap<Invoice, InvoiceReturnDTO>();

@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using Hotel.BusinessLogic.DTO.RoomDetail;
-using Hotel.BusinessLogic.DTO.RoomRegulation;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.Entities;
-using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Repositories.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -27,7 +20,6 @@ namespace Hotel.BusinessLogic.Services
         public async Task AddRoomDetail(RoomDetailToCreateDTO roomRegulation)
         {
             var room = _mapper.Map<RoomDetail>(roomRegulation);
-
             await _roomDetailRepository.CreateAsync(room);
         }
 
@@ -58,14 +50,16 @@ namespace Hotel.BusinessLogic.Services
             var entity = await _roomDetailRepository.FindAsync(x => x.Id == id);
             if (entity != null)
             {
-                await _roomDetailRepository.DeleteAsync( entity);
+                await _roomDetailRepository.DeleteAsync(entity);
 
             }
             else
             {
                 //throw exception here
+                //throw exception here
+                throw new Exception("bad request");
             }
-        
+
         }
 
         public Task UpdateRoomDetail(RoomDetail regulation)

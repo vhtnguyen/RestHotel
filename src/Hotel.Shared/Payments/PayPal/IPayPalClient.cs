@@ -1,6 +1,5 @@
 ﻿namespace Hotel.Shared.Payments.PayPal;
 
-public interface IPayPalClient
+public interface IPayPalClient : IPayment
 {
-    Task<SessionResource> CreateSession(CreateSessionResouce resource);
 }

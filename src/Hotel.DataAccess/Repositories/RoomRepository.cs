@@ -1,12 +1,8 @@
-﻿using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using org.apache.zookeeper.data;
-using Hotel.DataAccess.Repositories;
-using System.Linq;
-using System;
+using Hotel.DataAccess.Repositories.IRepositories;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -32,7 +28,7 @@ internal class RoomRepository : IRoomRepository
 
     public async Task<IEnumerable<Room>?> FindAllAsync(Expression<Func<Room, bool>> predicate)
     {
-        return await _context.Room.Include(r=>r.RoomDetail).Where(predicate).ToListAsync();
+        return await _context.Room.Include(r => r.RoomDetail).Where(predicate).ToListAsync();
     }
     public async Task<Room?> FindAsync(int id)
     {
@@ -44,14 +40,14 @@ internal class RoomRepository : IRoomRepository
         throw new NotImplementedException();
     }
     public async Task<Room> CreateAsync(Room entity)
-    => await _genericRepository.CreateAsync(entity);
+        => await _genericRepository.CreateAsync(entity);
     public async Task UpdateAsync(Room entity)
     {
         throw new NotImplementedException();
     }
     public async Task RemoveByIDAsync(int id)
     {
-        var room_to_remove = await _context.Room.FirstOrDefaultAsync(r=>r.Id==id);
+        var room_to_remove = await _context.Room.FirstOrDefaultAsync(r => r.Id == id);
         if (room_to_remove == null)
         {
             throw new NotImplementedException();
@@ -69,8 +65,8 @@ internal class RoomRepository : IRoomRepository
     public async Task<IEnumerable<Room>?> FindFreeByDateAsync(Expression<Func<Room, bool>> predicate)
     {
         return await _context.Room
-                    .Include(r=>r.RoomDetail)
-                    .ThenInclude(rD=>rD.RoomRegulation)
+                    .Include(r => r.RoomDetail)
+                    .ThenInclude(rD => rD.RoomRegulation)
                     .Where(predicate)
                     .ToListAsync();
     }
