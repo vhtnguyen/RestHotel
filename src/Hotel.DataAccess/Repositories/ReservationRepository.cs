@@ -133,5 +133,12 @@ namespace Hotel.DataAccess.Repositories
         {
             await _genericCardRepository.DeleteAsync(card);
         }
+
+        public async Task<int> GetTotalPages(int page, int entries)
+        {
+            int TotalCount = await _context.ReservationCard.CountAsync();
+            int TotalPages = (int)Math.Ceiling((double)TotalCount / entries);
+            return TotalPages;
+        }
     }
 }

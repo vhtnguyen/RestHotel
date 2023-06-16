@@ -162,4 +162,11 @@ public class ReservationController : Controller
 
         return Ok(rooms);
     }
+
+    [HttpGet("total-page")]
+    public async Task<ActionResult> GetTotalPage(int page, int entries)
+    {
+        Console.WriteLine(page);
+        return Ok(await _reservationService.GetTotalPage(page, entries));
+    }
 }

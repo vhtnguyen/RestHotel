@@ -20,5 +20,6 @@ namespace Hotel.BusinessLogic.Services
         Task<List<ReservationCardReturnDTO>?> ChangeRoom(ChangeRoomDTO changeRoomDTO);
         Task<ReservationCardReturnDTO?> EditReservationCard(ReservationCardEditDTO reservationCardEditDTO);
         Task<ReservationCardReturnDTO?> RemoveReservationCard(IdDTO idDTO);
+        Task<int> GetTotalPage(int page, int entries);
     }
 }

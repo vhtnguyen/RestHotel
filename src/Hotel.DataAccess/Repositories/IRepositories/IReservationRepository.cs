@@ -38,5 +38,7 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         Task<ReservationCard?> GetReservationCardByID(int id);
 
         Task RemoveReservationCardByID(ReservationCard card);
+
+        Task<int> GetTotalPages(int page, int entries);
     }
 }

@@ -231,5 +231,10 @@ namespace Hotel.BusinessLogic.Services
             var result = _mapper.Map<ReservationCardReturnDTO>(card);
             return result;
         }
+
+        public async Task<int> GetTotalPage(int page, int entries)
+        {
+            return await _reservationRepository.GetTotalPages(page, entries);
+        }
     }
 }
