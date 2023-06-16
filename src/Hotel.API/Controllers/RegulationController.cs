@@ -33,6 +33,7 @@ namespace Hotel.API.Controllers
         [HttpPost]
         public async Task Post(RoomRegulationToCreateDTO roomRegulation)
         {
+
             await _roomRegulationServices.AddRoomRegulation(roomRegulation);
         }
 

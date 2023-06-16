@@ -18,6 +18,8 @@ internal class AppDbContext : DbContext
     public DbSet<ReservationCard> ReservationCard { get; set; }
     public DbSet<Room> Room {get; set;}
     public DbSet<InvoiceHotelService> InvoiceHotelService {get; set;}
+
+    public DbSet<RoomDetail> roomDetails { get; set;}   
     // datasets
 
 	// configured

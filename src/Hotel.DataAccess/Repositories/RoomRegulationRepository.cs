@@ -23,6 +23,7 @@ namespace Hotel.DataAccess.Repositories
         {
             await _genericRepository.CreateAsync(entity);
             await _genericRepository.SaveChangesAsync();
+
         }
 
         public async Task DeleteAsync(int id, RoomRegulation entity)

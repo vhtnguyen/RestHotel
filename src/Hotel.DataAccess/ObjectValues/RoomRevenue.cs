@@ -10,13 +10,20 @@ namespace Hotel.DataAccess.ObjectValues
     {
 
 
-        public RoomRevenue(ICollection<Room> roomLists)
+        public RoomRevenue(int id, int freq, double price)
         {
-            //roomLists.Any(x=>x.)
+            this.id = id;
+            this.freq = freq;
+            caculateTotalSum(price);
         }
+        public void caculateTotalSum(double price)
+        {
+            this.totalSum = price * freq;
 
-        public int Id { get; set; }
-        public string RoomType { get; set; }
-        public double TotalRevenue { get; set; }
+        }
+          public int id { get; set; }
+         public int freq { get; set; }
+        public double totalSum { get; set; }
+
     }
 }

@@ -64,6 +64,8 @@ namespace Hotel.BusinessLogic.Services
             else
             {
                 //throw exception here
+                //throw exception here
+                throw new Exception("bad request");
             }
         
         }

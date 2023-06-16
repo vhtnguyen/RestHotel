@@ -8,6 +8,8 @@ using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
 using Hotel.BusinessLogic.DTO.RoomRegulation;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.CodeDom;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.BusinessLogic.Services.IServices;
 
@@ -28,12 +30,13 @@ namespace Hotel.BusinessLogic.Services
             var room = _mapper.Map<RoomRegulation>(roomRegulation);
 
             await _roomRegulationRepository.CreateAsync(room);
+
+
         }
 
         public async Task<IEnumerable<RoomRegulationToReturnDTO>> getAllRoomRegulation()
         {
             //Expression<Func<RoomRegulation, bool>> expression = x => true;
-
             var roomRegulationList = await _roomRegulationRepository.BrowserAsync();
             List<RoomRegulationToReturnDTO> result = new List<RoomRegulationToReturnDTO>();
             //await _roomRegulationRepository.FindAsync(expression);
@@ -66,8 +69,11 @@ namespace Hotel.BusinessLogic.Services
             else
             {
                 //throw exception here
+                throw new Exception("bad request");
             }
         }
+
+
 
         public Task UpdateRoomRegulation(RoomRegulation regulation)
         {
