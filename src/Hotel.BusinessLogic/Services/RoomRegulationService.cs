@@ -56,13 +56,13 @@ namespace Hotel.BusinessLogic.Services
         public async Task<RoomRegulationToReturnDTO> getRoomByID(int id)
         {
 
-            return _mapper.Map<RoomRegulationToReturnDTO>(await _userRepository.FindAsync(x => x.Id == id));
+            return _mapper.Map<RoomRegulationToReturnDTO>(await _roomRegulationRepository.FindAsync(x => x.Id == id));
         }
 
         public async Task RemoveRoomRegulation(int id)
         {
 
-            var entity = await _userRepository.FindAsync(x => x.Id == id);
+            var entity = await _roomRegulationRepository.FindAsync(x => x.Id == id);
             if (entity != null)
             {
                 await _roomRegulationRepository.DeleteAsync(id, entity);
