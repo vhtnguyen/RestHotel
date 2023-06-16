@@ -64,7 +64,8 @@ public class PaymentService : IPaymentService
 
         var sessionResource = new CreateSessionResource(
             invoiceId.ToString(),
-            invoiceId.ToString(), "USD", sessionItems);
+            invoiceId.ToString(), "USD",
+            invoice.TotalSum, sessionItems);
 
         var response = await paymentSession.CreateSession(sessionResource);
 
