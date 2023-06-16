@@ -3,6 +3,7 @@ using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.Shared.Exceptions;
 using org.apache.zookeeper.data;
 using System;
 using System.Collections.Generic;
@@ -34,12 +35,12 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {
-            if (await _roomRepository.FindAsync(roomToCreateDTO.Id) != null)
+            var room = await _roomRepository.FindAsync(roomToCreateDTO.Id);
+            if (room != null)
             {
-                // room id is existed
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("Create fail", "Room id is exist");
             }
-            Room new_room = new Room(roomToCreateDTO.Id, roomToCreateDTO.Status, roomToCreateDTO.Note);
+            var new_room = new Room(roomToCreateDTO.Id, roomToCreateDTO.Status, roomToCreateDTO.Note);
 
             // fake data for testing purpose
             // right code:  RoomDetail detail=_roomDetailRepository.FindAsync(roomToCreateDTO.RoomDetailID);
@@ -49,16 +50,13 @@ namespace Hotel.BusinessLogic.Services
             );
             detail.RoomRegulation = new RoomRegulation(0, 5, 4, 90, 10, 10);
 
-            if (detail != null)
+            if (detail == null)
             {
-                new_room.RoomDetail = detail;
-                await _roomRepository.CreateAsync(new_room);
-                return _mapper.Map<RoomToReturnDetailDTO>(new_room);
+                throw new DomainBadRequestException("Create fail", "Room detail id is invalid");
             }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            new_room.RoomDetail = detail;
+            await _roomRepository.CreateAsync(new_room);
+            return _mapper.Map<RoomToReturnDetailDTO>(new_room);
 
         }
 

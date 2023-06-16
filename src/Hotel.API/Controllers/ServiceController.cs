@@ -1,11 +1,13 @@
 ﻿
 using Hotel.BusinessLogic.DTO.HotelServices;
 using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Hotel.API.Controllers;
 
+[Authorize(Roles = "Manager,Staff")]
 [Route("api/[controller]")]
 [ApiController]
 public class ServiceController : ControllerBase

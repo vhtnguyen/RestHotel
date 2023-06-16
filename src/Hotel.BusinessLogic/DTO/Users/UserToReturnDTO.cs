@@ -8,11 +8,11 @@ namespace Hotel.BusinessLogic.DTO.Users
 {
     public class UserToReturnDTO
     {
-        public int Id { get; set; } 
-        public string? FullName { get; set; }
+        public required int Id { get; set; } 
+        public required string FullName { get; set; }
         public string? Email { get; set; }
         public string? TelephoneNumber { get; set; }
-        public string? Roles { get; set; }
+        public required string Roles { get; set; }
         public string? Avatar { get; set; }
 
     }

@@ -7,9 +7,11 @@ using Hotel.DataAccess.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Hotel.BusinessLogic.DTO.Users;
 using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.API.Controllers;
 
+[Authorize(Roles="Manager,Staff")]
 [Route("api/[controller]")]
 [ApiController]
 public class RoomController : ControllerBase

@@ -40,25 +40,40 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(userId);
             if (user == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("", "User not found.");
             }
             else
             {
                 return _mapper.Map<UserToReturnDTO>(user);
             }
         }
+
+        public async Task<UserToReturnDTO> GetUserByUsernameAsync(string username)
+        {
+            var user = await _userRepository.FindAsync(u=>u.Account== username);
+            if (user == null)
+            {
+                throw new DomainBadRequestException("", "User not found");
+
+            }
+            else
+            {
+                return _mapper.Map<UserToReturnDTO>(user);
+            }
+        }
+
         public async Task<UserToReturnDTO> CreateUserAsync(UserToCreateDTO userToCreateDTO)
         {
             var user = await _userRepository.FindAsync(u => u.Account == userToCreateDTO.Account);
             if (user != null)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("Create fail", "Username is exist");
             }
             var new_role = await _roleRepository.FindAsync(r => r.Id == userToCreateDTO.Role);
 
             if (new_role == null)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("Create fail", "Role not found");
             }
             var new_user = _mapper.Map<User>(userToCreateDTO);
             // change password
@@ -72,10 +87,13 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task RemoveUserAsync(int userId)
         {
-            // finduser
-            // if(user)
-            // delete user
+            var user = _userRepository.FindAsync(userId);
+            if (user == null)
+            {
+                throw new DomainBadRequestException("Remove fail", "User not found");
+            }
             await _userRepository.DeleteByIDAsync(userId);
+               
         }
         public async Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent)
         {
@@ -120,12 +138,12 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Id == userID);
             if (user == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("Change fail", "User not found");
             }
             else
             {
                 // hashing new password
-                var encryptPassword = newPassWord;
+                var encryptPassword = _stringHasher.Hash(newPassWord); ;
 
                 // change password
                 user.Password = encryptPassword;
@@ -138,19 +156,19 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Id == userID);
             if (user == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("Change fail", "User not found");
             }
             else
             {
                 // check password
-                var isMatch = true;
+                var isMatch = _stringHasher.Verify(user.Password!, currentPassWord);
                 if (!isMatch)
                 {
-                    throw new NotImplementedException();
+                    throw new DomainBadRequestException("Change fail", "Wrong password");
                 }
 
                 // hashing password
-                var encryptPassword = newPassWord;
+                var encryptPassword = _stringHasher.Hash(newPassWord);
 
                 // change password
                 user.Password = encryptPassword;
@@ -164,13 +182,13 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Account == userLoginDto.Username);
             if (user == null)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("Login fail", "Invalid user");
             }
 
             var isMatch = _stringHasher.Verify(user.Password!, userLoginDto.Password);
             if (isMatch == false)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("Login fail", "Invalid user");
             }
 
             var roles = new List<string>();
