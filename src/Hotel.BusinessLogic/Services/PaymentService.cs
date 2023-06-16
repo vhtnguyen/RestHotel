@@ -71,7 +71,7 @@ public class PaymentService : IPaymentService
         invoice.SetPayment(response.RequestId);
         await _invoiceRepository.SaveChangesAsync();
         // set ttl
-        var expireAt = DateTime.Now.AddSeconds(_options.ExpirationAt);
+        var expireAt = DateTime.Now.AddMinutes(_options.ExpirationAt);
         await _cacheService.SetAsync($"payment:{response.RequestId}", $"{invoiceId}", expireAt);
         return response;
     }
