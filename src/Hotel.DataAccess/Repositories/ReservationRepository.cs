@@ -86,11 +86,14 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<List<ReservationCard>> GetListReservationCardsByTime(DateTime from, DateTime to)
         {
+            if (from == to)
+            {
+                to = to + new TimeSpan(23, 59, 59);
+            }
             var result = await _context.ReservationCard
                                 .Include(card => card.Invoice)
                                 .Include(card => card.Room)
-                                .Where(card => ((card.ArrivalDate >= from && to >= card.DepartureDate) ||
-                                (card.ArrivalDate == card.DepartureDate && (card.ArrivalDate == from || card.ArrivalDate == to))))
+                                .Where(card => (card.ArrivalDate >= from && to >= card.DepartureDate))
                                 .ToListAsync();
             return result;
         }

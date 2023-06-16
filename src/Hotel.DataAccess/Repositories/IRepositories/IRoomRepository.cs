@@ -12,7 +12,7 @@ public interface IRoomRepository
     Task<Room?> FindAsync(int id);
     Task<Room> CreateAsync(Room entity);
     Task UpdateAsync(Room entity);
-    Task DeleteByIDAsync(int id);
+    Task RemoveByIDAsync(int id);
     Task SaveChangesAsync();
-
+    Task<IEnumerable<Room>?> FindFreeByDateAsync(Expression<Func<Room, bool>> predicate);
 }

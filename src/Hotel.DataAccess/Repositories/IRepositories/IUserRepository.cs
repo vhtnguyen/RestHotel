@@ -7,10 +7,10 @@ namespace Hotel.DataAccess.Repositories.IRepositories;
 public interface IUserRepository
 {
     Task<User?> FindAsync(Expression<Func<User, bool>> predicate);
+    Task<User?> FindAsync(int id);
     Task<IEnumerable<User>?> GetListAsync();
 
     Task<IEnumerable<User>> BrowserAsync();
-    Task<User?> FindAsync(Guid id);
     Task<User> CreateAsync(User entity);
     Task UpdateAsync(User entity);
     Task DeleteByIDAsync(int id);

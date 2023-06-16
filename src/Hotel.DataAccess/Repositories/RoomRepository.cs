@@ -1,6 +1,5 @@
 using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Hotel.DataAccess.Repositories.IRepositories;
@@ -26,15 +25,17 @@ internal class RoomRepository : IRoomRepository
            .ToListAsync();
         return result;
     }
-    public async Task<Room?> FindAsync(Expression<Func<Room, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
+
     public async Task<IEnumerable<Room>?> FindAllAsync(Expression<Func<Room, bool>> predicate)
     {
-        throw new NotImplementedException();
+        return await _context.Room.Include(r => r.RoomDetail).Where(predicate).ToListAsync();
     }
     public async Task<Room?> FindAsync(int id)
+    {
+        return await _context.Room
+           .Include(r => r.RoomDetail).Where(r => r.Id == id).FirstOrDefaultAsync();
+    }
+    public async Task<Room?> FindAsync(Expression<Func<Room, bool>> predicate)
     {
         throw new NotImplementedException();
     }
@@ -44,13 +45,30 @@ internal class RoomRepository : IRoomRepository
     {
         throw new NotImplementedException();
     }
-    public async Task DeleteByIDAsync(int id)
+    public async Task RemoveByIDAsync(int id)
     {
-        throw new NotImplementedException();
+        var room_to_remove = await _context.Room.FirstOrDefaultAsync(r => r.Id == id);
+        if (room_to_remove == null)
+        {
+            throw new NotImplementedException();
+        }
+        else
+        {
+            _context.Room.Remove(room_to_remove);
+            await _context.SaveChangesAsync();
+        }
     }
     public async Task SaveChangesAsync()
     {
         throw new NotImplementedException();
+    }
+    public async Task<IEnumerable<Room>?> FindFreeByDateAsync(Expression<Func<Room, bool>> predicate)
+    {
+        return await _context.Room
+                    .Include(r => r.RoomDetail)
+                    .ThenInclude(rD => rD.RoomRegulation)
+                    .Where(predicate)
+                    .ToListAsync();
     }
 }
 

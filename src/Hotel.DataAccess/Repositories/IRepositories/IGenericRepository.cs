@@ -10,8 +10,7 @@ public interface IGenericRepository<TEntity>
     Task<List<TEntity>> GetListAsync();
     Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate);
     Task<IEnumerable<TEntity>> BrowserAsync();
-    Task<TEntity?> FindAsyncById(int id);
-    Task<TEntity?> FindAsync(Guid id);
+    Task<TEntity?> FindAsync(int id);
     Task<TEntity> CreateAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
     Task DeleteAsync(TEntity entity);

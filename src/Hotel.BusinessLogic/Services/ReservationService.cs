@@ -12,13 +12,15 @@ namespace Hotel.BusinessLogic.Services
         private readonly IMapper _mapper;
         IReservationRepository _reservationRepository;
         IInvoiceRepository _invoiceRepository;
+        IRoomRepository _roomRepository;
 
-        public ReservationService(IMapper mapper,
+        public ReservationService(IMapper mapper, IRoomRepository roomRepository,
             IReservationRepository reservationRepository, IInvoiceRepository invoiceRepository)
         {
             _mapper = mapper;
             _reservationRepository = reservationRepository;
             _invoiceRepository = invoiceRepository;
+            _roomRepository = roomRepository;
         }
 
         public async Task<List<ReservationCardReturnDTO>> GetAll(int page, int entries)

@@ -31,9 +31,8 @@ namespace Hotel.API.Controllers
             await _roomRegulationServices.RemoveRoomRegulation(id);
         }
         [HttpPost]
-        public async Task Post(int maxGuest, int defaultGuest, double maxSurchargeRatio, double maxOverseaSurchargeRatio, double roomExchangeFee)
+        public async Task Post(RoomRegulationToCreateDTO roomRegulation)
         {
-            RoomRegulationToCreateDTO roomRegulation = new(maxGuest, defaultGuest, maxOverseaSurchargeRatio, maxOverseaSurchargeRatio, roomExchangeFee);
             await _roomRegulationServices.AddRoomRegulation(roomRegulation);
         }
 

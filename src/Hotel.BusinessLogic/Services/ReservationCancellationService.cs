@@ -56,10 +56,10 @@ namespace Hotel.BusinessLogic.Services
                 // {
                 //     await _reservationRepository.RemoveAsync(card);
                 // }
-                foreach (InvoiceHotelService service in invoice.HotelServices)
-                {
-                    await _invoiceHotelServiceRepository.RemoveInvoiceHotelService(service);
-                }
+                // foreach (InvoiceHotelService service in invoice.HotelServices)
+                // {
+                //     await _invoiceHotelServiceRepository.RemoveInvoiceHotelService(service);
+                // }
                 await _invoiceRepository.RemoveInvoice(invoice);
             }
         }

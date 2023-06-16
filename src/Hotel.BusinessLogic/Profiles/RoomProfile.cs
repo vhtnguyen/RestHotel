@@ -31,6 +31,12 @@ namespace Hotel.BusinessLogic.Profiles
                 .ForMember(dest => dest.RoomType, opt => opt.MapFrom(src => src.RoomDetail.RoomType))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.RoomDetail.Price));
 
+            CreateMap<Room, RoomFreeToReturnDTO>()
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.RoomDetail.Description))
+                .ForMember(dest => dest.DefaultGuest, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.DefaultGuest))
+                .ForMember(dest => dest.MaxGuest, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.MaxGuest))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.RoomDetail.Price));
+
         }
     }
 }

@@ -10,9 +10,12 @@ public static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         // add normally
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<IGenericRepository<RoomRegulation>, GenericRepository<RoomRegulation>>();
         services.AddScoped<IRoomRegulationRepository, RoomRegulationRepository>();
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+
+        services.AddScoped<IRoomDetailRepository, RoomDetailRepository>();
+
         services.AddScoped<IGenericRepository<Invoice>, GenericRepository<Invoice>>();
         services.AddScoped<IGenericRepository<Room>, GenericRepository<Room>>();
         services.AddScoped<IGenericRepository<ReservationCard>, GenericRepository<ReservationCard>>();

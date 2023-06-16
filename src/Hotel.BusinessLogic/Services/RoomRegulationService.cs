@@ -15,28 +15,28 @@ namespace Hotel.BusinessLogic.Services
 {
     internal class RoomRegulationService : IRoomRegulationService
     {
-        private readonly IRoomRegulationRepository _userRepository;
+        private readonly IRoomRegulationRepository _roomRegulationRepository;
         private readonly IMapper _mapper;
         public RoomRegulationService(IRoomRegulationRepository userRepository, IMapper mapper)
         {
             _mapper = mapper;
-            _userRepository = userRepository;
+            _roomRegulationRepository = userRepository;
         }
 
         public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
         {
             var room = _mapper.Map<RoomRegulation>(roomRegulation);
 
-            await _userRepository.CreateAsync(room);
+            await _roomRegulationRepository.CreateAsync(room);
         }
 
         public async Task<IEnumerable<RoomRegulationToReturnDTO>> getAllRoomRegulation()
         {
             //Expression<Func<RoomRegulation, bool>> expression = x => true;
 
-            var roomRegulationList = await _userRepository.BrowserAsync();
+            var roomRegulationList = await _roomRegulationRepository.BrowserAsync();
             List<RoomRegulationToReturnDTO> result = new List<RoomRegulationToReturnDTO>();
-            //await _userRepository.FindAsync(expression);
+            //await _roomRegulationRepository.FindAsync(expression);
             foreach (var x in roomRegulationList)
             {
 
@@ -52,15 +52,15 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<RoomRegulationToReturnDTO> getRoomByID(int id)
         {
-            return _mapper.Map<RoomRegulationToReturnDTO>(await _userRepository.FindAsync(x => x.Id == id));
+            return _mapper.Map<RoomRegulationToReturnDTO>(await _roomRegulationRepository.FindAsync(x => x.Id == id));
         }
 
         public async Task RemoveRoomRegulation(int id)
         {
-            var entity = await _userRepository.FindAsync(x => x.Id == id);
+            var entity = await _roomRegulationRepository.FindAsync(x => x.Id == id);
             if (entity != null)
             {
-                await _userRepository.DeleteAsync(id, entity);
+                await _roomRegulationRepository.DeleteAsync(id, entity);
 
             }
             else
