@@ -13,6 +13,7 @@ public class Invoice
     public double DownPayment { get; set; }
     public string? Email { get; set; }
     public string? NameCus { get; set; }
+    public string? PaymentId { get; set; }
 
     // reference property
     public ICollection<ReservationCard> ReservationCards { get; set; } = new List<ReservationCard>();
@@ -28,6 +29,11 @@ public class Invoice
         DownPayment = downPayment;
         Email = email;
         NameCus = nameCus;
+    }
+
+    public void SetPayment(string id)
+    {
+        PaymentId = id;
     }
 
     public void PaySucceed()

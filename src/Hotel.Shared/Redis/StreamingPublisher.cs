@@ -21,6 +21,7 @@ internal class StreamingPublisher : IStreamingPublisher
     {
         _logger.LogInformation($"publish a message {command.GetType().Name} at topic {topic}_{command.GetType().Name}");
         var data = JsonConvert.SerializeObject(command);
-        await _subscriber.PublishAsync($"{topic}_{command.GetType().Name}", data);
+        // var channel = $"{topic}_{command.GetType().Name}";
+        await _subscriber.PublishAsync(topic, data);
     }
 }

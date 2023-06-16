@@ -17,7 +17,13 @@ internal class InvoiceRepository : IInvoiceRepository
         _context = context;
     }
     public async Task<Invoice?> FindAsync(Expression<Func<Invoice, bool>> predicate)
-        => await _genericRepository.FindAsync(predicate);
+        => await _context.Invoice
+            .Include(i => i.ReservationCards)
+            .ThenInclude(i => i.Room)
+            .ThenInclude(i => i.RoomDetail)
+            .Include(i => i.HotelServices)
+            .ThenInclude(i => i.HotelService)
+            .FirstOrDefaultAsync(predicate);
 
     public async Task<IEnumerable<Invoice>> GetAllInvoice()
     {

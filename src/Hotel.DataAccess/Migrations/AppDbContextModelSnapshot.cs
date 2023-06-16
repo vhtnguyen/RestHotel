@@ -66,6 +66,9 @@ namespace Hotel.DataAccess.Migrations
                     b.Property<string>("NameCus")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 

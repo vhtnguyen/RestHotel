@@ -1,3 +1,4 @@
+using Hotel.BusinessLogic.Commands;
 using Hotel.BusinessLogic.DTO.Payment;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.Repositories.IRepositories;
@@ -13,18 +14,21 @@ public class PaymentService : IPaymentService
     private readonly IPaymentFactory _factory;
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly ICacheService _cacheService;
-    private readonly RedisOptions _options;
+    private readonly PaymentOptions _options;
+    private readonly IStreamingPublisher _publisher;
     public PaymentService(
+        IStreamingPublisher publisher,
         IPaymentFactory factory,
         IInvoiceRepository repo,
         ICacheService cacheService,
-        IOptions<RedisOptions> options
+        IOptions<PaymentOptions> options
     )
     {
         _factory = factory;
         _invoiceRepository = repo;
         _cacheService = cacheService;
         _options = options.Value;
+        _publisher = publisher;
     }
     public async Task<SessionResource> CreatePaymentLink(int invoiceId, CreatePaymentDto payment)
     {
@@ -47,12 +51,15 @@ public class PaymentService : IPaymentService
 
         foreach (var card in invoice.ReservationCards)
         {
-            sessionItems.Add(new CreateSessionItemResouce($"Card_{card.Id}", card.Room.RoomDetail.Price, 1));
+            sessionItems.Add(new CreateSessionItemResouce(
+                $"Card_{card.Id}", card.Room.RoomDetail.Price * _options.DepositRatio, 1));
         }
 
         foreach (var service in invoice.HotelServices)
         {
-            sessionItems.Add(new CreateSessionItemResouce(service.HotelService.Name!, service.HotelService.Price, 1));
+            sessionItems.Add(new CreateSessionItemResouce(
+                service.HotelService.Name!,
+                service.HotelService.Price * _options.DepositRatio, 1));
         }
 
         var sessionResource = new CreateSessionResource(
@@ -61,30 +68,20 @@ public class PaymentService : IPaymentService
 
         var response = await paymentSession.CreateSession(sessionResource);
 
+        invoice.SetPayment(response.RequestId);
+        await _invoiceRepository.SaveChangesAsync();
         // set ttl
-        var expireAt = DateTime.Now.AddMinutes(_options.ExpirationAt);
+        var expireAt = DateTime.Now.AddSeconds(_options.ExpirationAt);
         await _cacheService.SetAsync($"payment:{response.RequestId}", $"{invoiceId}", expireAt);
-
         return response;
     }
 
     public async Task PayFailed(string paymentIntentId)
     {
-        var invoiceId = await _cacheService.GetAsync<string>($"payment:{paymentIntentId}");
-
-        if (String.IsNullOrWhiteSpace(invoiceId))
-        {
-            throw new DomainBadRequestException(
-                $"Not found invoice id associate payment id '{paymentIntentId}'",
-                "not_found_invoice");
-        }
-
-        Int32.TryParse(invoiceId, out var id);
-
-        var invoice = await _invoiceRepository.GetInvoiceDetail(id);
+        var invoice = await _invoiceRepository.FindAsync(i => i.PaymentId == paymentIntentId);
         if (invoice == null)
         {
-            throw new DomainBadRequestException($"Not found invoice at id '{invoiceId}'", "not_found_invoice");
+            throw new DomainBadRequestException($"Not found invoice at payment id '{paymentIntentId}'", "not_found_invoice");
         }
         await _invoiceRepository.RemoveInvoice(invoice);
         await _cacheService.DeleteAsync($"payment:{paymentIntentId}");
@@ -92,25 +89,44 @@ public class PaymentService : IPaymentService
 
     public async Task PaySucceed(string paymentIntentId)
     {
-        var invoiceId = await _cacheService.GetAsync<string>($"payment:{paymentIntentId}");
-
-        if (String.IsNullOrWhiteSpace(invoiceId))
-        {
-            throw new DomainBadRequestException(
-                $"Not found invoice id associate payment id '{paymentIntentId}'",
-                "not_found_invoice");
-        }
-
-        Int32.TryParse(invoiceId, out var id);
-
-        var invoice = await _invoiceRepository.GetInvoiceDetail(id);
+        var invoice = await _invoiceRepository.FindAsync(i => i.PaymentId == paymentIntentId);
         if (invoice == null)
         {
-            throw new DomainBadRequestException($"Not found invoice at id '{invoiceId}'", "not_found_invoice");
+            throw new DomainBadRequestException($"Not found invoice at payment id '{paymentIntentId}'", "not_found_invoice");
         }
-
         invoice.PaySucceed();
         await _invoiceRepository.SaveChangesAsync();
         await _cacheService.DeleteAsync($"payment:{paymentIntentId}");
+
+        var details = new List<InvoiceDetail>();
+
+        foreach (var card in invoice.ReservationCards)
+        {
+            details.Add(new InvoiceDetail
+            {
+                Name = $"Card_{card.Id}",
+                Price = card.Room.RoomDetail.Price,
+                Quantity = 1
+            });
+        }
+
+        foreach (var service in invoice.HotelServices)
+        {
+            details.Add(new InvoiceDetail
+            {
+                Name = service.HotelService.Name!,
+                Price = service.HotelService.Price,
+                Quantity = 1
+            });
+        }
+        var command = new SendNotificationCommand
+        {
+            InvoiceId = invoice.Id,
+            CusName = invoice.NameCus!,
+            Email = invoice.Email!,
+            Details = details
+
+        };
+        await _publisher.PublishAsync("email", command);
     }
 }

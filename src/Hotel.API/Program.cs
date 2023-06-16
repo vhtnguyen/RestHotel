@@ -28,14 +28,13 @@ builder.Services.AddFilters();
 
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
-//builder.Services.AddMailKit();
+builder.Services.AddMailKit();
 //builder.Services.AddMessaging();
 //builder.Services.AddDistributedLock();
 builder.Services.AddPayment();
 builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
 builder.Services.AddHostedService<AppInitializer>();
-//builder.Services.AddHostedService<StreamingService>();
 //builder.Services.AddHostedService<MessagingService>();
 builder.Services.AddJwtAuthentication();
 builder.Services.AddHttpClient();
@@ -64,9 +63,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRedisStreaming()
-    .SubscribeAsync<SendNotificationCommandRejected>("email")
-    .SubscribeAsync<SendNotificationCommand>("email", onError: (c, e) => new SendNotificationCommandRejected
-    { Code = e.Code, Message = e.Message, Email = c.Email });
+    .SubscribeAsync<SendNotificationCommand>("email")
+    .SubscribeAsync<InvoiceExpirationCommand>("__keyevent@0__:expired");
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.UseJwtAuthentication();

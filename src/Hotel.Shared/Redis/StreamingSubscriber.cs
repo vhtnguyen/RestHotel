@@ -38,9 +38,25 @@ internal class StreamingSubscriber : IStreamingSubscriber
     {
         _logger.LogInformation($"subscriber topic {topic}_{typeof(TCommand).Name}");
         // write handle async function with polly fault handling
-        _subscriber.SubscribeAsync($"{topic}_{typeof(TCommand).Name}", async (channel, data) =>
+        // string channel = $"{topic}_{typeof(TCommand).Name}";
+        _subscriber.SubscribeAsync(topic, async (channel, data) =>
         {
-            var command = JsonConvert.DeserializeObject<TCommand>(data!);
+            string parse = data!;
+
+            // handle invoice expire
+            if (!parse.Contains('{'))
+            {
+                // not handle that event
+                if (!parse.StartsWith("payment"))
+                {
+                    return;
+                }
+
+                var elements = parse.Split(":");
+                parse = "{" + "\"" + elements[0] + "\"" + ":" + "\"" + elements[1] + "\"" + "}";
+            }
+
+            var command = JsonConvert.DeserializeObject<TCommand>(parse);
             if (command == null)
             {
                 return;
@@ -90,6 +106,12 @@ internal class StreamingSubscriber : IStreamingSubscriber
                 {
                     var rejectedCommand = onError(command, domainException)!;
                     await _publisher.PublishAsync(topic, rejectedCommand);
+                    return Task.CompletedTask;
+                }
+
+                if (ex is DomainException domainException1)
+                {
+                    _logger.LogInformation($"Domain throw exception {domainException1.Message}");
                     return Task.CompletedTask;
                 }
 

@@ -1,5 +1,6 @@
 ﻿using Hotel.BusinessLogic.DTO.Payment;
 using Hotel.BusinessLogic.Services.IServices;
+using Hotel.Shared.Payments;
 using Hotel.Shared.Payments.Stripe;
 using Hotel.Shared.Redis;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +16,17 @@ public class PaymentController : ControllerBase
 {
     private readonly IPaymentService _paymentService;
     private readonly StripeOptions _options;
-    private readonly RedisOptions _redisOptions;
+    private readonly PaymentOptions _paymentOptions;
     private readonly ILogger<PaymentController> _logger;
     public PaymentController(
         ILogger<PaymentController> logger,
         IOptions<StripeOptions> options,
-        IOptions<RedisOptions> redisOptions,
+        IOptions<PaymentOptions> paymentOptions,
         IPaymentService paymentService)
     {
         _paymentService = paymentService;
         _options = options.Value;
-        _redisOptions = redisOptions.Value;
+        _paymentOptions = paymentOptions.Value;
         _logger = logger;
     }
 
@@ -33,7 +34,7 @@ public class PaymentController : ControllerBase
     public async Task<ActionResult> Create(int invoiceId, CreatePaymentDto payment)
     {
         var response = await _paymentService.CreatePaymentLink(invoiceId, payment);
-        return Ok(new { Url = response.Url, ExpireAt = _redisOptions.ExpirationAt });
+        return Ok(new { Url = response.Url, ExpireAt = _paymentOptions.ExpirationAt });
     }
 
     [HttpPost("stripe")]
