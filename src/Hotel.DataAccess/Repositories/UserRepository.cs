@@ -3,9 +3,7 @@ using Hotel.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using org.apache.zookeeper.data;
-using Hotel.DataAccess.Repositories;
-using System.Linq;
+using Hotel.DataAccess.Repositories.IRepositories;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -31,7 +29,7 @@ internal class UserRepository : IUserRepository
            .ToListAsync();
         return result;
     }
-     
+
 
     //// some delegate method
 
@@ -50,9 +48,9 @@ internal class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
     public async Task DeleteByIDAsync(int userId)
-    { 
-        var user_to_remove= await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        if(user_to_remove != null)
+    {
+        var user_to_remove = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user_to_remove != null)
         {
             _context.Users.Remove(user_to_remove);
             await _context.SaveChangesAsync();
@@ -62,7 +60,7 @@ internal class UserRepository : IUserRepository
             throw new NotImplementedException();
 
         }
-        
+
     }
 
     public async Task<IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate)
@@ -77,4 +75,3 @@ internal class UserRepository : IUserRepository
     }
 }
 
-   

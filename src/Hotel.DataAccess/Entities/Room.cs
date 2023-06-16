@@ -10,7 +10,7 @@ public class Room
 
     // reference key
     public virtual ICollection<ReservationCard> ReservationCards { get; set; } = new List<ReservationCard>();
-    public RoomDetail? RoomDetail { get; set; }
+    public RoomDetail RoomDetail { get; set; } = null!;
     [JsonConstructor]
     public Room(int id, string? status, string? note)
     {

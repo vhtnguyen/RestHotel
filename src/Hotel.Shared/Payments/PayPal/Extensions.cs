@@ -5,7 +5,7 @@ namespace Hotel.Shared.Payments.PayPal;
 
 public static class Extensions
 {
-    public static IServiceCollection AddPayPayCheckout(this IServiceCollection services)
+    public static IServiceCollection AddPayPalCheckout(this IServiceCollection services)
     {
         using var serviceProvider = services.BuildServiceProvider();
         var configuration = serviceProvider.GetService<IConfiguration>()!;

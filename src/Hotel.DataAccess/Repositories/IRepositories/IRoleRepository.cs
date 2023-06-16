@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
-namespace Hotel.DataAccess.Repositories;
+namespace Hotel.DataAccess.Repositories.IRepositories;
 
 public interface IRoleRepository
 {

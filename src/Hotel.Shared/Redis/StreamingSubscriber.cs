@@ -24,7 +24,7 @@ internal class StreamingSubscriber : IStreamingSubscriber
         WebApplication application)
     {
         // get redis option include retry policy and something related to polly
-        _logger = application.Services.GetService<ILogger<StreamingSubscriber>>()!;  
+        _logger = application.Services.GetService<ILogger<StreamingSubscriber>>()!;
         _subscriber = application.Services.GetService<IConnectionMultiplexer>()!.GetSubscriber();
         _publisher = application.Services.GetService<IStreamingPublisher>()!;
         _commandDispatcher = application.Services.GetService<ICommandDispatcher>()!;
@@ -33,28 +33,35 @@ internal class StreamingSubscriber : IStreamingSubscriber
     }
 
     public IStreamingSubscriber SubscribeAsync<TCommand>(
-        string topic, Func<TCommand, DomainException, IRejectedCommand>? onError = null) 
-        where TCommand : ICommand 
+        string topic, Func<TCommand, DomainException, IRejectedCommand>? onError = null)
+        where TCommand : ICommand
     {
         _logger.LogInformation($"subscriber topic {topic}_{typeof(TCommand).Name}");
         // write handle async function with polly fault handling
-        _subscriber.SubscribeAsync($"{topic}_{typeof(TCommand).Name}", async (channel, data) =>
+        // string channel = $"{topic}_{typeof(TCommand).Name}";
+        _subscriber.SubscribeAsync(topic, async (channel, data) =>
         {
-            var command = JsonConvert.DeserializeObject<TCommand>(data!);
+            string parse = data!;
+
+            // handle invoice expire
+            if (!parse.Contains('{'))
+            {
+                // not handle that event
+                if (!parse.StartsWith("payment"))
+                {
+                    return;
+                }
+
+                var elements = parse.Split(":");
+                parse = "{" + "\"" + elements[0] + "\"" + ":" + "\"" + elements[1] + "\"" + "}";
+            }
+
+            var command = JsonConvert.DeserializeObject<TCommand>(parse);
             if (command == null)
             {
                 return;
             }
-
-            if(_options.MultiWorkerEnable)
-            {
-                await _messagingChannel.Writer.WriteAsync(command);
-            }
-            else
-            {
-                await HandleAsync(topic, command, () => _commandDispatcher.DispatchAsync(command), onError);
-            } 
-                
+            await HandleAsync(topic, command, () => _commandDispatcher.DispatchAsync(command), onError);
         });
 
         return this;
@@ -63,9 +70,9 @@ internal class StreamingSubscriber : IStreamingSubscriber
 
     // pass handler and on error here
     private async Task HandleAsync<TCommand>(
-        string topic, 
+        string topic,
         TCommand command,
-        Func<Task> handler, 
+        Func<Task> handler,
         Func<TCommand, DomainException, IRejectedCommand>? onError = null)
         where TCommand : ICommand
     {
@@ -86,7 +93,8 @@ internal class StreamingSubscriber : IStreamingSubscriber
 
                 _logger.LogInformation($"handled message {messageName} on topic {topic}");
                 return Task.CompletedTask;
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 if (currentPollyExecution != 0)
                 {
@@ -98,6 +106,12 @@ internal class StreamingSubscriber : IStreamingSubscriber
                 {
                     var rejectedCommand = onError(command, domainException)!;
                     await _publisher.PublishAsync(topic, rejectedCommand);
+                    return Task.CompletedTask;
+                }
+
+                if (ex is DomainException domainException1)
+                {
+                    _logger.LogInformation($"Domain throw exception {domainException1.Message}");
                     return Task.CompletedTask;
                 }
 

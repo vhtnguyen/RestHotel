@@ -1,12 +1,7 @@
 ﻿using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.DataAccess.Repositories;
@@ -21,18 +16,17 @@ internal class InvoiceRepository : IInvoiceRepository
         _genericRepository = genericRepository;
         _context = context;
     }
-    public async Task<Invoice?> FindAsync(Expression<Func<Invoice, bool>> predicate) 
-        => await _genericRepository.FindAsync(predicate);
+    public async Task<Invoice?> FindAsync(Expression<Func<Invoice, bool>> predicate)
+        => await _context.Invoice
+            .Include(i => i.ReservationCards)
+            .ThenInclude(i => i.Room)
+            .ThenInclude(i => i.RoomDetail)
+            .Include(i => i.HotelServices)
+            .ThenInclude(i => i.HotelService)
+            .FirstOrDefaultAsync(predicate);
 
     public async Task<IEnumerable<Invoice>> GetAllInvoice()
     {
-        //var result = _context.Invoice
-        //     .Include(i => i.ReservationCards).ThenInclude(i => i.Guests)
-        //     .ToList();
-        //if (result == null)  
-        //{
-        //    throw new Exception();
-        //}
         var result = await _genericRepository.GetListAsync();
         return result;
     }
@@ -45,16 +39,19 @@ internal class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceDetail(int id)
     {
         var result = await _context.Invoice
-                        .Include(i => i.ReservationCards).ThenInclude(card => card.Guests)
-                        .Include(i => i.HotelServices).ThenInclude(i => i.HotelService)
+                        .Include(i => i.ReservationCards)
+                        .ThenInclude(i => i.Room)
+                        .ThenInclude(i => i.RoomDetail)
+                        .Include(i => i.HotelServices)
+                        .ThenInclude(i => i.HotelService)
                         .FirstOrDefaultAsync(i => i.Id == id);
-                        
+
         return result;
     }
 
-    public Task<Invoice?> GetInvoiceQuery(Invoice query)
+    public async Task SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        await _genericRepository.SaveChangesAsync();
     }
 
     public async Task RemoveInvoice(Invoice invoice)

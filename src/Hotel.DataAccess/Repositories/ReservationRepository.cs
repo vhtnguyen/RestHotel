@@ -19,9 +19,9 @@ namespace Hotel.DataAccess.Repositories
         private readonly IGenericRepository<ReservationCard> _genericCardRepository;
         private readonly AppDbContext _context;
 
-        public ReservationRepository(IGenericRepository<Invoice> genericRepository, 
-            IGenericRepository<ReservationCard> genericCardRepository, 
-            AppDbContext context, IGenericRepository<Room> genericRoomRepository) 
+        public ReservationRepository(IGenericRepository<Invoice> genericRepository,
+            IGenericRepository<ReservationCard> genericCardRepository,
+            AppDbContext context, IGenericRepository<Room> genericRoomRepository)
         {
             _genericInvoiceRepository = genericRepository;
             _genericRoomRepository = genericRoomRepository;
@@ -72,14 +72,14 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<Object> RollBackTranasction(Object transaction)
         {
-            IDbContextTransaction Transaction = (IDbContextTransaction) transaction;
+            IDbContextTransaction Transaction = (IDbContextTransaction)transaction;
             await Transaction.RollbackAsync();
             return true;
         }
 
         public async Task<Object> CommitTranasction(Object transaction)
         {
-            IDbContextTransaction Transaction = (IDbContextTransaction) transaction;
+            IDbContextTransaction Transaction = (IDbContextTransaction)transaction;
             Transaction.Commit();
             return true;
         }
@@ -105,10 +105,10 @@ namespace Hotel.DataAccess.Repositories
             await _genericCardRepository.DeleteAsync(card);
         }
 
-        public async Task<ReservationCard?> FindAsync(Expression<Func<ReservationCard, bool>> predicate) 
+        public async Task<ReservationCard?> FindAsync(Expression<Func<ReservationCard, bool>> predicate)
         => await _genericCardRepository.FindAsync(predicate);
 
-        public async Task<List<ReservationCard>> FindAsyncByInvoiceID(int id) 
+        public async Task<List<ReservationCard>> FindAsyncByInvoiceID(int id)
         {
             return await _context.ReservationCard
                             .Include(c => c.Room)
@@ -129,6 +129,11 @@ namespace Hotel.DataAccess.Repositories
         public async Task RemoveReservationCardByID(ReservationCard card)
         {
             await _genericCardRepository.DeleteAsync(card);
+        }
+
+        public async Task<ReservationCard?> GetAsync(int id)
+        {
+            return await _genericCardRepository.FindAsync(card => card.Id == id);
         }
     }
 }

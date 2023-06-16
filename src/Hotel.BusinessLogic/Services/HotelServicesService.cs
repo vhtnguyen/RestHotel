@@ -1,10 +1,10 @@
 ﻿
-using Hotel.DataAccess.Repositories;
 using AutoMapper;
 using Hotel.BusinessLogic.DTO.HotelServices;
 using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
-using Hotel.BusinessLogic.DTO.Users;
+using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -36,28 +36,28 @@ namespace Hotel.BusinessLogic.Services
         public async Task<IEnumerable<ServiceToReturnDTO>?> SearchSeviceAsync(string? value, string searchOption, int category)
         {
             IEnumerable<HotelService>? result;
-            if(searchOption=="all"&&category == 0)
+            if (searchOption == "all" && category == 0)
             {
                 return await this.GetServicesAsync();
             }
-           
-           
+
+
             switch (searchOption)
             {
                 case "id":
                     {
-                        Expression<Func<HotelService, bool>> predicate = service => service.Id.ToString().Contains(value) && (category==0||service.Category.Id == category);
+                        Expression<Func<HotelService, bool>> predicate = service => service.Id.ToString().Contains(value) && (category == 0 || service.Category.Id == category);
                         result = await _hotelServiceRepository.FindAllAsync(predicate);
                         break;
                     }
-                    
+
                 case "name":
                     {
                         Expression<Func<HotelService, bool>> predicate = service => service.Name.Contains(value) && (category == 0 || service.Category.Id == category);
                         result = await _hotelServiceRepository.FindAllAsync(predicate);
                         break;
                     }
-                    
+
 
                 case "all":
 
@@ -67,7 +67,7 @@ namespace Hotel.BusinessLogic.Services
                         break;
                     }
                 default:
-                    
+
                     throw new ArgumentException("Invalid search option.", nameof(searchOption));
 
             }

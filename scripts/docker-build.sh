@@ -1,1 +1,1 @@
-docker build -t hotel.api:latest .
+docker build -t 12082002/resthotel:latest .

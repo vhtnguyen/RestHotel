@@ -1,6 +1,7 @@
 ﻿using Hotel.BusinessLogic.Handlers;
 using Hotel.BusinessLogic.Profiles;
 using Hotel.BusinessLogic.Services;
+using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ public static class Extensions
         services.AddScoped<IReservationService, ReservationService>();
         services.AddScoped<IInvoiceService, InvoiceService>();
         services.AddScoped<IReservationCancellationService, ReservationCancellationService>();
+        services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IRoomRegulationService, RoomRegulationService>();
+        services.AddScoped<IRoomService, RoomService>();
+
 
         services.AddMapper();
         return services;

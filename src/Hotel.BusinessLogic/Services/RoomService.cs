@@ -2,6 +2,7 @@
 using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories;
+using Hotel.DataAccess.Repositories.IRepositories;
 using org.apache.zookeeper.data;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.Services
 {
-    public class RoomService:IRoomService
+    public class RoomService : IRoomService
     {
         private readonly IMapper _mapper;
         private readonly IRoomRepository _roomRepository;
@@ -25,8 +26,8 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<List<RoomToReturnListDTO>> GetRoomListAsync()
         {
-            var result= await _roomRepository.GetListAsync();
-            return _mapper.Map< List< RoomToReturnListDTO >>(result);
+            var result = await _roomRepository.GetListAsync();
+            return _mapper.Map<List<RoomToReturnListDTO>>(result);
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {
@@ -38,9 +39,9 @@ namespace Hotel.BusinessLogic.Services
             RoomDetail detail = new RoomDetail(
               0, 999, "Double", "A haunted room", null
             );
-            detail.RoomRegulation = new RoomRegulation(0,5,4,90,10,10);
+            detail.RoomRegulation = new RoomRegulation(0, 5, 4, 90, 10, 10);
 
-            if (detail !=null)
+            if (detail != null)
             {
                 new_room.RoomDetail = detail;
                 await _roomRepository.CreateAsync(new_room);

@@ -17,7 +17,7 @@ public class EntityConfiguration
     IEntityTypeConfiguration<InvoiceHotelService>,
     IEntityTypeConfiguration<ServiceCategory>,
     IEntityTypeConfiguration<RoomDetail>
-   
+
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -52,7 +52,7 @@ public class EntityConfiguration
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasMany(b => b.Users).WithOne(r=>r.Role).IsRequired();
+        builder.HasMany(b => b.Users).WithOne(r => r.Role).IsRequired();
     }
 
     public void Configure(EntityTypeBuilder<Room> builder)

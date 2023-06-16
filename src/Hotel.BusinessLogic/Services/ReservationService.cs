@@ -1,18 +1,9 @@
 ﻿using Hotel.BusinessLogic.DTO.HotelReservation;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
-using Hotel.BusinessLogic.DTO.Invoices;
-using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.DataAccess.Entities;
+using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.ObjectValues;
-using System.Globalization;
-using Microsoft.Extensions.Hosting;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -21,26 +12,26 @@ namespace Hotel.BusinessLogic.Services
         private readonly IMapper _mapper;
         IReservationRepository _reservationRepository;
         IInvoiceRepository _invoiceRepository;
-        
-        public ReservationService(IMapper mapper, 
+
+        public ReservationService(IMapper mapper,
             IReservationRepository reservationRepository, IInvoiceRepository invoiceRepository)
         {
             _mapper = mapper;
             _reservationRepository = reservationRepository;
             _invoiceRepository = invoiceRepository;
         }
-        
+
         public async Task<List<ReservationCardReturnDTO>> GetAll(int page, int entries)
         {
             List<ReservationCard> CardsList = await _reservationRepository.GetListAsyncWithPagination(page, entries);
-            List<ReservationCardReturnDTO> result =  _mapper.Map<List<ReservationCardReturnDTO>>(CardsList);
+            List<ReservationCardReturnDTO> result = _mapper.Map<List<ReservationCardReturnDTO>>(CardsList);
             return result;
         }
 
         public async Task<List<ReservationCardReturnDTO>> GetReservationCardsByTime(PeriodTimeDTO periodTimeDTO)
         {
             List<ReservationCard> CardsList = await _reservationRepository.GetListReservationCardsByTime(periodTimeDTO.ArrivalDate, periodTimeDTO.DepartureDate);
-            List<ReservationCardReturnDTO> result =  _mapper.Map<List<ReservationCardReturnDTO>>(CardsList);
+            List<ReservationCardReturnDTO> result = _mapper.Map<List<ReservationCardReturnDTO>>(CardsList);
             return result;
         }
 
@@ -54,7 +45,7 @@ namespace Hotel.BusinessLogic.Services
             //var transaction = _reservationRepository.CreateTransaction();
             List<ReservationCard> CardsListByTime = await _reservationRepository
                 .GetListReservationCardsByTime(reservationDTO.ArrivalDate, reservationDTO.DepartureDate);
-            
+
             if (createInvoice != null)
             {
                 for (int i = 0; i < createInvoice.ReservationCards.Count(); i++)
@@ -79,9 +70,8 @@ namespace Hotel.BusinessLogic.Services
                     }
                 }
             }
-            
-            Invoice Result = await _invoiceRepository.CreateAsync(createInvoice);
 
+            Invoice? Result = await _invoiceRepository.CreateAsync(createInvoice!);
             //_reservationRepository.CommitTranasction(transaction);
 
             //return _mapper.Map<InvoiceReturnDTO>(Result);
@@ -92,7 +82,7 @@ namespace Hotel.BusinessLogic.Services
         {
             //create invoice
             Invoice? invoice = await _invoiceRepository.GetInvoiceDetail(reservationDTO.InvoiceId);
-            
+
             if (invoice != null)
             {
                 invoice.Status = "partlydeposited";
@@ -101,7 +91,7 @@ namespace Hotel.BusinessLogic.Services
                 invoice.DownPayment = reservationDTO.DownPayment;
                 invoice.NameCus = reservationDTO.NameCus;
                 await _invoiceRepository.UpdateInvoice(invoice);
-                
+
                 ICollection<ReservationCard> availableCards = await _reservationRepository.FindAsyncByInvoiceID(invoice.Id);
                 foreach (GuestRoomInfoDTO card in reservationDTO.ReservationCards)
                 {
@@ -152,7 +142,7 @@ namespace Hotel.BusinessLogic.Services
             List<ReservationCard> handledCards = new List<ReservationCard>();
             //get revcards by invoice id
             List<ReservationCard> cards = await _reservationRepository.FindAsyncByInvoiceID(changeRoomDTO.InvoiceId);
-            
+
             if (cards.Count() == 0)
             {
                 var result = _mapper.Map<List<ReservationCardReturnDTO>>(cards);
@@ -183,19 +173,19 @@ namespace Hotel.BusinessLogic.Services
                         newCard.SetRoom(RoomByID);
                         foreach (Guest guest in oldCard.Guests)
                         {
-                            newCard.AddGuest(new Guest(guest.Name, guest.TelephoneNumber, 
+                            newCard.AddGuest(new Guest(guest.Name, guest.TelephoneNumber,
                                     guest.Address, guest.Type, guest.PersonIdentification));
                         }
                         newCard.Notes = oldCard.Notes;
                         newCard.RoomRegulation = RoomByID.RoomDetail.RoomRegulation;
-                        ReservationCard createdCard =  await _reservationRepository.CreateAsync(newCard);
+                        ReservationCard createdCard = await _reservationRepository.CreateAsync(newCard);
                         handledCards.Add(createdCard);
                     }
                     await _reservationRepository.UpdateAsync(oldCard);
                     handledCards.Add(oldCard);
                 }
             }
-            
+
             return _mapper.Map<List<ReservationCardReturnDTO>>(handledCards);
         }
 

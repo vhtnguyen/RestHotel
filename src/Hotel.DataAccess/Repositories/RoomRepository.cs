@@ -1,11 +1,9 @@
-﻿using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Context;
 using Hotel.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using org.apache.zookeeper.data;
-using Hotel.DataAccess.Repositories;
-using System.Linq;
+using Hotel.DataAccess.Repositories.IRepositories;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -41,7 +39,7 @@ internal class RoomRepository : IRoomRepository
         throw new NotImplementedException();
     }
     public async Task<Room> CreateAsync(Room entity)
-    => await _genericRepository.CreateAsync(entity);
+        => await _genericRepository.CreateAsync(entity);
     public async Task UpdateAsync(Room entity)
     {
         throw new NotImplementedException();

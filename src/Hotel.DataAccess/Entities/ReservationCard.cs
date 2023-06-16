@@ -8,11 +8,11 @@ public class ReservationCard
     public int Id { get; set; }
     public DateTime ArrivalDate { get; set; }
     public DateTime DepartureDate { get; set; }
-    public string? Notes {get; set;}
+    public string? Notes { get; set; }
 
     // reference key
     public Invoice? Invoice { get; set; }
-    public Room? Room { get; set; }
+    public Room Room { get; set; } = null!;
     public RoomRegulation? RoomRegulation { get; set; }
     public virtual ICollection<Guest> Guests { get; set; } = new List<Guest>();
 

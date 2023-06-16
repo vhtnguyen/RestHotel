@@ -6,21 +6,20 @@ using Hotel.BusinessLogic.Services;
 using Hotel.DataAccess.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Hotel.BusinessLogic.DTO.Users;
+using Hotel.BusinessLogic.Services.IServices;
 
 namespace Hotel.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RoomController : Controller
+public class RoomController : ControllerBase
 {
     private readonly IRoomService _roomService;
-
     public RoomController(IRoomService roomService)
     {
         _roomService = roomService;
     }
     [HttpGet("")]
-
     public async Task<ActionResult<List<RoomToReturnListDTO>>> Get()
     {
         return Ok(await _roomService.GetRoomListAsync());

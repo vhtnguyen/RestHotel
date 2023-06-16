@@ -45,27 +45,27 @@ public class MessagingService : BackgroundService
         {
             switch (command)
             {
-                case SendNotificationCommand c:
-                    await HandleAsync(
-                        command,
-                        () => _commandDispatcher.DispatchAsync(c),
-                        (_, e) => new SendNotificationCommandRejected()
-                        {
-                            Email = c.Email,
-                            Code = e.Code,
-                            Message = e.Message
-                        });
-                    break;
-                case SendNotificationCommandRejected c:
-                    await _distributedLockFactory.Create("email").GetLocker().LockAsync(() => HandleAsync(
-                        command, 
-                        () => _commandDispatcher.DispatchAsync(c)));
-                    break;
-                default:
-                    await HandleAsync(
-                        command,
-                        () => _commandDispatcher.DispatchAsync(command));
-                    break;
+                // case SendNotificationCommand c:
+                //     await HandleAsync(
+                //         command,
+                //         () => _commandDispatcher.DispatchAsync(c),
+                //         (_, e) => new SendNotificationCommandRejected()
+                //         {
+                //             Email = c.Email,
+                //             Code = e.Code,
+                //             Message = e.Message
+                //         });
+                //     break;
+                // case SendNotificationCommandRejected c:
+                //     await _distributedLockFactory.Create("email").GetLocker().LockAsync(() => HandleAsync(
+                //         command, 
+                //         () => _commandDispatcher.DispatchAsync(c)));
+                //     break;
+                // default:
+                //     await HandleAsync(
+                //         command,
+                //         () => _commandDispatcher.DispatchAsync(command));
+                //     break;
             };
         }
     }
