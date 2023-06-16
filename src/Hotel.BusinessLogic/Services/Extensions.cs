@@ -22,6 +22,7 @@ namespace Hotel.BusinessLogic.Services
             services.AddScoped<IRoomDetailService, RoomDetailService>();
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IRoomService,RoomService>();
+            services.AddScoped<IRoomRevenueService, RoomRevenueService>();
             return services;
         }
     }

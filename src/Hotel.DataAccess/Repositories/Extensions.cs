@@ -21,6 +21,7 @@ public static class Extensions
         services.AddScoped<IGenericRepository<ReservationCard>, GenericRepository<ReservationCard>>();
         services.AddScoped<IReservationRepository,ReservationRepository>();
         services.AddScoped<IInvoiceHotelServiceRepository, InvoiceHotelServiceRepository>();
+        services.AddScoped<IRoomRevenueRepository, RoomRevenuRepository>();
         return services;
     }
 }

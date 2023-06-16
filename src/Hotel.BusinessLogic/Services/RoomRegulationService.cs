@@ -8,6 +8,8 @@ using Hotel.DataAccess.Entities;
 using System.Linq.Expressions;
 using Hotel.BusinessLogic.DTO.RoomRegulation;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.CodeDom;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -64,8 +66,11 @@ namespace Hotel.BusinessLogic.Services
             else
             {
                 //throw exception here
+                throw new Exception("bad request");
             }
         }
+
+   
 
         public Task UpdateRoomRegulation(RoomRegulation regulation)
         {

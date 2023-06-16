@@ -9,19 +9,31 @@ namespace Hotel.BusinessLogic.DTO.RoomRevenue
 {
     public class RoomRevenueToReturnDTO
     {
-        public RoomRevenueToReturnDTO(int id, int freq, double price)
+        public RoomRevenueToReturnDTO(double percentage)
+        {
+            this.percentage = percentage;
+        }
+
+        public RoomRevenueToReturnDTO(int id, double totalSum)
         {
             this.id = id;
-            this.freq = freq;
-             caculateTotalSum(price);
+            this.totalSum = totalSum;
+         
         }
-        public void caculateTotalSum(double price)
-        {
-            this.totalSum=price*freq;
 
+       public int id { get; set; }
+     
+    public    double totalSum { get; set; }
+
+public        double percentage { get; set; }
+        public void getPercentage( List<RoomRevenueToReturnDTO> src)
+        {
+            double totalSum = 0;
+            foreach(var roomType in src)
+            {
+               totalSum += roomType.totalSum; 
+            }
+            this.percentage = this.totalSum*100 / totalSum;
         }
-        int id { get; set; }
-        int freq { get; set; }
-        double totalSum { get; set; }
     }
 }
