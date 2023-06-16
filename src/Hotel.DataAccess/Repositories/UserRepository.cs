@@ -20,7 +20,9 @@ internal class UserRepository : IUserRepository
     }
 
     public async Task<User?> FindAsync(Expression<Func<User, bool>> predicate)
-        => await _genericRepository.FindAsync(predicate);
+        => await _context.Users
+            .Include(c => c.Role)
+            .FirstOrDefaultAsync(predicate);
 
     public async Task<IEnumerable<User>?> GetListAsync()
     {
@@ -64,7 +66,6 @@ internal class UserRepository : IUserRepository
             await _context.SaveChangesAsync();
 
         }
-
     }
 
     public async Task<IEnumerable<User>?> FindAllAsync(Expression<Func<User, bool>> predicate)

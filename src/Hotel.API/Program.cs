@@ -2,9 +2,6 @@ using Hotel.API.Backgrounds;
 using Hotel.API.Filters;
 using Hotel.BusinessLogic;
 using Hotel.BusinessLogic.Commands;
-using Hotel.BusinessLogic.Services;
-using Hotel.DataAccess.Context;
-using Hotel.DataAccess.Repositories;
 using Hotel.Shared.Dispatchers;
 using Hotel.Shared.Logging;
 using Hotel.Shared.MailKit;
@@ -29,13 +26,10 @@ builder.Services.AddFilters();
 builder.Services.AddRedis();
 builder.Services.AddDispatcher();
 builder.Services.AddMailKit();
-//builder.Services.AddMessaging();
-//builder.Services.AddDistributedLock();
 builder.Services.AddPayment();
 builder.Services.AddDataAccessLayer();
 builder.Services.AddBusinessLogicLayer();
 builder.Services.AddHostedService<AppInitializer>();
-//builder.Services.AddHostedService<MessagingService>();
 builder.Services.AddJwtAuthentication();
 builder.Services.AddHttpClient();
 
@@ -69,8 +63,8 @@ app.UseRedisStreaming()
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();
-app.UseJwtAuthentication();
-// app.UseAuthorization();
+// app.UseJwtAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 

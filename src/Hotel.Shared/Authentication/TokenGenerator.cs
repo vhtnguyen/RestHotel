@@ -29,6 +29,8 @@ public class TokenGenerator : ITokenGenerator
 
         var token = new SecurityTokenDescriptor
         {
+            Issuer = _options.Issuer,
+            Audience = _options.Audience,
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(_options.ExpirationAt),
             SigningCredentials = new SigningCredentials(

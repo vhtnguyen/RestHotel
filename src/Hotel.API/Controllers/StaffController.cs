@@ -3,6 +3,8 @@ using Hotel.BusinessLogic.DTO.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Hotel.API.Controllers;
 
@@ -11,10 +13,14 @@ namespace Hotel.API.Controllers;
 public class StaffController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly ILogger<StaffController> _logger;
 
-    public StaffController(IUserService userService)
+    public StaffController(
+        ILogger<StaffController> logger,
+        IUserService userService)
     {
         _userService = userService;
+        _logger = logger;
     }
     [HttpGet("")]
 
@@ -38,12 +44,20 @@ public class StaffController : ControllerBase
         return Ok(await _userService.CreateUserAsync(userToCreateDTO));
     }
 
-
+    [Authorize(Roles = "staff")]
     [HttpGet("profile")]
     public async Task<ActionResult> GetUserDetailByID([FromQuery] int id)
     {
+        // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var result = await _userService.GetUserByIDAsync(id);
         return Ok(result);
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> Login(UserCreateDto user)
+    {
+        (var token, var userDto) = await _userService.Login(user);
+        return Ok(new { Token = token, user = userDto });
     }
 
     [HttpPut("")]

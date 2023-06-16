@@ -33,8 +33,12 @@ public static class Extensions
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.Key)),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = false,
+                    ValidIssuer = options.Issuer,
+                    ValidAudience = options.Audience
                 };
             });
 
