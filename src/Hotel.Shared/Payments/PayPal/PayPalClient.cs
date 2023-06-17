@@ -37,17 +37,15 @@ internal class PayPalClient : IPayPalClient
         };
 
         var total = resource.Items.Sum(i => i.Quantity * i.Price);
-        var tax = resource.TotalSum - total;
         var details = new Details()
         {
-            subtotal = total.ToString(),
-            tax = tax.ToString()
+            subtotal = total.ToString()
         };
         // create amount
         var amount = new Amount()
         {
             currency = resource.Currency,
-            total = resource.TotalSum.ToString("F"),
+            total = total.ToString("F"),
             details = details
         };
 

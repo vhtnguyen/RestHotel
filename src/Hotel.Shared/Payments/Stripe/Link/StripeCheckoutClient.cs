@@ -19,8 +19,6 @@ internal class StripeCheckoutClient : IStripeCheckoutClient
     {
         // StripeConfiguration.ApiKey = _options.ApiKey;
         var lineItems = new List<SessionLineItemOptions>();
-        var total = resource.Items.Sum(i => i.Quantity * i.Price);
-        var tax = resource.TotalSum - total;
 
         foreach (var item in resource.Items)
         {

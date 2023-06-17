@@ -15,6 +15,11 @@ namespace Hotel.BusinessLogic.Profiles
     {
         public RoomProfile()
         {
+            CreateMap<RoomToCreateDTO, Room>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Note, otp => otp.MapFrom(src => src.Note));
+
             CreateMap<Room, RoomToReturnDetailDTO>()
             .ForMember(dest => dest.RoomType, opt => opt.MapFrom(src => src.RoomDetail.RoomType))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.RoomDetail.Price))

@@ -3,6 +3,7 @@ using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.Shared.Exceptions;
 using org.apache.zookeeper.data;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,16 @@ namespace Hotel.BusinessLogic.Services
         private readonly IMapper _mapper;
         private readonly IRoomRepository _roomRepository;
         private readonly IReservationRepository _reservationRepository;
-        //private readonly IRoomDetail _roleRepository;
+        private readonly IRoomDetailRepository _roomDetailRepository;
 
         public RoomService(IRoomRepository roomRepository,
-                            IMapper mapper, IReservationRepository reservationRepository)
+                            IMapper mapper, IReservationRepository reservationRepository,
+                            IRoomDetailRepository roomDetail)
         {
             _mapper = mapper;
             _roomRepository = roomRepository;
             _reservationRepository = reservationRepository;
+            _roomDetailRepository = roomDetail;
         }
 
         public async Task<List<RoomToReturnListDTO>> GetRoomListAsync()
@@ -34,32 +37,25 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {
+
             if (await _roomRepository.FindAsync(roomToCreateDTO.Id) != null)
             {
                 // room id is existed
-                throw new NotImplementedException();
+                throw new DomainBadRequestException($"role has existed at id '{roomToCreateDTO.Id}'", "room_existed");
             }
-            Room new_room = new Room(roomToCreateDTO.Id, roomToCreateDTO.Status, roomToCreateDTO.Note);
 
-            // fake data for testing purpose
-            // right code:  RoomDetail detail=_roomDetailRepository.FindAsync(roomToCreateDTO.RoomDetailID);
-
-            RoomDetail detail = new RoomDetail(
-              0, 10000, "Double", "A haunted room", null
-            );
-            detail.RoomRegulation = new RoomRegulation(0, 5, 4, 90, 10, 10);
-
-            if (detail != null)
+            var roomDetail = await _roomDetailRepository.FindAsync(i => i.Id == roomToCreateDTO.RoomDetailID);
+            if (roomDetail == null)
             {
-                new_room.RoomDetail = detail;
-                await _roomRepository.CreateAsync(new_room);
-                return _mapper.Map<RoomToReturnDetailDTO>(new_room);
+                throw new DomainBadRequestException($"room detail hasn't existed at id '{roomToCreateDTO.RoomDetailID}'",
+                 "room_not_existed");
             }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            var room = _mapper.Map<Room>(roomToCreateDTO);
+            room.RoomDetail = roomDetail;
 
+
+            var _room = await _roomRepository.CreateAsync(room);
+            return _mapper.Map<RoomToReturnDetailDTO>(_room);
         }
 
         public async Task<RoomToReturnDetailDTO> GetRoomByIDAsync(int id)

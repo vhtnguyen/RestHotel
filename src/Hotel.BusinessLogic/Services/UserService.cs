@@ -138,25 +138,18 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Id == userID);
             if (user == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("user hasn't exsit", "user_not_exist");
             }
-            else
+            // check password
+            var isMatch = _stringHasher.Verify(user.Password!, currentPassWord);
+            if (isMatch == false)
             {
-                // check password
-                var isMatch = true;
-                if (!isMatch)
-                {
-                    throw new NotImplementedException();
-                }
-
-                // hashing password
-                var encryptPassword = newPassWord;
-
-                // change password
-                user.Password = encryptPassword;
-                await _userRepository.UpdateAsync(user);
-
+                throw new DomainBadRequestException("password is not matched", "password_not_matched");
             }
+
+            // change password
+            user.Password = _stringHasher.Hash(newPassWord);
+            await _userRepository.UpdateAsync(user);
         }
 
         public async Task<(string, UserToReturnDTO)> Login(UserCreateDto userLoginDto)
@@ -164,13 +157,13 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Account == userLoginDto.Username);
             if (user == null)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("user hasn't exsit", "user_not_exist");
             }
 
             var isMatch = _stringHasher.Verify(user.Password!, userLoginDto.Password);
             if (isMatch == false)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("password is not matched", "password_not_matched");
             }
 
             var roles = new List<string>();

@@ -14,7 +14,7 @@ public class ReservationController : ControllerBase
     private readonly IRoomService _roomService;
     private readonly IReservationCancellationService _reservationCancellationService;
 
-    public ReservationController(IReservationService reservationService, 
+    public ReservationController(IReservationService reservationService,
             IReservationCancellationService reservationCancellationService,
             IRoomService roomService)
     {
@@ -40,25 +40,11 @@ public class ReservationController : ControllerBase
         }
         PendingInvoiceReturnDTO Invoice = await _reservationService.CreatePendingReservation(reservation);
 
-        try
+        if (Invoice == null)
         {
-            if (Invoice == null)
-            {
-                return BadRequest("Some room has been booked before!");
-            }
-            return Ok(Invoice);
+            return BadRequest("Some room has been booked before!");
         }
-        finally
-        {
-            // Response.OnCompleted(async () => 
-            // {
-            //     if (Invoice != null)
-            //     {
-            //         await _reservationCancellationService.CheckConfirmedReservation(Invoice.InvoiceId);
-            //     }
-            // });
-
-        }
+        return Ok(Invoice);
     }
 
 
@@ -70,7 +56,7 @@ public class ReservationController : ControllerBase
         {
             return BadRequest("Wrong input date format");
         }
-        InvoiceReturnDTO Invoice = await _reservationService.ConfirmReservation(reservation);
+        var Invoice = await _reservationService.ConfirmReservation(reservation);
         if (Invoice == null)
         {
             return BadRequest("Reservation doesn't exist");
@@ -130,7 +116,7 @@ public class ReservationController : ControllerBase
     [HttpPost("edit")]
     public async Task<ActionResult> EditReservationCard(ReservationCardEditDTO reservationCardEditDTO)
     {
-        ReservationCardReturnDTO card = await _reservationService.EditReservationCard(reservationCardEditDTO);
+        var card = await _reservationService.EditReservationCard(reservationCardEditDTO);
         if (card == null)
         {
             return BadRequest("Wrong reservation card id");
