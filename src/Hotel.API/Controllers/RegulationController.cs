@@ -25,6 +25,11 @@ namespace Hotel.API.Controllers
 
             return _roomRegulationServices.getAllRoomRegulation();
         }
+        //[HttpPut("{id}")]
+        //public Task<ActionResult> update(int id,RoomRegulation )
+        //{
+
+        //}
         [HttpDelete]
         public async Task Delete(int id)
         {
