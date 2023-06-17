@@ -38,8 +38,8 @@ internal class InvoiceService : IInvoiceService
         {
             throw new DomainBadRequestException($"Card doen't exist on id '{cardId}'", "not_found_card");
         }
-
         invoice.AddReservationCard(card);
+        invoice.TotalSum += card.Room.RoomDetail.Price;
         // get reservation card
         await _invoiceRepository.SaveChangesAsync();
     }
@@ -59,6 +59,7 @@ internal class InvoiceService : IInvoiceService
             throw new DomainBadRequestException($"service doen't exist on id '{serviceId}'", "not_found_service");
         }
 
+        invoice.TotalSum += service.Price;
         invoice.AddHotelService(service);
         await _invoiceRepository.SaveChangesAsync();
     }
@@ -70,6 +71,7 @@ internal class InvoiceService : IInvoiceService
         {
             throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
         }
+
         await _invoiceRepository.RemoveInvoice(invoice);
     }
 
@@ -101,6 +103,7 @@ internal class InvoiceService : IInvoiceService
         }
 
         invoice.RemoveReservationCard(card);
+        invoice.TotalSum -= card.Room.RoomDetail.Price;
         // get reservation card
         await _invoiceRepository.SaveChangesAsync();
     }
@@ -120,6 +123,7 @@ internal class InvoiceService : IInvoiceService
             throw new DomainBadRequestException($"service doen't exist on id '{serviceId}'", "not_found_service");
         }
 
+        invoice.TotalSum -= service.Price;
         invoice.RemoveHotelService(service);
         await _invoiceRepository.SaveChangesAsync();
     }

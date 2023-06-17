@@ -136,7 +136,10 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<ReservationCard?> GetAsync(int id)
         {
-            return await _genericCardRepository.FindAsync(card => card.Id == id);
+            return await _context.ReservationCard
+                .Include(i => i.Room)
+                .ThenInclude(i => i.RoomDetail)
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }

@@ -21,11 +21,12 @@ internal class MomoClient : IMomoClient
 
     public async Task<SessionResource> CreateSession(CreateSessionResource resource)
     {
+        var totalSum = resource.Items.Sum(s => s.Quantity * s.Price);
         var payload = new MomoPayload
         {
             partnerCode = _options.PartnerCode,
             requestId = "REQUEST_" + resource.OrderId,
-            amount = (long)resource.Items.Sum(s => s.Quantity * s.Price),
+            amount = (long)resource.TotalSum,
             orderId = "ORDER_" + resource.OrderId,
             orderInfo = "Hotel invoice",
             redirectUrl = _options.ReturnUrl,

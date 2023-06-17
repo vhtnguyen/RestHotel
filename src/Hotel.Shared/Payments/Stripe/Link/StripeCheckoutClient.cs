@@ -17,8 +17,11 @@ internal class StripeCheckoutClient : IStripeCheckoutClient
     }
     public async Task<SessionResource> CreateSession(CreateSessionResource resource)
     {
-        StripeConfiguration.ApiKey = _options.ApiKey;
+        // StripeConfiguration.ApiKey = _options.ApiKey;
         var lineItems = new List<SessionLineItemOptions>();
+        var total = resource.Items.Sum(i => i.Quantity * i.Price);
+        var tax = resource.TotalSum - total;
+
         foreach (var item in resource.Items)
         {
             lineItems.Add(new SessionLineItemOptions
@@ -34,7 +37,6 @@ internal class StripeCheckoutClient : IStripeCheckoutClient
                         Name = item.Name
                     }
                 }
-
             });
         }
         var options = new SessionCreateOptions
