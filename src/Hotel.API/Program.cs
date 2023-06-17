@@ -92,7 +92,7 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 // app.UseJwtAuthentication();
-app.UseAuthorization();
+//app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 

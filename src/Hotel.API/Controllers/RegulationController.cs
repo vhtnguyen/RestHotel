@@ -31,11 +31,15 @@ namespace Hotel.API.Controllers
             await _roomRegulationServices.RemoveRoomRegulation(id);
         }
         [HttpPost]
-        public async Task Post(RoomRegulationToCreateDTO roomRegulation)
+        public async Task Create(RoomRegulationToCreateDTO roomRegulation)
         {
 
             await _roomRegulationServices.AddRoomRegulation(roomRegulation);
         }
-
+        //[HttpPost("update")]
+        //public async Task update(RoomRegulationToCreateDTO roomRegulation)
+        //{
+        //    await _roomRegulationServices.UpdateRoomRegulation( roomRegulation);
+        //}
     }
 }

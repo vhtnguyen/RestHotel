@@ -18,4 +18,8 @@ public class RoomDetail
         Description = description;
         Image = image;
     }
+
+    public RoomDetail()
+    {
+    }
 }

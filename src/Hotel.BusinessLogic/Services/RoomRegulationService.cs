@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.CodeDom;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.BusinessLogic.Services.IServices;
+using Hotel.Shared.Exceptions;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -69,13 +70,13 @@ namespace Hotel.BusinessLogic.Services
             else
             {
                 //throw exception here
-                throw new Exception("bad request");
+                throw new DomainBadRequestException("","");
             }
         }
 
 
 
-        public Task UpdateRoomRegulation(RoomRegulation regulation)
+        public Task UpdateRoomRegulation(RoomRegulationToCreateDTO regulation)
         {
             throw new NotImplementedException();
         }

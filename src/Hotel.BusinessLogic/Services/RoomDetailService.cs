@@ -3,24 +3,38 @@ using Hotel.BusinessLogic.DTO.RoomDetail;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.Shared.Exceptions;
 
 namespace Hotel.BusinessLogic.Services
 {
     internal class RoomDetailService : IRoomDetailService
     {
         private readonly IRoomDetailRepository _roomDetailRepository;
+        private readonly IRoomRegulationRepository _roomRegulationRepository;
         private readonly IMapper _mapper;
 
-        public RoomDetailService(IRoomDetailRepository userRepository, IMapper mapper)
+        public RoomDetailService(IRoomDetailRepository roomDetailRepository, IRoomRegulationRepository roomRegulationRepository, IMapper mapper)
         {
-            _roomDetailRepository = userRepository;
+            _roomDetailRepository = roomDetailRepository;
+            _roomRegulationRepository = roomRegulationRepository;
             _mapper = mapper;
         }
 
-        public async Task AddRoomDetail(RoomDetailToCreateDTO roomRegulation)
+        public async Task<RoomDetailToReturnDTO> CreateRoomDetail(RoomDetailToCreateDTO roomDetail)
         {
-            var room = _mapper.Map<RoomDetail>(roomRegulation);
-            await _roomDetailRepository.CreateAsync(room);
+            var roomRegulationID = roomDetail.RoomRegulationId;
+            var roomRegulation = await _roomRegulationRepository.FindAsync(x => x.Id == roomRegulationID);
+            if (roomRegulation==null)
+            {
+                throw new DomainBadRequestException("", "");
+            }
+           
+            RoomDetail newRoomDetail =  _mapper.Map<RoomDetail>(roomDetail);
+            newRoomDetail.RoomRegulation = roomRegulation;
+            await _roomDetailRepository.CreateAsync(newRoomDetail);
+
+            return _mapper.Map<RoomDetailToReturnDTO>(newRoomDetail);
+            
         }
 
         public async Task<IEnumerable<RoomDetailToReturnDTO>> getAllRoomDetail()
@@ -57,7 +71,7 @@ namespace Hotel.BusinessLogic.Services
             {
                 //throw exception here
                 //throw exception here
-                throw new Exception("bad request");
+                throw new DomainBadRequestException("", "");
             }
 
         }

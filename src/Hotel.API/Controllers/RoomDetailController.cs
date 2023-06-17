@@ -36,9 +36,9 @@ namespace Hotel.API.Controllers
             await _roomDetailService.RemoveRoomDetail(id);
         }
         [HttpPost]
-        public async Task Post(RoomDetailToCreateDTO roomDetail)
+        public async Task<RoomDetailToReturnDTO> Create(RoomDetailToCreateDTO roomDetail)
         {
-            await _roomDetailService.AddRoomDetail(roomDetail);
+            return   await _roomDetailService.CreateRoomDetail(roomDetail);
         }
 
     }

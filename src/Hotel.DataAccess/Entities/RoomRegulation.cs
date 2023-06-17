@@ -10,6 +10,7 @@ public class RoomRegulation
     public double MaxSurchargeRatio { get; set; }
     public double MaxOverseaSurchargeRatio { get; set; }
     public double RoomExchangeFee { get; set; }
+    //public 
 
     //public ICollection<RoomRegulationRoomDetail> RoomDetails { get; set; } = new List<RoomRegulationRoomDetail>();
     [JsonConstructor]
