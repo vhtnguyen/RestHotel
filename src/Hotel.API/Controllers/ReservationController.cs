@@ -2,6 +2,7 @@ using Hotel.BusinessLogic.DTO.HotelReservation;
 using Hotel.BusinessLogic.DTO.Rooms;
 using Hotel.BusinessLogic.Services;
 using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.API.Controllers;
@@ -96,6 +97,8 @@ public class ReservationController : ControllerBase
         return Ok(cards);
     }
 
+
+    [Authorize(Roles = "staff,manager")]
     [HttpPost("change-room")]
     public async Task<ActionResult> ChaneRoom(ChangeRoomDTO changeRoomDTO)
     {
@@ -113,6 +116,8 @@ public class ReservationController : ControllerBase
         return Ok(handledCards);
     }
 
+
+    [Authorize(Roles = "staff,manager")]
     [HttpPost("edit")]
     public async Task<ActionResult> EditReservationCard(ReservationCardEditDTO reservationCardEditDTO)
     {
@@ -125,6 +130,8 @@ public class ReservationController : ControllerBase
         return Ok(card);
     }
 
+
+    [Authorize(Roles = "staff,manager")]
     [HttpDelete("")]
     public async Task<ActionResult> RemoveReservationCard(IdDTO idDTO)
     {

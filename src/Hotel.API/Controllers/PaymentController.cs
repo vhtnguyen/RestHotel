@@ -84,10 +84,6 @@ public class PaymentController : ControllerBase
         {
             await _paymentService.PaySucceed(payment.resource.id);
         }
-        // else if (payment.event_type == "PAYMENT.SALE.DENIED")
-        // {
-        //     await _paymentService.PayFailed(payment.resource.id);
-        // }
         else
         {
             Console.WriteLine("Unhandled event type: {0}", payment.event_type);

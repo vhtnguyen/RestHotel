@@ -13,6 +13,6 @@ namespace Hotel.BusinessLogic.Services.IServices
 
         Task ChangeUserPassWordAsync(int userID, string newPassWord);
         Task ChangeUserPassWordAsync(int userID, string currentPassWord, string newPassWord);
-
+        Task AddRole(UserAddRoleDto role);
     }
 }

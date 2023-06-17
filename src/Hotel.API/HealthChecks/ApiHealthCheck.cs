@@ -7,6 +7,6 @@ public class ApiHealthCheck : IHealthCheck
     // ping api
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(HealthCheckResult.Healthy("api endpoint is health"));
     }
 }

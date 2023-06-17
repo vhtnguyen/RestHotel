@@ -3,6 +3,7 @@ using Hotel.BusinessLogic.DTO.RoomDetail;
 using Hotel.BusinessLogic.DTO.RoomRegulation;
 using Hotel.BusinessLogic.Services;
 using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.API.Controllers
@@ -18,7 +19,6 @@ namespace Hotel.API.Controllers
             this._roomDetailService = roomDetailService;
         }
 
-
         [HttpGet("id")]
         public async Task<RoomDetailToReturnDTO> Get(int id)
         {
@@ -30,11 +30,17 @@ namespace Hotel.API.Controllers
 
             return _roomDetailService.getAllRoomDetail();
         }
+
+
+        [Authorize(Roles = "manager")]
         [HttpDelete]
         public async Task Delete(int id)
         {
             await _roomDetailService.RemoveRoomDetail(id);
         }
+
+
+        [Authorize(Roles = "manager")]
         [HttpPost]
         public async Task Post(RoomDetailToCreateDTO roomDetail)
         {

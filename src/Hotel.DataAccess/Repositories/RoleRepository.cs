@@ -22,12 +22,11 @@ public class RoleRepository : IRoleRepository
         {
             list_role = all_roles.Where(predicate.Compile()).ToList();
         }
-        else
-        {
-
-        }
         return list_role;
     }
 
-
+    public Task Create(Role role)
+    {
+        return _genericRepository.CreateAsync(role);
+    }
 }

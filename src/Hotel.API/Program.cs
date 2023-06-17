@@ -78,11 +78,14 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+
+// }
+
+// add swagger
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseRedisStreaming()
     .SubscribeAsync<SendNotificationCommand>("email")

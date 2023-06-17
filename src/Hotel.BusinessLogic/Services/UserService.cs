@@ -40,7 +40,7 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(userId);
             if (user == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("user hasn't exsit", "user_not_exist");
             }
             else
             {
@@ -52,13 +52,13 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Account == userToCreateDTO.Account);
             if (user != null)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("user has existed", "");
             }
             var new_role = await _roleRepository.FindAsync(r => r.Id == userToCreateDTO.Role);
 
             if (new_role == null)
             {
-                throw new DomainBadRequestException("", "");
+                throw new DomainBadRequestException("role has not exist", "");
             }
             var new_user = _mapper.Map<User>(userToCreateDTO);
             // change password
@@ -120,7 +120,7 @@ namespace Hotel.BusinessLogic.Services
             var user = await _userRepository.FindAsync(u => u.Id == userID);
             if (user == null)
             {
-                throw new NotImplementedException();
+                throw new DomainBadRequestException("user hasn't exsit", "user_not_exist");
             }
             else
             {
@@ -177,6 +177,15 @@ namespace Hotel.BusinessLogic.Services
             var token = await _tokenGenerator.GenerateToken(tokenPayload);
 
             return (token, _mapper.Map<UserToReturnDTO>(user));
+        }
+
+        public async Task AddRole(UserAddRoleDto roleType)
+        {
+            var role = new Role()
+            {
+                NameType = roleType.RoleType
+            };
+            await _roleRepository.Create(role);
         }
     }
 }

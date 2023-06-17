@@ -8,6 +8,5 @@ public interface IRoleRepository
 {
     Task<Role?> FindAsync(Expression<Func<Role, bool>> predicate);
     Task<List<Role>?> FindAllAsync(Expression<Func<Role, bool>> predicate);
-
-
+    Task Create(Role role);
 }

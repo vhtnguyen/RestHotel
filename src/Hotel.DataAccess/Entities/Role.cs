@@ -10,10 +10,10 @@ public class Role
     // navigation property
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 
-    [JsonConstructor]
-    public Role(int id, string? nameType)
-    {
-        Id = id;
-        NameType = nameType;
-    }
+    // [JsonConstructor]
+    // public Role(int id, string? nameType)
+    // {
+    //     Id = id;
+    //     NameType = nameType;
+    // }
 }

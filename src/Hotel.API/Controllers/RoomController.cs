@@ -7,6 +7,7 @@ using Hotel.DataAccess.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Hotel.BusinessLogic.DTO.Users;
 using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.API.Controllers;
 
@@ -25,11 +26,16 @@ public class RoomController : ControllerBase
         return Ok(await _roomService.GetRoomListAsync());
     }
 
+
+    [Authorize(Roles = "manager")]
     [HttpPost("")]
     public async Task<ActionResult<RoomToReturnDetailDTO>> CreateRoom([FromBody] RoomToCreateDTO roomToCreateDTO)
     {
         return Ok(await _roomService.CreateRoomAsync(roomToCreateDTO));
     }
+
+
+    [Authorize(Roles = "manager")]
     [HttpDelete("")]
 
     public async Task<ActionResult<List<RoomToReturnListDTO>>> RemoveRoom([FromQuery] int id)
@@ -39,7 +45,7 @@ public class RoomController : ControllerBase
     }
 
     [HttpGet("detail")]
-    public async Task<ActionResult<RoomToReturnDetailDTO>> Get([FromQuery]int id)
+    public async Task<ActionResult<RoomToReturnDetailDTO>> Get([FromQuery] int id)
     {
         return Ok(await _roomService.GetRoomByIDAsync(id));
     }

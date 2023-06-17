@@ -10,18 +10,20 @@ namespace Hotel.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class StaffController : ControllerBase
+public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly ILogger<StaffController> _logger;
+    private readonly ILogger<UserController> _logger;
 
-    public StaffController(
-        ILogger<StaffController> logger,
+    public UserController(
+        ILogger<UserController> logger,
         IUserService userService)
     {
         _userService = userService;
         _logger = logger;
     }
+
+    [Authorize(Roles = "manager")]
     [HttpGet("")]
 
     public async Task<ActionResult> Get()
@@ -29,6 +31,7 @@ public class StaffController : ControllerBase
         return Ok(await _userService.GetUserListAsync());
     }
 
+    [Authorize(Roles = "manager")]
     [HttpGet("search")]
     public async Task<ActionResult<UserToReturnDTO>> Search([FromQuery] string value, string option = "id")
     {
@@ -38,18 +41,20 @@ public class StaffController : ControllerBase
         return Ok(await _userService.SearchUserAsync(option, value));
     }
 
+
+    [Authorize(Roles = "manager")]
     [HttpPost("")]
     public async Task<ActionResult> CreateUser([FromBody] UserToCreateDTO userToCreateDTO)
     {
         return Ok(await _userService.CreateUserAsync(userToCreateDTO));
     }
 
-    [Authorize(Roles = "staff")]
+    [Authorize(Roles = "staff,manager")]
     [HttpGet("profile")]
-    public async Task<ActionResult> GetUserDetailByID([FromQuery] int id)
+    public async Task<ActionResult> GetUserDetailByID()
     {
-        // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var result = await _userService.GetUserByIDAsync(id);
+        var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _userService.GetUserByIDAsync(userId);
         return Ok(result);
     }
 
@@ -60,18 +65,38 @@ public class StaffController : ControllerBase
         return Ok(new { Token = token, user = userDto });
     }
 
+
+    [Authorize(Roles = "staff,manager")]
     [HttpPut("")]
-    public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody] string newPassWord)
+    public async Task<ActionResult> ChangeUserPassword([FromBody] string newPassWord)
     {
-        await _userService.ChangeUserPassWordAsync(id, newPassWord);
+        var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        await _userService.ChangeUserPassWordAsync(userId, newPassWord);
         return Ok("ok");
     }
 
+    [Authorize(Roles = "staff,manager")]
+    [HttpPut("")]
+    public async Task<ActionResult> ChangeUserPassword([FromBody] string currentPassWord, string newPassWord)
+    {
+        var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        await _userService.ChangeUserPassWordAsync(userId, currentPassWord, newPassWord);
+        return Ok("ok");
+    }
+
+    [Authorize(Roles = "manager")]
     [HttpDelete("")]
     public async Task<ActionResult> RemoveUser([FromQuery] int id)
     {
         await _userService.RemoveUserAsync(id);
         return Ok($"Removed user #'{id}'.");
+    }
+
+    [HttpPost("role")]
+    public async Task<ActionResult> AddRole(UserAddRoleDto role)
+    {
+        await _userService.AddRole(role);
+        return NoContent();
     }
 }
 
