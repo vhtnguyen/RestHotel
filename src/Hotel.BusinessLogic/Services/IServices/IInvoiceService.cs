@@ -11,4 +11,5 @@ public interface IInvoiceService
     Task AddReservationCard(int invoiceId, int cardId);
     Task RemoveReservationCard(int invoiceId, int cardId);
     Task Delete(int invoiceId);
+    Task<(double, List<string>)> CalculateInvoice(int id);
 }

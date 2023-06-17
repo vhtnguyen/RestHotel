@@ -140,6 +140,13 @@ namespace Hotel.DataAccess.Repositories
                 .Include(i => i.Room)
                 .ThenInclude(i => i.RoomDetail)
                 .FirstOrDefaultAsync(i => i.Id == id);
+
+        }
+        public async Task<int> GetTotalPages(int page, int entries)
+        {
+            int TotalCount = await _context.ReservationCard.CountAsync();
+            int TotalPages = (int)Math.Ceiling((double)TotalCount / entries);
+            return TotalPages;
         }
     }
 }

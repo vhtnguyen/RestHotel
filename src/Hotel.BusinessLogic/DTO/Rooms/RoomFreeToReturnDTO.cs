@@ -17,5 +17,8 @@ namespace Hotel.BusinessLogic.DTO.Rooms
         public int DefaultGuest {get; set;}
         public int MaxGuest {get; set;}
         public double Price {get; set;}
+        public double MaxSurchargeRatio { get; set; }
+        public double MaxOverseaSurchargeRatio { get; set; }
+        public double RoomExchangeFee { get; set; }
     }
 }

@@ -61,11 +61,11 @@ namespace Hotel.BusinessLogic.Services
                         return null;
                     }
                     createInvoice.ReservationCards.ElementAt(i).SetRoom(RoomByID);
-                    createInvoice.ReservationCards.ElementAt(i).RoomRegulation = RoomByID.RoomDetail.RoomRegulation;
+                    createInvoice.ReservationCards.ElementAt(i).RoomRegulation = RoomByID.RoomDetail!.RoomRegulation;
                     //check conflict
                     foreach (ReservationCard card in CardsListByTime)
                     {
-                        if (card.Room.Id == reservationDTO.ReservationCards.ElementAt(i).RoomId)
+                        if (card.Room!.Id == reservationDTO.ReservationCards.ElementAt(i).RoomId)
                         {
                             return null;
                         }
@@ -74,10 +74,11 @@ namespace Hotel.BusinessLogic.Services
             }
 
             Invoice? Result = await _invoiceRepository.CreateAsync(createInvoice!);
+
             //_reservationRepository.CommitTranasction(transaction);
 
             //return _mapper.Map<InvoiceReturnDTO>(Result);
-            return new PendingInvoiceReturnDTO(Result.Id);
+            return new PendingInvoiceReturnDTO(Result!.Id);
         }
 
         public async Task<InvoiceReturnDTO?> ConfirmReservation(ReservationConfirmedDTO reservationDTO)
@@ -99,7 +100,7 @@ namespace Hotel.BusinessLogic.Services
                 {
                     foreach (ReservationCard aCard in availableCards)
                     {
-                        if (aCard.Room.Id == card.RoomId)
+                        if (aCard.Room!.Id == card.RoomId)
                         {
                             aCard.Guests = _mapper.Map<List<Guest>>(card.Guests);
                             aCard.Notes = card.Notes;
@@ -108,6 +109,9 @@ namespace Hotel.BusinessLogic.Services
                     }
                 }
                 invoice.ReservationCards = availableCards;
+                double total = await CountRoomFee(invoice.Id);
+                invoice.TotalSum = total;
+                await _invoiceRepository.UpdateInvoice(invoice);
             }
             else
             {
@@ -150,9 +154,14 @@ namespace Hotel.BusinessLogic.Services
                 var result = _mapper.Map<List<ReservationCardReturnDTO>>(cards);
                 return result;
             }
+
+            Invoice? invoiceToFindFee = await _invoiceRepository.FindAsync(i => i.Id == changeRoomDTO.InvoiceId);
+            double oldRoomFee = await CountRoomFee(invoiceToFindFee!.Id);
+            double serviceFee = invoiceToFindFee.TotalSum - oldRoomFee;
+
             foreach (ReservationCard oldCard in cards)
             {
-                if (oldCard.Room.Id == changeRoomDTO.OldRoomId)
+                if (oldCard.Room!.Id == changeRoomDTO.OldRoomId)
                 {
                     //just extend time of stay
                     if (changeRoomDTO.OldRoomId == changeRoomDTO.NewRoomId)
@@ -166,12 +175,12 @@ namespace Hotel.BusinessLogic.Services
                         {
                             return null;
                         }
-                        Invoice invoice = await _invoiceRepository.FindAsync(i => i.Id == oldCard.Invoice.Id);
+                        Invoice? invoice = await _invoiceRepository.FindAsync(i => i.Id == oldCard.Invoice!.Id);
                         oldCard.DepartureDate = DateTime.UtcNow;
                         ReservationCard newCard = new ReservationCard();
                         newCard.ArrivalDate = DateTime.UtcNow;
                         newCard.DepartureDate = changeRoomDTO.To;
-                        newCard.SetInvoice(invoice);
+                        newCard.SetInvoice(invoice!);
                         newCard.SetRoom(RoomByID);
                         foreach (Guest guest in oldCard.Guests)
                         {
@@ -179,7 +188,7 @@ namespace Hotel.BusinessLogic.Services
                                     guest.Address, guest.Type, guest.PersonIdentification));
                         }
                         newCard.Notes = oldCard.Notes;
-                        newCard.RoomRegulation = RoomByID.RoomDetail.RoomRegulation;
+                        newCard.RoomRegulation = RoomByID.RoomDetail!.RoomRegulation;
                         ReservationCard createdCard = await _reservationRepository.CreateAsync(newCard);
                         handledCards.Add(createdCard);
                     }
@@ -187,6 +196,9 @@ namespace Hotel.BusinessLogic.Services
                     handledCards.Add(oldCard);
                 }
             }
+
+            invoiceToFindFee.TotalSum = serviceFee + await CountRoomFee(invoiceToFindFee.Id);
+            await _invoiceRepository.UpdateInvoice(invoiceToFindFee);
 
             return _mapper.Map<List<ReservationCardReturnDTO>>(handledCards);
         }
@@ -219,6 +231,53 @@ namespace Hotel.BusinessLogic.Services
 
             var result = _mapper.Map<ReservationCardReturnDTO>(card);
             return result;
+        }
+
+        public async Task<int> GetTotalPage(int page, int entries)
+        {
+            return await _reservationRepository.GetTotalPages(page, entries);
+        }
+
+        public async Task<double> CountRoomFee(int id)
+        {
+            double total = 0;
+
+            Invoice? invoice = await _invoiceRepository.GetInvoiceDetail(id);
+
+            foreach (ReservationCard card in invoice!.ReservationCards)
+            {
+                int daysOfStay = card.DepartureDate.Day - card.ArrivalDate.Day + 1;
+                int numGuests = card.Guests.Count();
+                Boolean hasForeign = false;
+                double roomFee = card.Room!.RoomDetail!.Price;
+
+                foreach (Guest guest in card.Guests)
+                {
+                    if (guest.Type == "foreign")
+                    {
+                        hasForeign = true;
+                        break;
+                    }
+                }
+
+                if (hasForeign)
+                {
+                    roomFee = roomFee + roomFee * card.RoomRegulation!.MaxOverseaSurchargeRatio;
+                }
+
+                if (numGuests > card.RoomRegulation!.DefaultGuest)
+                {
+                    roomFee = roomFee + roomFee * card.RoomRegulation!.MaxSurchargeRatio;
+                }
+
+                roomFee = roomFee * daysOfStay;
+                total = total + roomFee;
+            }
+
+            invoice.TotalSum = total;
+
+            //await _invoiceRepository.UpdateInvoice(invoice);
+            return total;
         }
     }
 }

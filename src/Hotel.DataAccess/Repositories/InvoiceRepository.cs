@@ -3,6 +3,7 @@ using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Hotel.Shared.Exceptions;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -39,11 +40,11 @@ internal class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceDetail(int id)
     {
         var result = await _context.Invoice
-                        .Include(i => i.ReservationCards)
-                        .ThenInclude(i => i.Room)
-                        .ThenInclude(i => i.RoomDetail)
-                        .Include(i => i.HotelServices)
-                        .ThenInclude(i => i.HotelService)
+                        .Include(i => i.ReservationCards).ThenInclude(card => card.Guests)
+                        .Include(i => i.ReservationCards).ThenInclude(card => card.Room)
+                            .ThenInclude(room => room!.RoomDetail)
+                        .Include(i => i.ReservationCards).ThenInclude(card => card.RoomRegulation)
+                        .Include(i => i.HotelServices).ThenInclude(i => i.HotelService)
                         .FirstOrDefaultAsync(i => i.Id == id);
 
         return result;
