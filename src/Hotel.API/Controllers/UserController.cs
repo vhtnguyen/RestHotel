@@ -66,12 +66,12 @@ public class UserController : ControllerBase
     }
 
 
-    [Authorize(Roles = "staff,manager")]
-    [HttpPut("")]
-    public async Task<ActionResult> ChangeUserPassword([FromBody] string newPassWord)
+    // admin change password for user
+    [Authorize(Roles = "manager")]
+    [HttpPut("admin")]
+    public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody] string newPassWord)
     {
-        var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        await _userService.ChangeUserPassWordAsync(userId, newPassWord);
+        await _userService.ChangeUserPassWordAsync(id, newPassWord);
         return Ok("ok");
     }
 

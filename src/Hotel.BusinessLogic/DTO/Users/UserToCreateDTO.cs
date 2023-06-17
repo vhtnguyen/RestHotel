@@ -8,12 +8,12 @@ namespace Hotel.BusinessLogic.DTO.Users
 {
     public class UserToCreateDTO
     {
-        public string? Account { get; set; }
-        public string? Password { get; set; }
-        public string? FullName { get; set; }
+        public required string Account { get; set; }
+        public required string Password { get; set; }
+        public required string FullName { get; set; }
         public string? Email { get; set; }
         public string? TelephoneNumber { get; set; }
-        public int? Role { get; set; }
+        public required int Role { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hotel.BusinessLogic.DTO.RoomRegulation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Hotel.BusinessLogic.DTO.RoomDetail
         public string? RoomType { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
+        public RoomRegulationToReturnDTO roomRegulation { get; set; }
         public RoomDetailToReturnDTO(int id, double price, string? roomType, string? description, string? image)
         {
             Id = id;

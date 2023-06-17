@@ -10,7 +10,7 @@ namespace Hotel.BusinessLogic.Services.IServices
         Task RemoveUserAsync(int userId);
 
         Task<UserToReturnDTO> GetUserByIDAsync(int userId);
-
+        Task<UserToReturnDTO> GetUserByUsernameAsync(string username);
         Task ChangeUserPassWordAsync(int userID, string newPassWord);
         Task ChangeUserPassWordAsync(int userID, string currentPassWord, string newPassWord);
         Task AddRole(UserAddRoleDto role);

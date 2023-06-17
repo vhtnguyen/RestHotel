@@ -12,17 +12,21 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.CodeDom;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.BusinessLogic.Services.IServices;
+using Hotel.Shared.Exceptions;
 
 namespace Hotel.BusinessLogic.Services
 {
     internal class RoomRegulationService : IRoomRegulationService
     {
         private readonly IRoomRegulationRepository _roomRegulationRepository;
+        private readonly IRoomDetailRepository _roomDetailRepository;
         private readonly IMapper _mapper;
-        public RoomRegulationService(IRoomRegulationRepository userRepository, IMapper mapper)
+
+        public RoomRegulationService(IRoomRegulationRepository roomRegulationRepository, IRoomDetailRepository roomDetailRepository, IMapper mapper)
         {
+            _roomRegulationRepository = roomRegulationRepository;
+            _roomDetailRepository = roomDetailRepository;
             _mapper = mapper;
-            _roomRegulationRepository = userRepository;
         }
 
         public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
@@ -69,15 +73,42 @@ namespace Hotel.BusinessLogic.Services
             else
             {
                 //throw exception here
-                throw new Exception("bad request");
+                throw new DomainBadRequestException("","");
             }
         }
 
 
 
-        public Task UpdateRoomRegulation(RoomRegulation regulation)
+        public async Task UpdateRoomRegulation(int id,RoomRegulationToCreateDTO roomRegulation)
         {
-            throw new NotImplementedException();
+
+   
+            var findRegulation = await _roomRegulationRepository.FindAsync(x => x.Id == id);
+            Console.WriteLine("haha");
+            if (findRegulation == null)
+            {
+                throw new DomainBadRequestException("Invalid id for RoomRegulation", "id_not_existed");
+            }
+            var roomDetailList = await _roomDetailRepository.BrowserAsync();
+
+            Console.WriteLine("h");
+
+            var room = _mapper.Map<RoomRegulation>(roomRegulation);
+            await _roomRegulationRepository.CreateAsync(room);
+
+            foreach (var x in roomDetailList)
+            {
+                Console.WriteLine(x.RoomRegulation.Id);
+                if (x.RoomRegulation.Id == id)
+                {
+                    Console.WriteLine("there");
+                    x.RoomRegulation = room;
+                    
+                }
+            }
+            await _roomDetailRepository.SaveChangeAsync();
+          
+
         }
     }
 }

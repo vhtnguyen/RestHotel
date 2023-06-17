@@ -37,6 +37,7 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {
+<<<<<<< HEAD
 
             if (await _roomRepository.FindAsync(roomToCreateDTO.Id) != null)
             {
@@ -52,6 +53,23 @@ namespace Hotel.BusinessLogic.Services
             }
             var room = _mapper.Map<Room>(roomToCreateDTO);
             room.RoomDetail = roomDetail;
+=======
+            var room = await _roomRepository.FindAsync(roomToCreateDTO.Id);
+            if (room != null)
+            {
+                throw new DomainBadRequestException("Create fail", "Room id is exist");
+            }
+            Room new_room = new Room(roomToCreateDTO.Id, roomToCreateDTO.Status, roomToCreateDTO.Note);
+
+            var roomDetail = await _roomDetailRepository.FindAsync(i => i.Id == roomToCreateDTO.RoomDetailID);
+            if (roomDetail == null)
+            {
+                throw new DomainBadRequestException("Create fail", "Room detail id is invalid");
+            }
+            new_room.RoomDetail = detail;
+            await _roomRepository.CreateAsync(new_room);
+            return _mapper.Map<RoomToReturnDetailDTO>(new_room);
+>>>>>>> 27c47a8c1cfa1830d62d87e740928eec35d4b2ec
 
 
             var _room = await _roomRepository.CreateAsync(room);

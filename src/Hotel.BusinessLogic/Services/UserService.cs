@@ -47,6 +47,21 @@ namespace Hotel.BusinessLogic.Services
                 return _mapper.Map<UserToReturnDTO>(user);
             }
         }
+
+        public async Task<UserToReturnDTO> GetUserByUsernameAsync(string username)
+        {
+            var user = await _userRepository.FindAsync(u => u.Account == username);
+            if (user == null)
+            {
+                throw new DomainBadRequestException("", "User not found");
+
+            }
+            else
+            {
+                return _mapper.Map<UserToReturnDTO>(user);
+            }
+        }
+
         public async Task<UserToReturnDTO> CreateUserAsync(UserToCreateDTO userToCreateDTO)
         {
             var user = await _userRepository.FindAsync(u => u.Account == userToCreateDTO.Account);
@@ -72,10 +87,13 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task RemoveUserAsync(int userId)
         {
-            // finduser
-            // if(user)
-            // delete user
+            var user = _userRepository.FindAsync(userId);
+            if (user == null)
+            {
+                throw new DomainBadRequestException("Remove fail", "User not found");
+            }
             await _userRepository.DeleteByIDAsync(userId);
+
         }
         public async Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent)
         {
@@ -122,16 +140,12 @@ namespace Hotel.BusinessLogic.Services
             {
                 throw new DomainBadRequestException("user hasn't exsit", "user_not_exist");
             }
-            else
-            {
-                // hashing new password
-                var encryptPassword = newPassWord;
+            // hashing new password
+            var encryptPassword = _stringHasher.Hash(newPassWord); ;
 
-                // change password
-                user.Password = encryptPassword;
-                await _userRepository.UpdateAsync(user);
-
-            }
+            // change password
+            user.Password = encryptPassword;
+            await _userRepository.UpdateAsync(user);
         }
         public async Task ChangeUserPassWordAsync(int userID, string currentPassWord, string newPassWord)
         {

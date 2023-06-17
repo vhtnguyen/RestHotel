@@ -17,33 +17,38 @@ namespace Hotel.API.Controllers
         }
 
         [HttpGet("id")]
-        public async Task<RoomRegulationToReturnDTO> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            return await _roomRegulationServices.getRoomByID(id);
+            return Ok(await _roomRegulationServices.getRoomByID(id));
         }
         [HttpGet]
-        public Task<IEnumerable<RoomRegulationToReturnDTO>> Get()
+        public async Task<ActionResult> Get()
         {
 
-            return _roomRegulationServices.getAllRoomRegulation();
+            return Ok(await _roomRegulationServices.getAllRoomRegulation());
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, RoomRegulationToCreateDTO roomRegulation)
+        {
+            await _roomRegulationServices.UpdateRoomRegulation(id, roomRegulation);
+            return NoContent();
 
-
-        [Authorize(Roles = "staff,manager")]
+        }
         [HttpDelete]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             await _roomRegulationServices.RemoveRoomRegulation(id);
+            return NoContent();
         }
 
 
         [Authorize(Roles = "manager")]
         [HttpPost]
-        public async Task Post(RoomRegulationToCreateDTO roomRegulation)
+        public async Task<ActionResult> Create(RoomRegulationToCreateDTO roomRegulation)
         {
 
             await _roomRegulationServices.AddRoomRegulation(roomRegulation);
+            return NoContent();
         }
-
     }
 }

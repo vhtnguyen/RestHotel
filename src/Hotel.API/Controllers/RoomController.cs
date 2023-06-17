@@ -1,12 +1,7 @@
 ﻿
 using Hotel.BusinessLogic.DTO.Rooms;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Hotel.BusinessLogic.Services;
-using Hotel.DataAccess.Entities;
-using Microsoft.IdentityModel.Tokens;
-using Hotel.BusinessLogic.DTO.Users;
-using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.API.Controllers;

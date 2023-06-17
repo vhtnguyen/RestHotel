@@ -13,8 +13,8 @@ namespace Hotel.BusinessLogic.Services.IServices
     {
         Task<IEnumerable<RoomDetailToReturnDTO>> getAllRoomDetail();
         Task<RoomDetailToReturnDTO> getRoomDetailByID(int id);
-        Task AddRoomDetail(RoomDetailToCreateDTO roomRegulation);
+        Task <RoomDetailToReturnDTO> CreateRoomDetail(RoomDetailToCreateDTO roomDetail);
         Task RemoveRoomDetail(int id);
-        Task UpdateRoomDetail(RoomDetail regulation);
+        Task UpdateRoomDetail(RoomDetailToReturnDTO regulation);
     }
 }

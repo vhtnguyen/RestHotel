@@ -16,7 +16,7 @@ namespace Hotel.BusinessLogic.Profiles
         {
             CreateMap<RoomDetail, RoomDetailToCreateDTO>();
             CreateMap<RoomDetailToCreateDTO, RoomDetail>().ForMember(des => des.Id, src => src.Ignore());
-            CreateMap<RoomDetail, RoomDetailToReturnDTO>();
+            CreateMap<RoomDetail, RoomDetailToReturnDTO>().ForMember(des=>des.roomRegulation,src=>src.MapFrom(x=>x.RoomRegulation) );
             CreateMap<RoomDetailToReturnDTO, RoomDetail>();
         }
     }

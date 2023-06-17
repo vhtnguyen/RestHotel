@@ -22,15 +22,14 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task<IEnumerable<ServiceToReturnDTO>> GetServicesAsync()
         {
-            var ServicesToReturn = await _hotelServiceRepository.GetListAsync();
-            return _mapper.Map<List<ServiceToReturnDTO>>(ServicesToReturn);
+            var services = await _hotelServiceRepository.GetListAsync();
+            return _mapper.Map<List<ServiceToReturnDTO>>(services);
         }
 
         public async Task<ServiceToReturnDTO> CreateServiceAsync(ServiceToCreateDTO serviceDTO)
         {
             HotelService new_service = _mapper.Map<HotelService>(serviceDTO);
             var new_service_with_category = await _hotelServiceRepository.CreateAsync(new_service, serviceDTO.Category);
-
             return _mapper.Map<ServiceToReturnDTO>(new_service_with_category);
         }
         public async Task<IEnumerable<ServiceToReturnDTO>?> SearchSeviceAsync(string? value, string searchOption, int category)
@@ -46,14 +45,14 @@ namespace Hotel.BusinessLogic.Services
             {
                 case "id":
                     {
-                        Expression<Func<HotelService, bool>> predicate = service => service.Id.ToString().Contains(value) && (category == 0 || service.Category.Id == category);
+                        Expression<Func<HotelService, bool>> predicate = service => service.Id.ToString().Contains(value!) && (category == 0 || service!.Category!.Id == category);
                         result = await _hotelServiceRepository.FindAllAsync(predicate);
                         break;
                     }
 
                 case "name":
                     {
-                        Expression<Func<HotelService, bool>> predicate = service => service.Name.Contains(value) && (category == 0 || service.Category.Id == category);
+                        Expression<Func<HotelService, bool>> predicate = service => service!.Name!.Contains(value!) && (category == 0 || service!.Category!.Id == category);
                         result = await _hotelServiceRepository.FindAllAsync(predicate);
                         break;
                     }
@@ -62,7 +61,7 @@ namespace Hotel.BusinessLogic.Services
                 case "all":
 
                     {
-                        Expression<Func<HotelService, bool>> predicate = service => service.Category.Id == category;
+                        Expression<Func<HotelService, bool>> predicate = service => service!.Category!.Id == category;
                         result = await _hotelServiceRepository.FindAllAsync(predicate);
                         break;
                     }

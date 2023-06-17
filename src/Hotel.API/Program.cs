@@ -78,14 +78,14 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-
-// }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // add swagger
-app.UseSwagger();
-app.UseSwaggerUI();
+
 
 app.UseRedisStreaming()
     .SubscribeAsync<SendNotificationCommand>("email")
@@ -95,7 +95,7 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 // app.UseJwtAuthentication();
-app.UseAuthorization();
+//app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
