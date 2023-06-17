@@ -19,11 +19,14 @@ namespace Hotel.BusinessLogic.Services
     internal class RoomRegulationService : IRoomRegulationService
     {
         private readonly IRoomRegulationRepository _roomRegulationRepository;
+        private readonly IRoomDetailRepository _roomDetailRepository;
         private readonly IMapper _mapper;
-        public RoomRegulationService(IRoomRegulationRepository userRepository, IMapper mapper)
+
+        public RoomRegulationService(IRoomRegulationRepository roomRegulationRepository, IRoomDetailRepository roomDetailRepository, IMapper mapper)
         {
+            _roomRegulationRepository = roomRegulationRepository;
+            _roomDetailRepository = roomDetailRepository;
             _mapper = mapper;
-            _roomRegulationRepository = userRepository;
         }
 
         public async Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation)
@@ -76,9 +79,36 @@ namespace Hotel.BusinessLogic.Services
 
 
 
-        public Task UpdateRoomRegulation(RoomRegulationToCreateDTO regulation)
+        public async Task UpdateRoomRegulation(int id,RoomRegulationToCreateDTO roomRegulation)
         {
-            throw new NotImplementedException();
+
+   
+            var findRegulation = await _roomRegulationRepository.FindAsync(x => x.Id == id);
+            Console.WriteLine("haha");
+            if (findRegulation == null)
+            {
+                throw new DomainBadRequestException("Invalid id for RoomRegulation", "id_not_existed");
+            }
+            var roomDetailList = await _roomDetailRepository.BrowserAsync();
+
+            Console.WriteLine("h");
+
+            var room = _mapper.Map<RoomRegulation>(roomRegulation);
+            await _roomRegulationRepository.CreateAsync(room);
+
+            foreach (var x in roomDetailList)
+            {
+                Console.WriteLine(x.RoomRegulation.Id);
+                if (x.RoomRegulation.Id == id)
+                {
+                    Console.WriteLine("there");
+                    x.RoomRegulation = room;
+                    
+                }
+            }
+            await _roomDetailRepository.SaveChangeAsync();
+          
+
         }
     }
 }

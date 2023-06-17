@@ -76,9 +76,15 @@ namespace Hotel.BusinessLogic.Services
 
         }
 
-        public Task UpdateRoomDetail(RoomDetail regulation)
+        public async Task UpdateRoomDetail(RoomDetailToReturnDTO roomDetail)
         {
-            throw new NotImplementedException();
+            var roomDetailId= await _roomDetailRepository.FindAsync(x=>x.Id==roomDetail.Id);
+            if (roomDetailId == null)
+            {
+                throw new DomainBadRequestException("Invalid id","update_fail");
+            }
+            roomDetailId= _mapper.Map< RoomDetailToReturnDTO , RoomDetail >(roomDetail, roomDetailId);
+            await _roomDetailRepository.SaveChangeAsync();
         }
     }
 }

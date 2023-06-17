@@ -14,7 +14,8 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         Task<RoomDetail?> FindAsync(Expression<Func<RoomDetail, bool>> predicate);
         Task<RoomDetail?> FindAsync(int id);
         Task CreateAsync(RoomDetail entity);
-        Task UpdateAsync(RoomDetail entity);
+        Task SaveChangeAsync();
+        Task  UpdateAsync(RoomDetail entity);
         Task DeleteAsync( RoomDetail entity);
     }
 }

@@ -40,6 +40,11 @@ namespace Hotel.API.Controllers
         {
             return   await _roomDetailService.CreateRoomDetail(roomDetail);
         }
+        [HttpPut]
+        public async Task update(RoomDetailToReturnDTO roomDetail)
+        {
+             await   _roomDetailService.UpdateRoomDetail(roomDetail);
+        }
 
     }
 }

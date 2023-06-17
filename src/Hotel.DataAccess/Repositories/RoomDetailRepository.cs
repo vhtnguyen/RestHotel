@@ -1,26 +1,28 @@
-﻿using Hotel.DataAccess.Entities;
+﻿using Hotel.DataAccess.Context;
+using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Hotel.DataAccess.Repositories
 {
     internal class RoomDetailRepository : IRoomDetailRepository
     {
         private readonly IGenericRepository<RoomDetail> _genericRepository;
+        private readonly AppDbContext _context;
 
-        public RoomDetailRepository(IGenericRepository<RoomDetail> genericRepository)
+        public RoomDetailRepository(IGenericRepository<RoomDetail> genericRepository, AppDbContext context)
         {
             _genericRepository = genericRepository;
+            _context = context;
         }
 
-        public Task<IEnumerable<RoomDetail>> BrowserAsync()
+        public async Task<IEnumerable<RoomDetail>> BrowserAsync()
         {
-            return _genericRepository.BrowserAsync();
+           var result= await  _context.roomDetails.Include(x=>x.RoomRegulation).ToListAsync();
+
+            return result;
         }
 
         public async Task CreateAsync(RoomDetail entity)
@@ -45,9 +47,15 @@ namespace Hotel.DataAccess.Repositories
             return await _genericRepository.FindAsync(id);
         }
 
+        public async Task SaveChangeAsync()
+        {
+            await _genericRepository.SaveChangesAsync();
+        }
+
         public async Task UpdateAsync(RoomDetail entity)
         {
-             await _genericRepository.UpdateAsync(entity);
+                 await  _genericRepository.UpdateAsync(entity);
+                
 
         }
     }

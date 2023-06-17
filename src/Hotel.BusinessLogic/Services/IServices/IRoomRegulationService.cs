@@ -8,7 +8,7 @@ namespace Hotel.BusinessLogic.Services.IServices
         Task<RoomRegulationToReturnDTO> getRoomByID(int id);
         Task AddRoomRegulation(RoomRegulationToCreateDTO roomRegulation);
         Task RemoveRoomRegulation(int id);
-        Task UpdateRoomRegulation(RoomRegulationToCreateDTO regulation);
+        Task UpdateRoomRegulation(int id, RoomRegulationToCreateDTO regulation);
 
 
     }

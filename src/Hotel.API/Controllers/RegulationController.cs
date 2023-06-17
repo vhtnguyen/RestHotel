@@ -25,11 +25,12 @@ namespace Hotel.API.Controllers
 
             return _roomRegulationServices.getAllRoomRegulation();
         }
-        //[HttpPut("{id}")]
-        //public Task<ActionResult> update(int id,RoomRegulation )
-        //{
+        [HttpPut("{id}")]
+        public async Task Update(int id, RoomRegulationToCreateDTO roomRegulation)
+        {
+            await _roomRegulationServices.UpdateRoomRegulation(id, roomRegulation);   
 
-        //}
+        }
         [HttpDelete]
         public async Task Delete(int id)
         {
