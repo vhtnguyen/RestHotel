@@ -20,18 +20,18 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<IEnumerable<RoomDetail>> BrowserAsync()
         {
-           var result= await  _context.roomDetails.Include(x=>x.RoomRegulation).ToListAsync();
+            var result = await _context.roomDetails.Include(x => x.RoomRegulation).ToListAsync();
 
             return result;
         }
 
         public async Task CreateAsync(RoomDetail entity)
         {
-                await _genericRepository.CreateAsync(entity);
+            await _genericRepository.CreateAsync(entity);
             await _genericRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync( RoomDetail entity)
+        public async Task DeleteAsync(RoomDetail entity)
         {
             await _genericRepository.DeleteAsync(entity);
             await _genericRepository.SaveChangesAsync();
@@ -39,7 +39,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<RoomDetail?> FindAsync(Expression<Func<RoomDetail, bool>> predicate)
         {
-            return  await _genericRepository.FindAsync(predicate);
+            return await _context.roomDetails.Include(i => i.RoomRegulation).FirstOrDefaultAsync(predicate);
         }
 
         public async Task<RoomDetail?> FindAsync(int id)
@@ -54,8 +54,8 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task UpdateAsync(RoomDetail entity)
         {
-                 await  _genericRepository.UpdateAsync(entity);
-                
+            await _genericRepository.UpdateAsync(entity);
+
 
         }
     }

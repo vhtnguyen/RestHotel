@@ -4,6 +4,7 @@ using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.DataAccess.Entities;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.ObjectValues;
+using Hotel.Shared.Helpers;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -176,9 +177,9 @@ namespace Hotel.BusinessLogic.Services
                             return null;
                         }
                         Invoice? invoice = await _invoiceRepository.FindAsync(i => i.Id == oldCard.Invoice!.Id);
-                        oldCard.DepartureDate = DateTime.UtcNow;
+                        oldCard.DepartureDate = DateTime.UtcNow.ToVietnameseDatetime();
                         ReservationCard newCard = new ReservationCard();
-                        newCard.ArrivalDate = DateTime.UtcNow;
+                        newCard.ArrivalDate = DateTime.UtcNow.ToVietnameseDatetime();
                         newCard.DepartureDate = changeRoomDTO.To;
                         newCard.SetInvoice(invoice!);
                         newCard.SetRoom(RoomByID);
@@ -221,14 +222,17 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<ReservationCardReturnDTO?> RemoveReservationCard(IdDTO idDTO)
         {
+
             ReservationCard? card = await _reservationRepository.GetReservationCardByID(idDTO.Id);
             if (card == null)
             {
                 return null;
             }
 
+            card.Invoice!.TotalSum -= _countRoomFee(card);
             await _reservationRepository.RemoveAsync(card);
 
+            await _invoiceRepository.SaveChangesAsync();
             var result = _mapper.Map<ReservationCardReturnDTO>(card);
             return result;
         }
@@ -246,38 +250,42 @@ namespace Hotel.BusinessLogic.Services
 
             foreach (ReservationCard card in invoice!.ReservationCards)
             {
-                int daysOfStay = card.DepartureDate.Day - card.ArrivalDate.Day + 1;
-                int numGuests = card.Guests.Count();
-                Boolean hasForeign = false;
-                double roomFee = card.Room!.RoomDetail!.Price;
-
-                foreach (Guest guest in card.Guests)
-                {
-                    if (guest.Type == "foreign")
-                    {
-                        hasForeign = true;
-                        break;
-                    }
-                }
-
-                if (hasForeign)
-                {
-                    roomFee = roomFee + roomFee * card.RoomRegulation!.MaxOverseaSurchargeRatio;
-                }
-
-                if (numGuests > card.RoomRegulation!.DefaultGuest)
-                {
-                    roomFee = roomFee + roomFee * card.RoomRegulation!.MaxSurchargeRatio;
-                }
-
-                roomFee = roomFee * daysOfStay;
-                total = total + roomFee;
+                total += _countRoomFee(card);
             }
 
             invoice.TotalSum = total;
 
             //await _invoiceRepository.UpdateInvoice(invoice);
             return total;
+        }
+        private double _countRoomFee(ReservationCard card)
+        {
+            int daysOfStay = card.DepartureDate.Day - card.ArrivalDate.Day + 1;
+            int numGuests = card.Guests.Count();
+            Boolean hasForeign = false;
+            double roomFee = card.Room!.RoomDetail!.Price;
+
+            foreach (Guest guest in card.Guests)
+            {
+                if (guest.Type == "foreign")
+                {
+                    hasForeign = true;
+                    break;
+                }
+            }
+
+            if (hasForeign)
+            {
+                roomFee = roomFee + roomFee * card.RoomRegulation!.MaxOverseaSurchargeRatio;
+            }
+
+            if (numGuests > card.RoomRegulation!.DefaultGuest)
+            {
+                roomFee = roomFee + roomFee * card.RoomRegulation!.MaxSurchargeRatio;
+            }
+
+            roomFee = roomFee * daysOfStay;
+            return roomFee;
         }
     }
 }

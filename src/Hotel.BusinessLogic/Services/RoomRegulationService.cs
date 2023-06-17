@@ -1,15 +1,6 @@
-using Hotel.DataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hotel.DataAccess.Entities;
-using System.Linq.Expressions;
 using Hotel.BusinessLogic.DTO.RoomRegulation;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.CodeDom;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.Shared.Exceptions;
@@ -73,16 +64,16 @@ namespace Hotel.BusinessLogic.Services
             else
             {
                 //throw exception here
-                throw new DomainBadRequestException("","");
+                throw new DomainBadRequestException("", "");
             }
         }
 
 
 
-        public async Task UpdateRoomRegulation(int id,RoomRegulationToCreateDTO roomRegulation)
+        public async Task UpdateRoomRegulation(int id, RoomRegulationToCreateDTO roomRegulation)
         {
 
-   
+
             var findRegulation = await _roomRegulationRepository.FindAsync(x => x.Id == id);
             Console.WriteLine("haha");
             if (findRegulation == null)
@@ -103,11 +94,11 @@ namespace Hotel.BusinessLogic.Services
                 {
                     Console.WriteLine("there");
                     x.RoomRegulation = room;
-                    
+
                 }
             }
             await _roomDetailRepository.SaveChangeAsync();
-          
+
 
         }
     }

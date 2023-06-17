@@ -179,7 +179,7 @@ internal class InvoiceService : IInvoiceService
         foreach (InvoiceHotelService service in invoice.HotelServices)
         {
             total = total + service.HotelService.Price;
-            string log = service.HotelService.Name + " - " + service.HotelService.Price.ToString() + "\n";
+            string log = service.HotelService.Name + " - " + service.HotelService.Price.ToString();
             detailInvoice.Add(log);
         }
 

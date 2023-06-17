@@ -1,5 +1,6 @@
 ﻿using Hotel.DataAccess.ObjectValues;
 using Hotel.Shared.Exceptions;
+using Hotel.Shared.Helpers;
 using Newtonsoft.Json;
 
 namespace Hotel.DataAccess.Entities;
@@ -55,7 +56,12 @@ public class Invoice
             throw new DomainBadRequestException($"Service has exist at id '{service.Id}'", "has_existed_service");
         }
 
-        HotelServices.Add(new InvoiceHotelService { InvoiceId = Id, HotelServiceId = service.Id, CreateOn = DateTime.Now });
+        HotelServices.Add(new InvoiceHotelService
+        {
+            InvoiceId = Id,
+            HotelServiceId = service.Id,
+            CreateOn = DateTime.UtcNow.ToVietnameseDatetime()
+        });
     }
 
     public void RemoveHotelService(HotelService service)

@@ -40,7 +40,7 @@ internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TE
 
     public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        var entity =await  _collection.SingleOrDefaultAsync(predicate);
+        var entity = await _collection.SingleOrDefaultAsync(predicate);
         return entity;
     }
 
@@ -50,7 +50,7 @@ internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TE
         return entity;
     }
 
- 
+
     public async Task<TEntity?> FindAsync(int id)
     {
         var entity = await _collection.FindAsync(id);
@@ -63,6 +63,7 @@ internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TE
     }
     public async Task UpdateAsync(TEntity entity)
     {
+        // tim id = entity.id
         _collection.Update(entity);
         await _context.SaveChangesAsync();
     }
