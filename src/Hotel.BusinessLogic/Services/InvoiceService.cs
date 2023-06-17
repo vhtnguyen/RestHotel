@@ -64,7 +64,7 @@ internal class InvoiceService : IInvoiceService
             int daysOfStay = card.DepartureDate.Day - card.ArrivalDate.Day + 1;
             int numGuests = card.Guests.Count();
             Boolean hasForeign = false;
-            double roomFee = daysOfStay * card.Room!.RoomDetail!.Price;
+            double roomFee = card.Room!.RoomDetail!.Price;
             string log = "Room " + card.Room.Id + " - " + numGuests + " guests";
 
             foreach (Guest guest in card.Guests)
@@ -88,8 +88,9 @@ internal class InvoiceService : IInvoiceService
                 roomFee = roomFee + roomFee * card.RoomRegulation!.MaxSurchargeRatio;
             }
 
+            roomFee = roomFee * daysOfStay;
             total = total + roomFee;
-            log = log + " - " + roomFee.ToString();
+            log = log + " - " + daysOfStay + " days" + " - " + roomFee.ToString();
             detailInvoice.Add(log);
         }
 
