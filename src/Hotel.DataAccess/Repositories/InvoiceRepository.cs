@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Hotel.Shared.Exceptions;
 
 namespace Hotel.DataAccess.Repositories;
 
@@ -46,6 +47,9 @@ internal class InvoiceRepository : IInvoiceRepository
     {
         var result = await _context.Invoice
                         .Include(i => i.ReservationCards).ThenInclude(card => card.Guests)
+                        .Include(i => i.ReservationCards).ThenInclude(card => card.Room)
+                            .ThenInclude(room => room!.RoomDetail)
+                        .Include(i => i.ReservationCards).ThenInclude(card => card.RoomRegulation)
                         .Include(i => i.HotelServices).ThenInclude(i => i.HotelService)
                         .FirstOrDefaultAsync(i => i.Id == id);
                         

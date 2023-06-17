@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Hotel.BusinessLogic.DTO.Invoices;
 using Hotel.DataAccess.Entities;
+using Hotel.DataAccess.ObjectValues;
 using Hotel.DataAccess.Repositories.IRepositories;
+using Hotel.Shared.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +46,65 @@ internal class InvoiceService : IInvoiceService
     public Task UpdateInvocie()
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<(double, List<string>)> CalculateInvoice(int id)
+    {
+        double total = 0;
+        List<string> detailInvoice = new List<string>();
+
+        Invoice? invoice = await _invoiceRepository.GetInvoiceDetail(id);
+        if (invoice == null)
+        {
+             throw new DomainBadRequestException($"Invoice has't exsited on id '{id}'", "not_found_invoice");
+        }
+        
+        foreach (ReservationCard card in invoice.ReservationCards)
+        {
+            int daysOfStay = card.DepartureDate.Day - card.ArrivalDate.Day + 1;
+            int numGuests = card.Guests.Count();
+            Boolean hasForeign = false;
+            double roomFee = daysOfStay * card.Room!.RoomDetail!.Price;
+            string log = "Room " + card.Room.Id + " - " + numGuests + " guests";
+
+            foreach (Guest guest in card.Guests)
+            {
+                if (guest.Type == "foreign")
+                {
+                    hasForeign = true;
+                    break;
+                }
+            }
+
+            if (hasForeign)
+            {
+                log = log + " - has foreign";
+                roomFee = roomFee + roomFee * card.RoomRegulation!.MaxOverseaSurchargeRatio;
+            }
+            
+            if (numGuests > card.RoomRegulation!.DefaultGuest)
+            {
+                log = log + " - over max guests";
+                roomFee = roomFee + roomFee * card.RoomRegulation!.MaxSurchargeRatio;
+            }
+
+            total = total + roomFee;
+            log = log + " - " + roomFee.ToString();
+            detailInvoice.Add(log);
+        }
+
+        foreach (InvoiceHotelService service in invoice.HotelServices)
+        {
+            total = total + service.HotelService.Price;
+            string log = service.HotelService.Name + " - " + service.HotelService.Price.ToString() + "\n";
+            detailInvoice.Add(log);
+        }
+        
+        invoice.TotalSum = total;
+
+        await _invoiceRepository.UpdateInvoice(invoice);
+
+        return (total, detailInvoice);
     }
 }
 

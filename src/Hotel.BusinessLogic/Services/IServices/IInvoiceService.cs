@@ -14,5 +14,5 @@ public interface IInvoiceService
     Task<Invoice> GetInvoiceBrowser(InvoiceBrowserDTO query);
     Task<InvoiceToDetailDTO> GetDetailDTO(int orderId);
     Task UpdateInvocie();
-    
+    Task<(double, List<string>)> CalculateInvoice(int id);
 }

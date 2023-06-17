@@ -35,6 +35,9 @@ namespace Hotel.BusinessLogic.Profiles
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.RoomDetail.Description))
                 .ForMember(dest => dest.DefaultGuest, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.DefaultGuest))
                 .ForMember(dest => dest.MaxGuest, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.MaxGuest))
+                .ForMember(dest => dest.MaxSurchargeRatio, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.MaxSurchargeRatio))
+                .ForMember(dest => dest.MaxOverseaSurchargeRatio, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.MaxOverseaSurchargeRatio))
+                .ForMember(dest => dest.RoomExchangeFee, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.RoomExchangeFee))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.RoomDetail.Price));
 
         }

@@ -1,5 +1,6 @@
 ﻿using Hotel.BusinessLogic.DTO.Invoices;
 using Hotel.BusinessLogic.Services;
+using Hotel.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.API.Controllers;
@@ -34,5 +35,13 @@ public class InvoiceController : Controller
     public async Task<ActionResult> DetailInvoice(int orderId)
     {
         return Ok(await _invoiceService.GetDetailDTO(orderId));
+    }
+
+    [HttpGet("calculate/{invoiceId}")]
+    public async Task<ActionResult> CalculateInvoice(int invoiceId)
+    {
+        (double total, List<string> detailInvoice) = await _invoiceService.CalculateInvoice(invoiceId);
+        
+        return Ok(new {Total = total, Detail = detailInvoice});
     }
 }
