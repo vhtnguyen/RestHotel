@@ -54,12 +54,13 @@ namespace Hotel.DataAccess.Repositories
         {
 
             var days = DateTime.DaysInMonth(year, month);
-
+            var monthStart = new DateTime(year, month, 1);
+            var monthEnd= new DateTime(year, month, 1).AddMonths(1).AddDays(-1);
             var joinTable = from r in _dbContext.Room
                       join rc in _dbContext.ReservationCard on r.Id equals rc.Room.Id
                       join rd in _dbContext.roomDetails on r.RoomDetail.Id equals rd.Id
                       where rc.ArrivalDate.Month == month && rc.ArrivalDate.Year == year
-                      select new { rcId=rc.Id,  rdId = rd.Id, rId = r.Id, price = rd.Price, totalDate = rc.DepartureDate.Month > month ? (days - rc.ArrivalDate.Day) : (rc.DepartureDate.Day - rc.ArrivalDate.Day) };
+                      select new { rcId=rc.Id,  rdId = rd.Id, rId = r.Id, price = rd.Price, totalDate = -(rc.ArrivalDate<monthStart?monthStart.Day:rc.ArrivalDate.Day) + (rc.DepartureDate>monthEnd?monthEnd.Day:rc.DepartureDate.Day)};
 
             var res = joinTable.GroupBy(x => new { id = x.rdId, price = x.price }).Select(y => new { rdId = y.Key.id, price = y.Key.price, totalDate = y.Sum(x => x.totalDate) });
 

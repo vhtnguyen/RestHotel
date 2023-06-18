@@ -17,14 +17,14 @@ namespace Hotel.API.Controllers
         {
             _roomRevenueService = roomRevenueService;
         }
-        [Authorize(Roles = "manager")]
+       
         [HttpGet]
         public async Task<IEnumerable<RoomRevenueToReturnDTO>> Get()
 
         {
             return await _roomRevenueService.getAll();
         }
-        [Authorize(Roles = "manager")]
+        //[Authorize(Roles = "manager")]
         [HttpGet("{month}/{year}")]
         public async Task<IEnumerable<RoomRevenueToReturnDTO>> GetDate(int month, int year)
         {
