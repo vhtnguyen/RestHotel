@@ -24,5 +24,11 @@ namespace Hotel.API.Controllers
         {
             return await _roomRevenueService.getAll();
         }
+        [Authorize(Roles = "manager")]
+        [HttpGet("{month}/{year}")]
+        public async Task<IEnumerable<RoomRevenueToReturnDTO>> GetDate(int month, int year)
+        {
+            return await _roomRevenueService.getByMonth(month,year);
+        }
     }
 }

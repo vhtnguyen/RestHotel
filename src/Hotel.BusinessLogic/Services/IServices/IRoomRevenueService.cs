@@ -12,5 +12,6 @@ namespace Hotel.BusinessLogic.Services.IServices
     {
 
         public Task<IEnumerable<RoomRevenueToReturnDTO>> getAll();
+        public Task<IEnumerable<RoomRevenueToReturnDTO>> getByMonth(int month, int year);
     }
 }

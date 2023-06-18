@@ -10,6 +10,6 @@ namespace Hotel.DataAccess.Repositories.IRepositories
     public interface IRoomRevenueRepository
     {
         Task <IEnumerable<RoomRevenue>> BrowserAsync();
-        Task<RoomRegulation?> FindAsync(Expression<Func<RoomRegulation, bool>> predicate);
+        Task<IEnumerable<RoomRevenue>> FindAsync(int month, int year);
     }
 }
