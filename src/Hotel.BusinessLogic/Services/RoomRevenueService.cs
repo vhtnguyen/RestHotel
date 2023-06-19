@@ -46,7 +46,7 @@ namespace Hotel.BusinessLogic.Services
         public async Task<IEnumerable<RoomRevenueToReturnDTO>> getByMonth(int month, int year)
         {
             var result = await _roomRevenueRepository.FindAsync(month,year);
-            Console.WriteLine(result.Count());
+            //Console.WriteLine(result.Count());
             List<RoomRevenueToReturnDTO> resultDTO = new List<RoomRevenueToReturnDTO>();
             //await _roomRegulationRepository.FindAsync(expression);
             foreach (var x in result)

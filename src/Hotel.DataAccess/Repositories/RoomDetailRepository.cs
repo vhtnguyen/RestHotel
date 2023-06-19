@@ -47,6 +47,21 @@ namespace Hotel.DataAccess.Repositories
             return await _genericRepository.FindAsync(id);
         }
 
+        public async Task<IEnumerable<int>> GetAllId()
+        {
+            var query = from rd in _context.roomDetails
+                        select new { id = rd.Id };
+
+            var res = await query.ToArrayAsync();
+            List<int> result = new List<int>();
+            foreach (var id in res)
+            {
+                result.Add(id.id);
+            }
+
+            return result;
+        }
+
         public async Task SaveChangeAsync()
         {
             await _genericRepository.SaveChangesAsync();
@@ -58,5 +73,6 @@ namespace Hotel.DataAccess.Repositories
 
 
         }
+
     }
 }

@@ -37,6 +37,12 @@ namespace Hotel.BusinessLogic.Services
             
         }
 
+        public async Task<IEnumerable<int>> getAllId()
+        {
+            var result= await _roomDetailRepository.GetAllId();
+            return result;
+        }
+
         public async Task<IEnumerable<RoomDetailToReturnDTO>> getAllRoomDetail()
         {
             var roomRegulationList = await _roomDetailRepository.BrowserAsync();

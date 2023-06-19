@@ -17,5 +17,6 @@ namespace Hotel.DataAccess.Repositories.IRepositories
         Task SaveChangeAsync();
         Task  UpdateAsync(RoomDetail entity);
         Task DeleteAsync( RoomDetail entity);
+        Task<IEnumerable<int>> GetAllId();
     }
 }

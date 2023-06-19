@@ -19,7 +19,7 @@ namespace Hotel.API.Controllers
             this._roomDetailService = roomDetailService;
         }
 
-        [HttpGet("id")]
+        [HttpGet("by-id")]
         public async Task<ActionResult> Get(int id)
         {
             var room = await _roomDetailService.getRoomDetailByID(id);
@@ -55,6 +55,15 @@ namespace Hotel.API.Controllers
         {
             await _roomDetailService.UpdateRoomDetail(roomDetail);
             return NoContent();
+        }
+
+
+        [HttpGet("all-id")]
+
+        public async Task<ActionResult> getAllId()
+        {
+            var result = await _roomDetailService.getAllId();
+            return Ok(result);
         }
 
     }

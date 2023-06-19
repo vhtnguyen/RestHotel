@@ -1,6 +1,6 @@
-﻿using Hotel.BusinessLogic.DTO.RoomOccupancy;
-using Hotel.BusinessLogic.DTO.RoomRevenue;
-using Hotel.BusinessLogic.Services.IServices;
+﻿using Hotel.BusinessLogic.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotel.API.Controllers
@@ -15,12 +15,32 @@ namespace Hotel.API.Controllers
         {
             _roomOccupancyService = roomOccupancyService;
         }
-
+        [Authorize(Roles = "manager")]
         [HttpGet]
-        public async Task<IEnumerable<RoomOccupancyToReturnDTO>> Get()
+        public async Task<IActionResult> Get()
 
         {
-            return await _roomOccupancyService.getAll();
+            var res = await _roomOccupancyService.getAll();
+
+            return Ok(res);
+        }
+        [Authorize(Roles = "manager")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByFilter(int id)
+
+        {
+            var res = await _roomOccupancyService.getByRoomDetailId(id);
+
+            return Ok(res);
+        }
+        [Authorize(Roles = "manager")]
+        [HttpGet("{id}/{month}/{year}")]
+        public async Task<IActionResult> GetByFilter(int id, int month, int year)
+
+        {
+            var res = await _roomOccupancyService.getByTypeAndMonth(id, month, year);
+
+            return Ok(res);
         }
     }
 }
