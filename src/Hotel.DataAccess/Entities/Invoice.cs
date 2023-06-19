@@ -40,7 +40,7 @@ public class Invoice
 
     public void PaySucceed()
     {
-        Status = "succeed_paying";
+        Status = "partly_deposited";
     }
 
     public void PayFailed()
