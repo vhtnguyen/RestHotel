@@ -89,7 +89,7 @@ namespace Hotel.BusinessLogic.Services
 
             if (invoice != null)
             {
-                invoice.Status = "partlydeposited";
+                invoice.Status = "partly_deposited";
                 invoice.Email = reservationDTO.Email;
                 invoice.TotalSum = reservationDTO.TotalSum;
                 invoice.DownPayment = reservationDTO.DownPayment;

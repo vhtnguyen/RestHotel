@@ -91,13 +91,6 @@ public class UserController : ControllerBase
         await _userService.RemoveUserAsync(id);
         return Ok($"Removed user #'{id}'.");
     }
-
-    [HttpPost("role")]
-    public async Task<ActionResult> AddRole(UserAddRoleDto role)
-    {
-        await _userService.AddRole(role);
-        return NoContent();
-    }
 }
 
 

@@ -42,6 +42,8 @@ namespace Hotel.API.Controllers
 
             return Ok(res);
         }
+
+        [Authorize(Roles = "manager")]
         [HttpGet("{month}/{year}")]
         public async Task<IActionResult> GetByFilter(int month, int year)
 

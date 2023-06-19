@@ -24,22 +24,22 @@ namespace Hotel.BusinessLogic.Services
         {
             var roomRegulationID = roomDetail.RoomRegulationId;
             var roomRegulation = await _roomRegulationRepository.FindAsync(x => x.Id == roomRegulationID);
-            if (roomRegulation==null)
+            if (roomRegulation == null)
             {
                 throw new DomainBadRequestException("", "");
             }
-           
-            RoomDetail newRoomDetail =  _mapper.Map<RoomDetail>(roomDetail);
+
+            RoomDetail newRoomDetail = _mapper.Map<RoomDetail>(roomDetail);
             newRoomDetail.RoomRegulation = roomRegulation;
             await _roomDetailRepository.CreateAsync(newRoomDetail);
 
             return _mapper.Map<RoomDetailToReturnDTO>(newRoomDetail);
-            
+
         }
 
         public async Task<IEnumerable<int>> getAllId()
         {
-            var result= await _roomDetailRepository.GetAllId();
+            var result = await _roomDetailRepository.GetAllId();
             return result;
         }
 
@@ -50,9 +50,7 @@ namespace Hotel.BusinessLogic.Services
             //await _roomDetailRepository.FindAsync(expression);
             foreach (var x in roomRegulationList)
             {
-
                 result.Add(_mapper.Map<RoomDetailToReturnDTO>(x));
-
             }
 
             return result;
@@ -84,12 +82,12 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task UpdateRoomDetail(RoomDetailToReturnDTO roomDetail)
         {
-            var roomDetailId= await _roomDetailRepository.FindAsync(x=>x.Id==roomDetail.Id);
+            var roomDetailId = await _roomDetailRepository.FindAsync(x => x.Id == roomDetail.Id);
             if (roomDetailId == null)
             {
-                throw new DomainBadRequestException("Invalid id","update_fail");
+                throw new DomainBadRequestException("Invalid id", "update_fail");
             }
-            roomDetailId= _mapper.Map< RoomDetailToReturnDTO , RoomDetail >(roomDetail, roomDetailId);
+            roomDetailId = _mapper.Map<RoomDetailToReturnDTO, RoomDetail>(roomDetail, roomDetailId);
             await _roomDetailRepository.SaveChangeAsync();
         }
     }
