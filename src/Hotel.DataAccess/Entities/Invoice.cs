@@ -32,9 +32,10 @@ public class Invoice
         NameCus = nameCus;
     }
 
-    public void SetPayment(string id)
+    public void SetPayment(string id, double downPayment)
     {
         PaymentId = id;
+        DownPayment = downPayment;
     }
 
     public void PaySucceed()

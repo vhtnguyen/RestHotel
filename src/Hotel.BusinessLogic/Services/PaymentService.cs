@@ -39,6 +39,11 @@ public class PaymentService : IPaymentService
             throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
         }
 
+        if (invoice.PaymentId != null)
+        {
+            throw new DomainBadRequestException($"Invoice has't been paid at id '{invoiceId}'", "invoice_has_paid");
+        }
+
         var paymentSession = _factory.CreatePaymentCheckoutSession(payment.PayMethod);
         if (paymentSession == null)
         {
@@ -49,10 +54,13 @@ public class PaymentService : IPaymentService
 
         var sessionItems = new List<CreateSessionItemResouce>();
 
+        double downPayment = 0;
         foreach (var card in invoice.ReservationCards)
         {
             sessionItems.Add(new CreateSessionItemResouce(
                 $"Card_{card.Id}", card.Room.RoomDetail.Price * _options.DepositRatio, 1));
+
+            downPayment += card.Room.RoomDetail.Price * _options.DepositRatio;
         }
 
         foreach (var service in invoice.HotelServices)
@@ -60,6 +68,8 @@ public class PaymentService : IPaymentService
             sessionItems.Add(new CreateSessionItemResouce(
                 service.HotelService.Name!,
                 service.HotelService.Price * _options.DepositRatio, 1));
+
+            downPayment += service.HotelService.Price * _options.DepositRatio;
         }
 
         var sessionResource = new CreateSessionResource(
@@ -69,7 +79,7 @@ public class PaymentService : IPaymentService
 
         var response = await paymentSession.CreateSession(sessionResource);
 
-        invoice.SetPayment(response.RequestId);
+        invoice.SetPayment(response.RequestId, downPayment);
         await _invoiceRepository.SaveChangesAsync();
         // set ttl
         var expireAt = DateTime.Now.AddMinutes(_options.ExpirationAt);
@@ -106,7 +116,7 @@ public class PaymentService : IPaymentService
             details.Add(new InvoiceDetail
             {
                 Name = $"Card_{card.Id}",
-                Price = card.Room.RoomDetail.Price,
+                Price = card.Room.RoomDetail.Price * _options.DepositRatio,
                 Quantity = 1
             });
         }
@@ -116,10 +126,11 @@ public class PaymentService : IPaymentService
             details.Add(new InvoiceDetail
             {
                 Name = service.HotelService.Name!,
-                Price = service.HotelService.Price,
+                Price = service.HotelService.Price * _options.DepositRatio,
                 Quantity = 1
             });
         }
+
         var command = new SendNotificationCommand
         {
             InvoiceId = invoice.Id,
