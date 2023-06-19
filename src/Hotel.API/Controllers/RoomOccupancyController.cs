@@ -42,5 +42,13 @@ namespace Hotel.API.Controllers
 
             return Ok(res);
         }
+        [HttpGet("{month}/{year}")]
+        public async Task<IActionResult> GetByFilter(int month, int year)
+
+        {
+            var res = await _roomOccupancyService.getByMonth(month, year);
+
+            return Ok(res);
+        }
     }
 }

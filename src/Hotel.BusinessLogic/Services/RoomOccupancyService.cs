@@ -2,6 +2,7 @@
 using Hotel.BusinessLogic.DTO.RoomOccupancy;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.Repositories.IRepositories;
+using org.apache.zookeeper.data;
 
 
 namespace Hotel.BusinessLogic.Services
@@ -36,6 +37,25 @@ namespace Hotel.BusinessLogic.Services
             }
             return resultDTO;
 
+        }
+
+        public async Task<IEnumerable<RoomOccupancyToReturnDTO>> getByMonth(int month, int year)
+        {
+            var result = await _roomOccupancyRepository.FindByMonthFilters(month, year);
+
+            List<RoomOccupancyToReturnDTO> resultDTO = new List<RoomOccupancyToReturnDTO>();
+            //await _roomRegulationRepository.FindAsync(expression);
+            foreach (var x in result)
+            {
+
+                resultDTO.Add(_mapper.Map<RoomOccupancyToReturnDTO>(x));
+
+            }
+            foreach (var x in resultDTO)
+            {
+                x.getPercentage(resultDTO);
+            }
+            return resultDTO;
         }
 
         public async Task<IEnumerable<RoomOccupancyToReturnDTO>> getByRoomDetailId(int id)

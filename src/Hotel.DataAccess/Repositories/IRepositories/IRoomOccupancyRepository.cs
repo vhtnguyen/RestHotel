@@ -11,5 +11,6 @@ namespace Hotel.DataAccess.Repositories.IRepositories
 
         Task<IEnumerable<RoomOccupancy>> FindByRoomDetailFilters(int id);
 
+        Task<IEnumerable<RoomOccupancy>> FindByMonthFilters(int month,int year);
     }
 }
