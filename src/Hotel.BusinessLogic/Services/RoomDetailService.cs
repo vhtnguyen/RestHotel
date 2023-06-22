@@ -45,15 +45,8 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<IEnumerable<RoomDetailToReturnDTO>> getAllRoomDetail()
         {
-            var roomRegulationList = await _roomDetailRepository.BrowserAsync();
-            List<RoomDetailToReturnDTO> result = new List<RoomDetailToReturnDTO>();
-            //await _roomDetailRepository.FindAsync(expression);
-            foreach (var x in roomRegulationList)
-            {
-                result.Add(_mapper.Map<RoomDetailToReturnDTO>(x));
-            }
-
-            return result;
+            var roomDetailList = await _roomDetailRepository.BrowserAsync();
+            return _mapper.Map<List<RoomDetailToReturnDTO>>(roomDetailList);
             //throw new NotImplementedException();
 
         }
@@ -73,7 +66,6 @@ namespace Hotel.BusinessLogic.Services
             }
             else
             {
-                //throw exception here
                 //throw exception here
                 throw new DomainBadRequestException("", "");
             }

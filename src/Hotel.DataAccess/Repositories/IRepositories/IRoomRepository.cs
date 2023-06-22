@@ -11,8 +11,8 @@ public interface IRoomRepository
     Task<IEnumerable<Room>?> FindAllAsync(Expression<Func<Room, bool>> predicate);
     Task<Room?> FindAsync(int id);
     Task<Room> CreateAsync(Room entity);
-    Task UpdateAsync(Room entity);
-    Task RemoveByIDAsync(int id);
+    Task<Room> UpdateAsync(Room entity);
+    Task RemoveAsync(Room entity);
     Task SaveChangesAsync();
     Task<IEnumerable<Room>?> FindFreeByDateAsync(Expression<Func<Room, bool>> predicate);
 }

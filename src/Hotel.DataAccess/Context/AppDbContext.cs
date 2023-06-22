@@ -19,7 +19,7 @@ internal class AppDbContext : DbContext
     public DbSet<Room> Room {get; set;}
     public DbSet<InvoiceHotelService> InvoiceHotelService {get; set;}
 
-    public DbSet<RoomDetail> roomDetails { get; set;}   
+    public DbSet<RoomDetail> RoomDetail { get; set;}   
     // datasets
 
 	// configured

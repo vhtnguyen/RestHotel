@@ -4,12 +4,7 @@ using Hotel.DataAccess.Entities;
 using Hotel.DataAccess.Repositories;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.Shared.Exceptions;
-using org.apache.zookeeper.data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -63,9 +58,34 @@ namespace Hotel.BusinessLogic.Services
             var room = await _roomRepository.FindAsync(id);
             return _mapper.Map<RoomToReturnDetailDTO>(room);
         }
+        public async Task<RoomToReturnDetailDTO> UpdateRoomAsync(RoomToCreateDTO room)
+        {
+            var room_to_edit = await _roomRepository.FindAsync(r=>r.Id==room.Id);
+            if(room_to_edit == null)
+            {
+                throw new DomainBadRequestException("", "");
+            }
+            var new_detail = await _roomDetailRepository.FindAsync(rD => rD.Id == room.RoomDetailID);
+
+            if(new_detail == null)
+            {
+                throw new DomainBadRequestException("", "");
+            }
+            room_to_edit.Note = room.Note;
+            room_to_edit.Status = room.Status;
+            room_to_edit.RoomDetail = new_detail;
+            var room_updated=await _roomRepository.UpdateAsync(room_to_edit);
+            return _mapper.Map<RoomToReturnDetailDTO>(room_updated);
+
+        }
         public async Task RemoveRoomByIDAsync(int id)
         {
-            await _roomRepository.RemoveByIDAsync(id);
+            var room_to_remove = await _roomRepository.FindAsync(id);
+            if (room_to_remove == null)
+            {
+                throw new NotImplementedException();
+            }
+            await _roomRepository.RemoveAsync(room_to_remove);
         }
         public async Task<List<RoomFreeToReturnDTO>?> FindFreeByDateAsync(RoomToFindFreeDTO roomToFindFreeDTO)
         {
@@ -84,5 +104,14 @@ namespace Hotel.BusinessLogic.Services
 
             return _mapper.Map<List<RoomFreeToReturnDTO>>(freeRoomsList);
         }
+        public async Task<List<RoomToReturnDetailDTO>> FindRooms(string roomType, string status)
+        {
+            roomType = roomType.ToLower();
+            status = status.ToLower();
+            var rooms = await _roomRepository.FindAllAsync(r => r.RoomDetail.RoomType == roomType && r.Status == status);
+            return _mapper.Map<List<RoomToReturnDetailDTO>>(rooms);
+        }
     }
+
+   
 }

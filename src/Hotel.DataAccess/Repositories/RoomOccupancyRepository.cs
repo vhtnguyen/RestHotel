@@ -54,7 +54,7 @@ namespace Hotel.DataAccess.Repositories
             var monthEnd = new DateTime(year, month, 1).AddMonths(1).AddDays(-1);
             var joinTable = from r in _dbContext.Room
                             join rc in _dbContext.ReservationCard on r.Id equals rc.Room.Id
-                            join rd in _dbContext.roomDetails on r.RoomDetail.Id equals rd.Id
+                            join rd in _dbContext.RoomDetail on r.RoomDetail.Id equals rd.Id
                             where rc.ArrivalDate <= monthEnd && rc.DepartureDate >= monthStart && rd.Id == id
                             select new { rcId = rc.Id, rdId = rd.Id, rId = r.Id,  totalDate = -(rc.ArrivalDate < monthStart ? monthStart.Day : rc.ArrivalDate.Day) + (rc.DepartureDate > monthEnd ? monthEnd.Day : rc.DepartureDate.Day) + 1 };
 
@@ -79,7 +79,7 @@ namespace Hotel.DataAccess.Repositories
             var monthEnd = new DateTime(year, month, 1).AddMonths(1).AddDays(-1);
             var joinTable = from r in _dbContext.Room
                             join rc in _dbContext.ReservationCard on r.Id equals rc.Room.Id
-                            join rd in _dbContext.roomDetails on r.RoomDetail.Id equals rd.Id
+                            join rd in _dbContext.RoomDetail on r.RoomDetail.Id equals rd.Id
                             where rc.ArrivalDate <= monthEnd && rc.DepartureDate >= monthStart 
                             select new { rcId = rc.Id, rdId = rd.Id, rId = r.Id, totalDate = -(rc.ArrivalDate < monthStart ? monthStart.Day : rc.ArrivalDate.Day) + (rc.DepartureDate > monthEnd ? monthEnd.Day : rc.DepartureDate.Day) + 1 };
 
@@ -102,7 +102,7 @@ namespace Hotel.DataAccess.Repositories
         
             var joinTable = from r in _dbContext.Room
                             join rc in _dbContext.ReservationCard on r.Id equals rc.Room.Id
-                            join rd in _dbContext.roomDetails on r.RoomDetail.Id equals rd.Id
+                            join rd in _dbContext.RoomDetail on r.RoomDetail.Id equals rd.Id
                             where  rd.Id == id
                             select new { rId = r.Id, totalDate =  EF.Functions.DateDiffDay(rc.ArrivalDate,rc.DepartureDate ) + 1 };
 

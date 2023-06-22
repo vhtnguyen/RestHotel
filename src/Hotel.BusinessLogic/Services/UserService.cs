@@ -108,13 +108,13 @@ namespace Hotel.BusinessLogic.Services
                     }
                 case "name":
                     {
-                        Expression<Func<User, bool>> predicate = user => user.FullName.Contains(searchContent);
+                        Expression<Func<User, bool>> predicate = user => user.FullName!.Contains(searchContent);
                         result = await _userRepository.FindAllAsync(predicate);
                         break;
                     }
                 case "email":
                     {
-                        Expression<Func<User, bool>> predicate = user => user.Email.Contains(searchContent);
+                        Expression<Func<User, bool>> predicate = user => user.Email!.Contains(searchContent);
                         result = await _userRepository.FindAllAsync(predicate);
                         break;
                     }

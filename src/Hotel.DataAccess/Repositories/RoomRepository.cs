@@ -21,42 +21,43 @@ internal class RoomRepository : IRoomRepository
     public async Task<IEnumerable<Room>?> GetListAsync()
     {
         var result = await _context.Room
-           .Include(r => r.RoomDetail)
+            .Include(r => r.RoomDetail)
+            .ThenInclude(rD => rD.RoomRegulation)
            .ToListAsync();
         return result;
     }
 
     public async Task<IEnumerable<Room>?> FindAllAsync(Expression<Func<Room, bool>> predicate)
     {
-        return await _context.Room.Include(r => r.RoomDetail).Where(predicate).ToListAsync();
+        return await _context.Room.Include(r => r.RoomDetail)
+                    .ThenInclude(rD => rD.RoomRegulation).Where(predicate).ToListAsync();
     }
     public async Task<Room?> FindAsync(int id)
     {
         return await _context.Room
-           .Include(r => r.RoomDetail).Where(r => r.Id == id).FirstOrDefaultAsync();
+           .Include(r => r.RoomDetail)
+            .ThenInclude(rD => rD.RoomRegulation).Where(r => r.Id == id).FirstOrDefaultAsync();
     }
     public async Task<Room?> FindAsync(Expression<Func<Room, bool>> predicate)
     {
-        throw new NotImplementedException();
+        return await _context.Room
+                    .Include(r => r.RoomDetail)
+                    .ThenInclude(rD => rD.RoomRegulation)
+                    .Where(predicate)
+                   .FirstOrDefaultAsync();
     }
     public async Task<Room> CreateAsync(Room entity)
         => await _genericRepository.CreateAsync(entity);
-    public async Task UpdateAsync(Room entity)
+    public async Task<Room> UpdateAsync(Room entity)
     {
-        throw new NotImplementedException();
+        var room = _context.Room.Update(entity);
+        await _context.SaveChangesAsync();
+        return room.Entity;
     }
-    public async Task RemoveByIDAsync(int id)
+    public async Task RemoveAsync(Room entity)
     {
-        var room_to_remove = await _context.Room.FirstOrDefaultAsync(r => r.Id == id);
-        if (room_to_remove == null)
-        {
-            throw new NotImplementedException();
-        }
-        else
-        {
-            _context.Room.Remove(room_to_remove);
-            await _context.SaveChangesAsync();
-        }
+        _context.Room.Remove(entity);
+        await _context.SaveChangesAsync();
     }
     public async Task SaveChangesAsync()
     {
@@ -70,5 +71,7 @@ internal class RoomRepository : IRoomRepository
                     .Where(predicate)
                     .ToListAsync();
     }
+
+   
 }
 

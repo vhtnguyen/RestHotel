@@ -20,7 +20,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<IEnumerable<RoomDetail>> BrowserAsync()
         {
-            var result = await _context.roomDetails.Include(x => x.RoomRegulation).ToListAsync();
+            var result = await _context.RoomDetail.Include(x => x.RoomRegulation).ToListAsync();
 
             return result;
         }
@@ -39,7 +39,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<RoomDetail?> FindAsync(Expression<Func<RoomDetail, bool>> predicate)
         {
-            return await _context.roomDetails.Include(i => i.RoomRegulation).FirstOrDefaultAsync(predicate);
+            return await _context.RoomDetail.Include(i => i.RoomRegulation).FirstOrDefaultAsync(predicate);
         }
 
         public async Task<RoomDetail?> FindAsync(int id)
@@ -49,7 +49,7 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<IEnumerable<int>> GetAllId()
         {
-            var query = from rd in _context.roomDetails
+            var query = from rd in _context.RoomDetail
                         select new { id = rd.Id };
 
             var res = await query.ToArrayAsync();
