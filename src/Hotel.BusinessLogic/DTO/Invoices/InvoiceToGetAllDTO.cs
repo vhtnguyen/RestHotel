@@ -13,6 +13,4 @@ public class InvoiceToGetAllDTO
     public string? Status { get; set; }
     public double TotalSum { get; set; }
     public string? NameCus { get; set; }
-    // public double DownPayment { get; set; }
-    // public string? Email { get; set; }
 }

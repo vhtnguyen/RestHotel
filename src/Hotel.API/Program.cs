@@ -66,7 +66,12 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Host.UseLogging();
 builder.Host.UseMonitoring();
 
-
+builder.Services.AddCors(o => o.AddPolicy("allowAll", builder =>
+{
+    builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+}));
 
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
@@ -94,10 +99,11 @@ app.UseRedisStreaming()
     .SubscribeAsync<InvoiceExpirationCommand>("__keyevent@0__:expired");
 
 app.UseStaticFiles();
+app.UseCors("allowAll");
 
-// app.UseHttpsRedirection();
 // app.UseJwtAuthentication();
-//app.UseAuthorization();
+app.UseHttpsRedirection();
+app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
