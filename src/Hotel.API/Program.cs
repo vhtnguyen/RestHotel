@@ -95,7 +95,7 @@ app.UseRedisStreaming()
 
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 // app.UseJwtAuthentication();
 //app.UseAuthorization();
 app.MapControllers();

@@ -39,8 +39,7 @@ public class InvoiceController : ControllerBase
     [HttpPost("{invoiceId}/service/{serviceId}")]
     public async Task<ActionResult> AddService(int invoiceId, int serviceId)
     {
-        await _invoiceService.AddService(invoiceId, serviceId);
-        return NoContent();
+        return Ok(await _invoiceService.AddService(invoiceId, serviceId));
     }
 
 
@@ -48,8 +47,7 @@ public class InvoiceController : ControllerBase
     [HttpPut("{invoiceId}/service/{serviceId}")]
     public async Task<ActionResult> RemoveService(int invoiceId, int serviceId)
     {
-        await _invoiceService.RemoveService(invoiceId, serviceId);
-        return NoContent();
+        return Ok(await _invoiceService.RemoveService(invoiceId, serviceId));
     }
 
 
@@ -57,8 +55,7 @@ public class InvoiceController : ControllerBase
     [HttpPost("{invoiceId}/card/{cardId}")]
     public async Task<ActionResult> AddReservationCard(int invoiceId, int cardId)
     {
-        await _invoiceService.AddReservationCard(invoiceId, cardId);
-        return NoContent();
+        return Ok(await _invoiceService.AddReservationCard(invoiceId, cardId));
     }
 
 
@@ -66,8 +63,7 @@ public class InvoiceController : ControllerBase
     [HttpPut("{invoiceId}/card/{cardId}")]
     public async Task<ActionResult> RemoveReservationCard(int invoiceId, int cardId)
     {
-        await _invoiceService.RemoveReservationCard(invoiceId, cardId);
-        return NoContent();
+        return Ok(await _invoiceService.RemoveReservationCard(invoiceId, cardId));
     }
 
 
@@ -85,5 +81,11 @@ public class InvoiceController : ControllerBase
         (double total, List<string> detailInvoice) = await _invoiceService.CalculateInvoice(invoiceId);
 
         return Ok(new { Total = total, Detail = detailInvoice });
+    }
+
+    [HttpPut("{invoiceId}")]
+    public async Task<ActionResult> Checkout(int invoiceId)
+    {
+        return Ok(await _invoiceService.CheckoutInvoice(invoiceId));
     }
 }
