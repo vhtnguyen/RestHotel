@@ -4,12 +4,13 @@ namespace Hotel.BusinessLogic.Services.IServices;
 
 public interface IInvoiceService
 {
-    Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync();
+    Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync(InvoiceQueryDto query);
     Task<InvoiceToDetailDTO> GetDetailDTO(int orderId);
-    Task AddService(int invoiceId, int serviceId);
-    Task RemoveService(int invoiceId, int serviceId);
-    Task AddReservationCard(int invoiceId, int cardId);
-    Task RemoveReservationCard(int invoiceId, int cardId);
+    Task<InvoiceToDetailDTO> AddService(int invoiceId, int serviceId);
+    Task<InvoiceToDetailDTO> RemoveService(int invoiceId, int serviceId);
+    Task<InvoiceToDetailDTO> AddReservationCard(int invoiceId, int cardId);
+    Task<InvoiceToDetailDTO> RemoveReservationCard(int invoiceId, int cardId);
+    Task<InvoiceToDetailDTO> CheckoutInvoice(int invoiceId);
     Task Delete(int invoiceId);
     Task<(double, List<string>)> CalculateInvoice(int id);
 }

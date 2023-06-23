@@ -1,6 +1,4 @@
 using Hotel.BusinessLogic.DTO.Invoices;
-using Hotel.BusinessLogic.Services;
-using Hotel.Shared.Exceptions;
 using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +19,9 @@ public class InvoiceController : ControllerBase
 
     [Authorize(Roles = "staff,manager")]
     [HttpGet("")]
-    public async Task<ActionResult> GetAll()
+    public async Task<ActionResult> GetAll([FromQuery] InvoiceQueryDto query)
     {
-        return Ok(await _invoiceService.GetAllInvoiceAsync());
+        return Ok(await _invoiceService.GetAllInvoiceAsync(query));
     }
 
 

@@ -7,7 +7,7 @@ public class RoomDetail
     public string? RoomType { get; set; }
     public string? Description { get; set; }
     public string? Image { get; set; }
-    
+
     // reference ky
     public RoomRegulation? RoomRegulation { get; set; }
     public RoomDetail(int id, double price, string? roomType, string? description, string? image)

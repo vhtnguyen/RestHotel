@@ -26,7 +26,7 @@ internal class InvoiceService : IInvoiceService
         _serviceRepository = serviceRepository;
     }
 
-    public async Task AddReservationCard(int invoiceId, int cardId)
+    public async Task<InvoiceToDetailDTO> AddReservationCard(int invoiceId, int cardId)
     {
         var invoice = await _invoiceRepository.GetInvoiceDetail(invoiceId);
         if (invoice == null)
@@ -41,12 +41,14 @@ internal class InvoiceService : IInvoiceService
             throw new DomainBadRequestException($"Card doen't exist on id '{cardId}'", "not_found_card");
         }
         invoice.AddReservationCard(card);
-        invoice.TotalSum += card.Room.RoomDetail.Price;
+        // invoice.TotalSum += card.Room.RoomDetail.Price;
         // get reservation card
         await _invoiceRepository.SaveChangesAsync();
+
+        return _mapper.Map<InvoiceToDetailDTO>(invoice);
     }
 
-    public async Task AddService(int invoiceId, int serviceId)
+    public async Task<InvoiceToDetailDTO> AddService(int invoiceId, int serviceId)
     {
         var invoice = await _invoiceRepository.GetInvoiceDetail(invoiceId);
         if (invoice == null)
@@ -64,6 +66,8 @@ internal class InvoiceService : IInvoiceService
         invoice.TotalSum += service.Price;
         invoice.AddHotelService(service);
         await _invoiceRepository.SaveChangesAsync();
+
+        return _mapper.Map<InvoiceToDetailDTO>(invoice);
     }
 
     public async Task Delete(int invoiceId)
@@ -77,9 +81,9 @@ internal class InvoiceService : IInvoiceService
         await _invoiceRepository.RemoveInvoice(invoice);
     }
 
-    public async Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync()
+    public async Task<IEnumerable<InvoiceToGetAllDTO>> GetAllInvoiceAsync(InvoiceQueryDto query)
     {
-        var result = await _invoiceRepository.GetAllInvoice();
+        var result = await _invoiceRepository.GetAllInvoice(query.Take, query.Page, query.Status);
         return _mapper.Map<IEnumerable<InvoiceToGetAllDTO>>(result);
     }
 
@@ -89,7 +93,7 @@ internal class InvoiceService : IInvoiceService
         return _mapper.Map<InvoiceToDetailDTO>(result);
     }
 
-    public async Task RemoveReservationCard(int invoiceId, int cardId)
+    public async Task<InvoiceToDetailDTO> RemoveReservationCard(int invoiceId, int cardId)
     {
         var invoice = await _invoiceRepository.GetInvoiceDetail(invoiceId);
         if (invoice == null)
@@ -105,12 +109,14 @@ internal class InvoiceService : IInvoiceService
         }
 
         invoice.RemoveReservationCard(card);
-        invoice.TotalSum -= card.Room.RoomDetail.Price;
+        // invoice.TotalSum -= card.Room.RoomDetail.Price;
         // get reservation card
         await _invoiceRepository.SaveChangesAsync();
+
+        return _mapper.Map<InvoiceToDetailDTO>(invoice);
     }
 
-    public async Task RemoveService(int invoiceId, int serviceId)
+    public async Task<InvoiceToDetailDTO> RemoveService(int invoiceId, int serviceId)
     {
         var invoice = await _invoiceRepository.GetInvoiceDetail(invoiceId);
         if (invoice == null)
@@ -128,6 +134,8 @@ internal class InvoiceService : IInvoiceService
         invoice.TotalSum -= service.Price;
         invoice.RemoveHotelService(service);
         await _invoiceRepository.SaveChangesAsync();
+
+        return _mapper.Map<InvoiceToDetailDTO>(invoice);
     }
 
     public async Task<(double, List<string>)> CalculateInvoice(int id)
@@ -188,6 +196,20 @@ internal class InvoiceService : IInvoiceService
         await _invoiceRepository.UpdateInvoice(invoice);
 
         return (total, detailInvoice);
+    }
+
+    public async Task<InvoiceToDetailDTO> CheckoutInvoice(int invoiceId)
+    {
+        var invoice = await _invoiceRepository.GetInvoiceDetail(invoiceId);
+        if (invoice == null)
+        {
+            throw new DomainBadRequestException($"Invoice has't exsited on id '{invoiceId}'", "not_found_invoice");
+        }
+
+        invoice.Checkout();
+        await _invoiceRepository.SaveChangesAsync();
+
+        return _mapper.Map<InvoiceToDetailDTO>(invoice);
     }
 }
 

@@ -48,6 +48,11 @@ public class Invoice
         Status = "failed_paying";
     }
 
+    public void Checkout()
+    {
+        Status = "check_out";
+    }
+
     public void AddHotelService(HotelService service)
     {
         var isExist = HotelServices.Any(s => s.HotelServiceId == service.Id);

@@ -1,6 +1,4 @@
-﻿using Hotel.BusinessLogic.DTO;
-using Hotel.BusinessLogic.DTO.HotelReservation;
-using Hotel.BusinessLogic.DTO.HotelServices;
+﻿using Hotel.BusinessLogic.DTO.HotelReservation;
 
 namespace Hotel.BusinessLogic.DTO.Invoices;
 
@@ -17,4 +15,12 @@ public class InvoiceToDetailDTO
     public ICollection<ServiceToDetailDTO>? HotelServices { get; set; }
     public ICollection<ReservationCardReturnDTO>? ReservationCards { get; set; }
     //public string 
+}
+
+public class ServiceToDetailDTO
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public double Price { get; set; }
+    public string? CreateOn { get; set; }
 }

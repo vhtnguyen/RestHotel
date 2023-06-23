@@ -26,9 +26,18 @@ internal class InvoiceRepository : IInvoiceRepository
             .ThenInclude(i => i.HotelService)
             .FirstOrDefaultAsync(predicate);
 
-    public async Task<IEnumerable<Invoice>> GetAllInvoice()
+    public async Task<IEnumerable<Invoice>> GetAllInvoice(int take, int page, string? status)
     {
-        var result = await _genericRepository.GetListAsync();
+        if (string.IsNullOrWhiteSpace(status))
+        {
+            status = "pending";
+        }
+
+        var result = await _context.Invoice
+            .Skip((page - 1) * take)
+            .Take(take)
+            .Where(i => i.Status!.ToLower() == status.ToLower())
+            .ToListAsync();
         return result;
     }
 
@@ -40,11 +49,15 @@ internal class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetInvoiceDetail(int id)
     {
         var result = await _context.Invoice
-                        .Include(i => i.ReservationCards).ThenInclude(card => card.Guests)
-                        .Include(i => i.ReservationCards).ThenInclude(card => card.Room)
+                        .Include(i => i.ReservationCards)
+                            .ThenInclude(card => card.Guests)
+                        .Include(i => i.ReservationCards)
+                            .ThenInclude(card => card.Room)
                             .ThenInclude(room => room!.RoomDetail)
-                        .Include(i => i.ReservationCards).ThenInclude(card => card.RoomRegulation)
-                        .Include(i => i.HotelServices).ThenInclude(i => i.HotelService)
+                        .Include(i => i.ReservationCards)
+                            .ThenInclude(card => card.RoomRegulation)
+                        .Include(i => i.HotelServices)
+                            .ThenInclude(i => i.HotelService)
                         .FirstOrDefaultAsync(i => i.Id == id);
 
         return result;

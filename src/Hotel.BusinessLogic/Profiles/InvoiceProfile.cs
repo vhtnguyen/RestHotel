@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Hotel.BusinessLogic.DTO.Invoices;
 using Hotel.DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hotel.BusinessLogic.Profiles;
 
@@ -17,6 +12,12 @@ public class InvoiceProfile : Profile
         CreateMap<Invoice, InvoiceToDetailDTO>()
             .ForMember(dest => dest.ReservationCards, opt => opt.MapFrom(src => src.ReservationCards))
             .ForMember(dest => dest.HotelServices, otp =>
-                otp.MapFrom(src => src.HotelServices.Select(i => i.HotelService)));
+                otp.MapFrom(src => src.HotelServices.Select(i => new ServiceToDetailDTO
+                {
+                    Id = i.HotelServiceId,
+                    Name = i.HotelService.Name,
+                    Price = i.HotelService.Price,
+                    CreateOn = i.CreateOn.ToString("dd/MM/yyyy")
+                })));
     }
 }
