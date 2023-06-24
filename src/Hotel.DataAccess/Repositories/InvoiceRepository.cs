@@ -34,9 +34,9 @@ internal class InvoiceRepository : IInvoiceRepository
         }
 
         var result = await _context.Invoice
+            .Where(i => i.Status!.ToLower() == status.ToLower())
             .Skip((page - 1) * take)
             .Take(take)
-            .Where(i => i.Status!.ToLower() == status.ToLower())
             .ToListAsync();
         return result;
     }

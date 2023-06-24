@@ -16,6 +16,8 @@ namespace Hotel.BusinessLogic.DTO.HotelReservation
         public string? ArrivalDate { get; set; }
         public string? DepartureDate { get; set; }
         public string? Status { get; set; }
+        public double Price { get; set; }
+        public string? RoomType { get; set; }
         public string? Notes { get; set; }
         public ICollection<GuestDTO> Guests { get; set; } = new List<GuestDTO>();
 

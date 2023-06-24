@@ -145,7 +145,7 @@ public class ReservationController : ControllerBase
     }
 
     [HttpGet("free-rooms-list")]
-    public async Task<ActionResult> GetFreeRoomList(RoomToFindFreeDTO roomToFindFreeDTO)
+    public async Task<ActionResult> GetFreeRoomList([FromQuery] RoomToFindFreeDTO roomToFindFreeDTO)
     {
         if (!roomToFindFreeDTO.ParseDate())
         {

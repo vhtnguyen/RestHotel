@@ -81,6 +81,7 @@ public class InvoiceController : ControllerBase
         return Ok(new { Total = total, Detail = detailInvoice });
     }
 
+    [Authorize(Roles = "staff,manager")]
     [HttpPut("{invoiceId}")]
     public async Task<ActionResult> Checkout(int invoiceId)
     {

@@ -20,6 +20,7 @@ public class ErrorHandlingMiddleware : IMiddleware
         {
             _logger.LogInformation($"domain layer throw exception {ex.Message}");
             // write data
+            context.Response.StatusCode = (int)ex.HttpStatusCode;
             await context.Response.WriteAsJsonAsync(new
             {
                 Message = ex.Message,
@@ -30,6 +31,7 @@ public class ErrorHandlingMiddleware : IMiddleware
         catch (Exception ex)
         {
             _logger.LogInformation($"server throw exception {ex.Message}");
+            context.Response.StatusCode = 500;
             await context.Response.WriteAsJsonAsync(new
             {
                 Message = ex.Message,
