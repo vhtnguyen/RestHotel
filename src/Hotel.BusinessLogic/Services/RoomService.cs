@@ -90,7 +90,7 @@ namespace Hotel.BusinessLogic.Services
         public async Task<List<RoomFreeToReturnDTO>?> FindFreeByDateAsync(RoomToFindFreeDTO roomToFindFreeDTO)
         {
             List<ReservationCard> CardsListByTime = await _reservationRepository
-                .GetListReservationCardsByTime(roomToFindFreeDTO.From, roomToFindFreeDTO.To);
+                .GetListReservationCardsInTime(roomToFindFreeDTO.From, roomToFindFreeDTO.To);
             
             List<int> idBookedRoomsList = new List<int>();
 

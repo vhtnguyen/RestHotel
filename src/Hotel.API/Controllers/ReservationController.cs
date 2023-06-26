@@ -92,7 +92,7 @@ public class ReservationController : ControllerBase
         List<ReservationCardReturnDTO>? cards = await _reservationService.GetReservationCardByInvoiceID(id);
         if (cards.Count() == 0)
         {
-            return Ok("Invoice doesn't exist");
+            return BadRequest("Invoice doesn't exist");
         }
         return Ok(cards);
     }
