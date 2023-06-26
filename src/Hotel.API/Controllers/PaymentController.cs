@@ -30,11 +30,22 @@ public class PaymentController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet("{paymentId}")]
+    public async Task<ActionResult> Get(string paymentId)
+    {
+        var isCompleted = await _paymentService.GetPaymentStatus(paymentId);
+        return Ok(new { isCompleted = isCompleted, paymentId = paymentId, Timeout = 10 });
+    }
     [HttpPost("{invoiceId}")]
     public async Task<ActionResult> Create(int invoiceId, CreatePaymentDto payment)
     {
         var response = await _paymentService.CreatePaymentLink(invoiceId, payment);
-        return Ok(new { Url = response.Url, ExpireAt = _paymentOptions.ExpirationAt });
+        return Ok(new
+        {
+            Url = response.Url,
+            ExpireAt = _paymentOptions.ExpirationAt,
+            PaymentId = response.RequestId
+        });
     }
 
     [HttpPost("stripe")]
