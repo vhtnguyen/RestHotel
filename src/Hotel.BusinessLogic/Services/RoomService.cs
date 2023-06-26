@@ -91,7 +91,7 @@ namespace Hotel.BusinessLogic.Services
         {
             List<ReservationCard> CardsListByTime = await _reservationRepository
                 .GetListReservationCardsByTime(roomToFindFreeDTO.From, roomToFindFreeDTO.To);
-
+            
             List<int> idBookedRoomsList = new List<int>();
 
             foreach (ReservationCard card in CardsListByTime)
