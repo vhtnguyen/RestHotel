@@ -41,5 +41,6 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no azureuser@20.239.179.81
+          ssh -o StrictHostKeyChecking=no azureuser@$remote_server
+          sudo docker swarm init --advertise-addr @$remote_server
           sudo docker service update --image $username/hotel.api:latest hotelserver_rest_hotel
