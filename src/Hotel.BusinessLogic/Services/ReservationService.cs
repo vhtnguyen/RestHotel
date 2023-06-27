@@ -222,13 +222,11 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<ReservationCardReturnDTO?> RemoveReservationCard(IdDTO idDTO)
         {
-
             ReservationCard? card = await _reservationRepository.GetReservationCardByID(idDTO.Id);
             if (card == null)
             {
                 return null;
             }
-
             card.Invoice!.TotalSum -= _countRoomFee(card);
             await _reservationRepository.RemoveAsync(card);
 
@@ -260,14 +258,14 @@ namespace Hotel.BusinessLogic.Services
         }
         private double _countRoomFee(ReservationCard card)
         {
-            int daysOfStay = card.DepartureDate.Day - card.ArrivalDate.Day + 1;
+            TimeSpan duration = card.DepartureDate - card.ArrivalDate;
+            int daysOfStay = duration.Days + 1;
             int numGuests = card.Guests.Count();
             Boolean hasForeign = false;
             double roomFee = card.Room!.RoomDetail!.Price;
-
             foreach (Guest guest in card.Guests)
             {
-                if (guest.Type == "foreign")
+                if (guest.Type == "foreigner")
                 {
                     hasForeign = true;
                     break;
@@ -278,7 +276,7 @@ namespace Hotel.BusinessLogic.Services
             {
                 roomFee = roomFee + roomFee * card.RoomRegulation!.MaxOverseaSurchargeRatio;
             }
-
+            
             if (numGuests > card.RoomRegulation!.DefaultGuest)
             {
                 roomFee = roomFee + roomFee * card.RoomRegulation!.MaxSurchargeRatio;

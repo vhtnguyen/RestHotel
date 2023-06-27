@@ -81,7 +81,7 @@ public class ReservationController : ControllerBase
         ReservationCardReturnDTO? card = await _reservationService.GetReservationCardByID(id);
         if (card == null)
         {
-            return Ok("Card doesn't exist");
+            return BadRequest("Card doesn't exist");
         }
         return Ok(card);
     }
@@ -132,9 +132,11 @@ public class ReservationController : ControllerBase
 
 
     [Authorize(Roles = "staff,manager")]
-    [HttpDelete("")]
-    public async Task<ActionResult> RemoveReservationCard(IdDTO idDTO)
+    [HttpDelete("{cardId}")]
+    public async Task<ActionResult> RemoveReservationCard(int cardId)
     {
+        IdDTO idDTO = new IdDTO();
+        idDTO.Id = cardId;
         ReservationCardReturnDTO? card = await _reservationService.RemoveReservationCard(idDTO);
         if (card == null)
         {

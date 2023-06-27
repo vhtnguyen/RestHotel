@@ -140,6 +140,7 @@ namespace Hotel.DataAccess.Repositories
         {
             return await _context.ReservationCard
                             .Include(c => c.Room).ThenInclude(r => r.RoomDetail)
+                            .Include(c => c.RoomRegulation)
                             .Include(c => c.Invoice)
                             .Where(c => c.Id == id)
                             .FirstOrDefaultAsync();
