@@ -36,11 +36,11 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo $private_key > ~/.ssh/id_rsa
+          echo "$private_key" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa $remote_server >> ~/.ssh/known_hosts
+          ssh-keyscan -t rsa 20.239.179.81 >> ~/.ssh/known_hosts
 
       - name: SSH to remote server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@$remote_server
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@20.239.179.81
           sudo docker service update --image $username/hotel.api:latest hotelserver_rest_hotel
