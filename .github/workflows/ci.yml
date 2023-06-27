@@ -15,7 +15,7 @@ jobs:
 
       - name: Push the Docker image
         run: |
-          docker login $username $password
+          docker login $username -p $password
           docker push $username/hotel.api:latest
 
     env:
