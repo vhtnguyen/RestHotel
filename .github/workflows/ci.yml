@@ -33,11 +33,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: $private_key
+      - name: Config SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i $private_key azureuser@20.239.179.81
+          ssh -o StrictHostKeyChecking=no azureuser@20.239.179.81
           sudo docker service update --image $username/hotel.api:latest hotelserver_rest_hotel
