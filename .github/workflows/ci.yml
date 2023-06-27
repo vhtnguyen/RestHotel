@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      username: ${{ secrets.DOCKER_USERNAME }}
+      password: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
 
@@ -18,13 +21,14 @@ jobs:
           docker login $username -p $password
           docker push $username/hotel.api:latest
 
-    env:
-      username: ${{ secrets.DOCKER_USERNAME }}
-      password: ${{ secrets.DOCKER_PASSWORD }}
-
   deploy:
     runs-on: windows-2022
     needs: build
+
+    env:
+      private_key: ${{ secrets.PRIVATE_KEY }}
+      username: ${{ secrets.DOCKER_USERNAME }}
+
     steps:
       - uses: action/checkout@v3
 
@@ -32,7 +36,3 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i $private_key azureuser@20.239.179.81
           sudo docker service update --image $username/hotel.api:latest hotelserver_rest_hotel
-
-    env:
-      private_key: ${{ secrets.PRIVATE_KEY }}
-      username: ${{ secrets.DOCKER_USERNAME }}
