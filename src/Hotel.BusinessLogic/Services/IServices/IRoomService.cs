@@ -11,7 +11,7 @@ namespace Hotel.BusinessLogic.Services
 {
     public interface IRoomService
     {
-        Task<List<RoomToReturnListDTO>> GetRoomListAsync();
+        Task<RoomToReturnQueryPerPageDTO> GetRoomListAsync(int page,int pageSize);
         Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO);
         Task<RoomToReturnDetailDTO> GetRoomByIDAsync(int id);
         Task<List<RoomToReturnDetailDTO>> FindRooms(string roomType, string status);

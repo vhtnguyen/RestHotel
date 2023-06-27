@@ -25,10 +25,23 @@ namespace Hotel.BusinessLogic.Services
             _roomDetailRepository = roomDetail;
         }
 
-        public async Task<List<RoomToReturnListDTO>> GetRoomListAsync()
+        public async Task<RoomToReturnQueryPerPageDTO> GetRoomListAsync(int page, int pageSize)
         {
-            var result = await _roomRepository.GetListAsync();
-            return _mapper.Map<List<RoomToReturnListDTO>>(result);
+          
+            var total = await _roomRepository.CountAsync();
+            if(total==0|| pageSize == 0)
+            {
+                total = 1; 
+                page = 1;
+                pageSize = 1;
+            }
+            var totalPages =((total - 1) / pageSize) + 1;
+            var roomList= await _roomRepository.GetListAsync(page, pageSize);
+            var result = new RoomToReturnQueryPerPageDTO(
+                totalPages, pageSize, page
+                );
+            result.AddList(_mapper.Map<List<RoomToReturnListDTO>>(roomList));
+            return result;
         }
         public async Task<RoomToReturnDetailDTO> CreateRoomAsync(RoomToCreateDTO roomToCreateDTO)
         {

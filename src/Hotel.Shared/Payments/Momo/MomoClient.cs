@@ -40,7 +40,8 @@ internal class MomoClient : IMomoClient
         payload.setSignture(signature);
 
         var response = await _momoPaymentRequest.SendPaymentRequest(_options.EndPoint, payload);
-        var result = new SessionResource(response["payUrl"], response["requestId"]);
+
+        var result = new SessionResource(response["qrCodeUrl"], response["requestId"]);
         return result;
     }
 }

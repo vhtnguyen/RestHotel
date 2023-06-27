@@ -16,7 +16,6 @@ internal class MomoPaymentRequest : IMomoPaymentRequest
     {
         var response = await _client.PostAsJsonAsync(endpoint, data);
         var result = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(result);
 
         return JsonConvert.DeserializeObject<Dictionary<string, string>>(result)!;
     }
