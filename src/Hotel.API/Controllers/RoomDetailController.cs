@@ -51,8 +51,9 @@ namespace Hotel.API.Controllers
             return Ok(room);
         }
         [HttpPut]
-        public async Task<ActionResult> update(RoomDetailToReturnDTO roomDetail)
+        public async Task<ActionResult> update(RoomDetailToUpdateDTO roomDetail)
         {
+
             await _roomDetailService.UpdateRoomDetail(roomDetail);
             return NoContent();
         }

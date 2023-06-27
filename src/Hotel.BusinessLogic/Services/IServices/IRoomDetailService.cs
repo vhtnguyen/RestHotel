@@ -15,7 +15,7 @@ namespace Hotel.BusinessLogic.Services.IServices
         Task<RoomDetailToReturnDTO> getRoomDetailByID(int id);
         Task <RoomDetailToReturnDTO> CreateRoomDetail(RoomDetailToCreateDTO roomDetail);
         Task RemoveRoomDetail(int id);
-        Task UpdateRoomDetail(RoomDetailToReturnDTO regulation);
+        Task UpdateRoomDetail(RoomDetailToUpdateDTO regulation);
         Task<IEnumerable<int>> getAllId();
 
     }
