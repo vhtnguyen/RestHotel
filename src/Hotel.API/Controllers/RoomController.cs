@@ -17,9 +17,10 @@ public class RoomController : ControllerBase
         _roomService = roomService;
     }
     [HttpGet("")]
-    public async Task<ActionResult<List<RoomToReturnListDTO>>> Get()
+    public async Task<ActionResult<RoomToReturnQueryPerPageDTO>> Get([FromQuery]int page,int pageSize)
     {
-        return Ok(await _roomService.GetRoomListAsync());
+        var respone = await _roomService.GetRoomListAsync(page, pageSize);
+        return Ok(respone);
     }
 
 

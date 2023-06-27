@@ -6,7 +6,8 @@ namespace Hotel.DataAccess.Repositories.IRepositories;
 
 public interface IRoomRepository
 {
-    Task<IEnumerable<Room>?> GetListAsync();
+    Task<IEnumerable<Room>?> GetListAsync(int page,int perPage);
+    Task<int> CountAsync();
     Task<Room?> FindAsync(Expression<Func<Room, bool>> predicate);
     Task<IEnumerable<Room>?> FindAllAsync(Expression<Func<Room, bool>> predicate);
     Task<Room?> FindAsync(int id);

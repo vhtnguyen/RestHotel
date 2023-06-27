@@ -17,10 +17,13 @@ internal class RoomRepository : IRoomRepository
         _genericRepository = genericRepository;
         _context = context;
     }
-
-    public async Task<IEnumerable<Room>?> GetListAsync()
+    public async Task<int> CountAsync()
     {
-        var result = await _context.Room
+        return await _context.Room.CountAsync();
+    }
+    public async Task<IEnumerable<Room>?> GetListAsync(int page,int perPage)
+    {
+        var result = await _context.Room.Skip((page - 1) * perPage).Take(perPage)
             .Include(r => r.RoomDetail)
             .ThenInclude(rD => rD.RoomRegulation)
            .ToListAsync();

@@ -17,7 +17,6 @@ namespace Hotel.BusinessLogic.DTO.Rooms
         public int RoomDetail { get; set; }
         public string? RoomType { get; set; }
         public double Price { get; set; }
-      
         
     }
 }
