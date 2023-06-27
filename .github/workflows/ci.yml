@@ -34,13 +34,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "$private_key" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa 20.239.179.81 >> ~/.ssh/known_hosts
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: $private_key
 
-      - name: SSH to remote server
+      - name: Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@20.239.179.81
+          ssh -o StrictHostKeyChecking=no -i $private_key azureuser@20.239.179.81
           sudo docker service update --image $username/hotel.api:latest hotelserver_rest_hotel
