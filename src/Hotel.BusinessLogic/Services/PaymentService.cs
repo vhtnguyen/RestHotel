@@ -96,7 +96,7 @@ public class PaymentService : IPaymentService
             throw new DomainBadRequestException($"Invoice has't exsited on id '{paymentId}'", "not_found_invoice");
         }
 
-        if (invoice.Status == "checkout")
+        if (invoice.Status == "partly_deposited")
         {
             return true;
         }
