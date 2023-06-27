@@ -14,12 +14,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build the Docker image
-        run: docker build -t $username/hotel.api:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/hotel.api:latest .
 
       - name: Push the Docker image
         run: |
-          docker login $username -p $password
-          docker push $username/hotel.api:latest
+          docker login ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/hotel.api:latest
 
   deploy:
     runs-on: windows-2022
@@ -34,5 +34,5 @@ jobs:
 
       - name: SSH to remote server
         run: |
-          ssh -o StrictHostKeyChecking=no -i $private_key azureuser@20.239.179.81
-          sudo docker service update --image $username/hotel.api:latest hotelserver_rest_hotel
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} azureuser@20.239.179.81
+          sudo docker service update --image ${{ secrets.DOCKER_USERNAME }}/hotel.api:latest hotelserver_rest_hotel
