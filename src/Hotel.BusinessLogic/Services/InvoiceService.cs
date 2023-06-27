@@ -90,6 +90,10 @@ internal class InvoiceService : IInvoiceService
     public async Task<InvoiceToDetailDTO> GetDetailDTO(int orderId)
     {
         var result = await _invoiceRepository.GetInvoiceDetail(orderId);
+        if (result == null)
+        {
+            throw new DomainBadRequestException($"Invoice has't exsited on id '{orderId}'", "not_found_invoice");
+        }
         return _mapper.Map<InvoiceToDetailDTO>(result);
     }
 
