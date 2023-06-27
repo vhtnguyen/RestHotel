@@ -22,6 +22,8 @@ namespace Hotel.DataAccess.Repositories.IRepositories
 
         Task<List<ReservationCard>> GetListReservationCardsByTime(DateTime from, DateTime to);
 
+        Task<List<ReservationCard>> GetListReservationCardsInTime(DateTime from, DateTime to);
+
         Task UpdateAsync(ReservationCard card);
 
         Task RemoveAsync(ReservationCard card);

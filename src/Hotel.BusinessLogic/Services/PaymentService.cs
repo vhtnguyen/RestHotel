@@ -87,6 +87,23 @@ public class PaymentService : IPaymentService
         return response;
     }
 
+    public async Task<bool> GetPaymentStatus(string paymentId)
+    {
+        var invoice = await _invoiceRepository.FindAsync(i => i.PaymentId == paymentId);
+
+        if (invoice == null)
+        {
+            throw new DomainBadRequestException($"Invoice has't exsited on id '{paymentId}'", "not_found_invoice");
+        }
+
+        if (invoice.Status == "checkout")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public async Task PayFailed(string paymentIntentId)
     {
         var invoice = await _invoiceRepository.FindAsync(i => i.PaymentId == paymentIntentId);

@@ -66,7 +66,7 @@ public class ReservationController : ControllerBase
     }
 
     [HttpGet("by-period-time")]
-    public async Task<ActionResult> GetReservationCardsByTime(PeriodTimeDTO periodTimeDTO)
+    public async Task<ActionResult> GetReservationCardsByTime([FromQuery] PeriodTimeDTO periodTimeDTO)
     {
         if (!periodTimeDTO.ParseDate())
         {
@@ -76,9 +76,9 @@ public class ReservationController : ControllerBase
     }
 
     [HttpGet("by-card-id")]
-    public async Task<ActionResult> GetReservationCardsById(IdDTO idDTO)
+    public async Task<ActionResult> GetReservationCardsById(int id)
     {
-        ReservationCardReturnDTO? card = await _reservationService.GetReservationCardByID(idDTO.Id);
+        ReservationCardReturnDTO? card = await _reservationService.GetReservationCardByID(id);
         if (card == null)
         {
             return Ok("Card doesn't exist");
@@ -87,12 +87,12 @@ public class ReservationController : ControllerBase
     }
 
     [HttpGet("by-card-invoice-id")]
-    public async Task<ActionResult> GetReservationCardsByInvoiceId(IdDTO idDTO)
+    public async Task<ActionResult> GetReservationCardsByInvoiceId(int id)
     {
-        List<ReservationCardReturnDTO>? cards = await _reservationService.GetReservationCardByInvoiceID(idDTO.Id);
+        List<ReservationCardReturnDTO>? cards = await _reservationService.GetReservationCardByInvoiceID(id);
         if (cards.Count() == 0)
         {
-            return Ok("Invoice doesn't exist");
+            return BadRequest("Invoice doesn't exist");
         }
         return Ok(cards);
     }
@@ -145,7 +145,7 @@ public class ReservationController : ControllerBase
     }
 
     [HttpGet("free-rooms-list")]
-    public async Task<ActionResult> GetFreeRoomList(RoomToFindFreeDTO roomToFindFreeDTO)
+    public async Task<ActionResult> GetFreeRoomList([FromQuery] RoomToFindFreeDTO roomToFindFreeDTO)
     {
         if (!roomToFindFreeDTO.ParseDate())
         {

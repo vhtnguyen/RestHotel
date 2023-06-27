@@ -27,6 +27,8 @@ namespace Hotel.BusinessLogic.Profiles
             .ForMember(dest => dest.InvoiceId, opt => opt.MapFrom(card => card.Invoice.Id))
             .ForMember(dest => dest.RoomId, opt => opt.MapFrom(card => card.Room.Id))
             .ForMember(dest => dest.GuestName, opt => opt.MapFrom(card => card.Invoice.NameCus))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(card => card.Room.RoomDetail.Price))
+            .ForMember(dest => dest.RoomType, opt => opt.MapFrom(card => card.Room.RoomDetail.RoomType))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(card => card.Invoice.Status))
             .ForMember(dest => dest.GuestsNumber, opt => opt.MapFrom(card => card.Guests.Count()))
             .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(card => card.ArrivalDate.ToString("dd/MM/yyyy")))

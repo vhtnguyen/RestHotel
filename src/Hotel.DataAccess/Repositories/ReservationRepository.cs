@@ -42,7 +42,7 @@ namespace Hotel.DataAccess.Repositories
             int Skip = (page - 1) * entries;
             var result = await _context.ReservationCard
                             .Include(card => card.Invoice)
-                            .Include(card => card.Room)
+                            .Include(card => card.Room).ThenInclude(r => r.RoomDetail)
                             .Skip(Skip)
                             .Take(entries)
                             .ToListAsync();
@@ -86,14 +86,30 @@ namespace Hotel.DataAccess.Repositories
 
         public async Task<List<ReservationCard>> GetListReservationCardsByTime(DateTime from, DateTime to)
         {
+            // if (from == to)
+            // {
+            //     to = to + new TimeSpan(23, 59, 59);
+            // }
+            var result = await _context.ReservationCard
+                                .Include(card => card.Invoice)
+                                .Include(card => card.Room).ThenInclude(r => r.RoomDetail)
+                                .Where(card => (card.ArrivalDate <= from && to <= card.DepartureDate))
+                                .ToListAsync();
+            return result;
+        }
+
+        public async Task<List<ReservationCard>> GetListReservationCardsInTime(DateTime from, DateTime to)
+        {
             if (from == to)
             {
                 to = to + new TimeSpan(23, 59, 59);
             }
             var result = await _context.ReservationCard
                                 .Include(card => card.Invoice)
-                                .Include(card => card.Room)
-                                .Where(card => (card.ArrivalDate >= from && to >= card.DepartureDate))
+                                .Include(card => card.Room).ThenInclude(r => r.RoomDetail)
+                                .Where(card => ((card.ArrivalDate >= from && to >= card.DepartureDate) ||
+                                                (card.ArrivalDate <= from && from <= card.DepartureDate) ||
+                                                (card.ArrivalDate <= to && to <= card.DepartureDate)))
                                 .ToListAsync();
             return result;
         }
@@ -114,7 +130,7 @@ namespace Hotel.DataAccess.Repositories
         public async Task<List<ReservationCard>> FindAsyncByInvoiceID(int id)
         {
             return await _context.ReservationCard
-                            .Include(c => c.Room)
+                            .Include(c => c.Room).ThenInclude(r => r.RoomDetail)
                             .Include(c => c.Invoice)
                             .Where(c => c.Invoice.Id == id)
                             .ToListAsync();
@@ -123,7 +139,7 @@ namespace Hotel.DataAccess.Repositories
         public async Task<ReservationCard?> GetReservationCardByID(int id)
         {
             return await _context.ReservationCard
-                            .Include(c => c.Room)
+                            .Include(c => c.Room).ThenInclude(r => r.RoomDetail)
                             .Include(c => c.Invoice)
                             .Where(c => c.Id == id)
                             .FirstOrDefaultAsync();

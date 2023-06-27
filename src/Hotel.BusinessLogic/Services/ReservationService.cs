@@ -33,7 +33,7 @@ namespace Hotel.BusinessLogic.Services
 
         public async Task<List<ReservationCardReturnDTO>> GetReservationCardsByTime(PeriodTimeDTO periodTimeDTO)
         {
-            List<ReservationCard> CardsList = await _reservationRepository.GetListReservationCardsByTime(periodTimeDTO.ArrivalDate, periodTimeDTO.DepartureDate);
+            List<ReservationCard> CardsList = await _reservationRepository.GetListReservationCardsInTime(periodTimeDTO.ArrivalDate, periodTimeDTO.DepartureDate);
             List<ReservationCardReturnDTO> result = _mapper.Map<List<ReservationCardReturnDTO>>(CardsList);
             return result;
         }

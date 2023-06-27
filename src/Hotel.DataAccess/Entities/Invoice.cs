@@ -50,7 +50,7 @@ public class Invoice
 
     public void Checkout()
     {
-        Status = "check_out";
+        Status = "checkout";
     }
 
     public void AddHotelService(HotelService service)

@@ -16,7 +16,7 @@ namespace Hotel.BusinessLogic.Profiles
         public RoomProfile()
         {
             CreateMap<RoomToCreateDTO, Room>();
-               
+
 
             CreateMap<Room, RoomToReturnDetailDTO>()
             .ForMember(dest => dest.Detail, opt => opt.MapFrom(src => src.RoomDetail));
@@ -28,6 +28,7 @@ namespace Hotel.BusinessLogic.Profiles
 
             CreateMap<Room, RoomFreeToReturnDTO>()
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.RoomDetail.Description))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.RoomDetail.Image))
                 .ForMember(dest => dest.DefaultGuest, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.DefaultGuest))
                 .ForMember(dest => dest.MaxGuest, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.MaxGuest))
                 .ForMember(dest => dest.MaxSurchargeRatio, opt => opt.MapFrom(src => src.RoomDetail.RoomRegulation.MaxSurchargeRatio))
