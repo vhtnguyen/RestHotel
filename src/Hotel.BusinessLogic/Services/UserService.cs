@@ -6,6 +6,8 @@ using Hotel.Shared.Exceptions;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.Shared.Authentication;
+using Hotel.BusinessLogic.DTO.Rooms;
+using System.Drawing.Printing;
 
 namespace Hotel.BusinessLogic.Services
 {
@@ -30,10 +32,22 @@ namespace Hotel.BusinessLogic.Services
             _stringHasher = stringHasher;
             _tokenGenerator = tokenGenerator;
         }
-        public async Task<List<UserToReturnDTO>> GetUserListAsync()
+        public async Task<ListUserToReturnDTO> GetUserListAsync(int page,int pageSize)
         {
-            var usersToReturn = await _userRepository.GetListAsync();
-            return _mapper.Map<List<UserToReturnDTO>>(usersToReturn);
+            var total = await _userRepository.CountAsync();
+            if (total == 0 || pageSize == 0)
+            {
+                total = 1;
+                page = 1;
+                pageSize = 1;
+            }
+            var totalPages = ((total - 1) / pageSize) + 1;
+            var userList = await _userRepository.GetListAsync(page, pageSize);
+            var result = new ListUserToReturnDTO(
+                totalPages, pageSize, page
+                );
+            result.AddList(_mapper.Map<List<UserToReturnDTO>>(userList));
+            return result;
         }
         public async Task<UserToReturnDTO> GetUserByIDAsync(int userId)
         {
