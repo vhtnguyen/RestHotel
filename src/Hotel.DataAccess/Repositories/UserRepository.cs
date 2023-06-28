@@ -24,11 +24,11 @@ internal class UserRepository : IUserRepository
             .Include(c => c.Role)
             .FirstOrDefaultAsync(predicate);
 
-    public async Task<IEnumerable<User>?> GetListAsync()
+    public async Task<IEnumerable<User>?> GetListAsync(int page, int pageSize)
     {
-        var result = await _context.Users
+        var result = await _context.Users.Skip((page - 1) * pageSize).Take(pageSize)
            .Include(u => u.Role)
-           .ToListAsync();
+          .ToListAsync();
         return result;
     }
     public async Task<User?> FindAsync(int id)
@@ -80,6 +80,10 @@ internal class UserRepository : IUserRepository
     public Task<IDbContextTransaction> CreateTransaction()
     {
         throw new NotImplementedException();
+    }
+    public async Task<int> CountAsync()
+    {
+        return await _context.Users.CountAsync();
     }
 }
 

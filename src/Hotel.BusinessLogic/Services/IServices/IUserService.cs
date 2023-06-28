@@ -4,7 +4,7 @@ namespace Hotel.BusinessLogic.Services.IServices
     public interface IUserService
     {
         Task<(string, UserToReturnDTO)> Login(UserCreateDto userLoginDto);
-        Task<List<UserToReturnDTO>> GetUserListAsync();
+        Task<ListUserToReturnDTO> GetUserListAsync(int page,int pageSize);
         Task<UserToReturnDTO> CreateUserAsync(UserToCreateDTO userToCreateDTO);
         Task<IEnumerable<UserToReturnDTO>> SearchUserAsync(string searchOption, string searchContent);
         Task RemoveUserAsync(int userId);

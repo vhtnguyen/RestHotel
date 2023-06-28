@@ -26,9 +26,9 @@ public class UserController : ControllerBase
     [Authorize(Roles = "manager")]
     [HttpGet("")]
 
-    public async Task<ActionResult> Get()
+    public async Task<ActionResult> Get(int page, int pageSize)
     {
-        return Ok(await _userService.GetUserListAsync());
+        return Ok(await _userService.GetUserListAsync(page, pageSize));
     }
 
     [Authorize(Roles = "manager")]
