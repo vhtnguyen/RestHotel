@@ -68,13 +68,11 @@ public class PaymentService : IPaymentService
 
         foreach (var service in invoice.HotelServices)
         {
-            var totalDay =
-                (int)DateTime.UtcNow.ToVietnameseDatetime().Subtract(service.CreateOn).Days + 1;
             sessionItems.Add(new CreateSessionItemResouce(
                 service.HotelService.Name!,
-                service.HotelService.Price * _options.DepositRatio, totalDay));
+                service.HotelService.Price * _options.DepositRatio, 1));
 
-            downPayment += service.HotelService.Price * _options.DepositRatio * totalDay;
+            downPayment += service.HotelService.Price * _options.DepositRatio;
         }
 
         var sessionResource = new CreateSessionResource(
@@ -135,11 +133,13 @@ public class PaymentService : IPaymentService
 
         foreach (var card in invoice.ReservationCards)
         {
+            var totalDay = card.DepartureDate.Subtract(card.ArrivalDate).Days + 1;
             details.Add(new InvoiceDetail
             {
-                Name = $"Card_{card.Id}",
+
+                Name = $"Room_{card.Room.Id}",
                 Price = card.Room.RoomDetail.Price * _options.DepositRatio,
-                Quantity = 1
+                Quantity = totalDay
             });
         }
 
