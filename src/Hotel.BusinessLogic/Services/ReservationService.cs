@@ -212,9 +212,18 @@ namespace Hotel.BusinessLogic.Services
                 return null;
             }
 
+            //to re-count totalSum
+            Invoice? invoiceToFindFee = await _invoiceRepository.FindAsync(i => i.Id == card.Invoice!.Id);
+            double oldRoomFee = await CountRoomFee(invoiceToFindFee!.Id);
+            double serviceFee = invoiceToFindFee.TotalSum - oldRoomFee;
+
+            //update
             card.Guests = _mapper.Map<List<Guest>>(reservationCardEditDTO.Guests);
             card.Notes = card.Notes;
             await _reservationRepository.UpdateAsync(card);
+
+            invoiceToFindFee.TotalSum = serviceFee + await CountRoomFee(invoiceToFindFee.Id);
+            await _invoiceRepository.UpdateInvoice(invoiceToFindFee);
 
             var result = _mapper.Map<ReservationCardReturnDTO>(card);
             return result;

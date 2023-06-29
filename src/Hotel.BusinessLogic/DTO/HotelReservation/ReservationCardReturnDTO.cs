@@ -19,6 +19,7 @@ namespace Hotel.BusinessLogic.DTO.HotelReservation
         public double Price { get; set; }
         public string? RoomType { get; set; }
         public string? Notes { get; set; }
+        public int MaxGuests { get; set;}
         public ICollection<GuestDTO> Guests { get; set; } = new List<GuestDTO>();
 
         // public ReservationCardReturnDTO(int id, int invoiceID, string? guestName, 

@@ -13,7 +13,7 @@ namespace Hotel.BusinessLogic.DTO.Users
         public required string FullName { get; set; }
         public string? Email { get; set; }
         public string? TelephoneNumber { get; set; }
-        public required int Role { get; set; }
+        public required string Role { get; set; }
 
     }
 }
