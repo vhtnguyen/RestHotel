@@ -30,6 +30,7 @@ namespace Hotel.BusinessLogic.Profiles
             .ForMember(dest => dest.Price, opt => opt.MapFrom(card => card.Room.RoomDetail.Price))
             .ForMember(dest => dest.RoomType, opt => opt.MapFrom(card => card.Room.RoomDetail.RoomType))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(card => card.Invoice.Status))
+            .ForMember(dest => dest.MaxGuests, opt => opt.MapFrom(card => card.RoomRegulation.MaxGuest))
             .ForMember(dest => dest.GuestsNumber, opt => opt.MapFrom(card => card.Guests.Count()))
             .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(card => card.ArrivalDate.ToString("dd/MM/yyyy")))
             .ForMember(dest => dest.DepartureDate, opt => opt.MapFrom(card => card.DepartureDate.ToString("dd/MM/yyyy")));
