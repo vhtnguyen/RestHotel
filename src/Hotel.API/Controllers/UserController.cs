@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Hotel.BusinessLogic.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Hotel.BusinessLogic.DTO.Shared;
+using System;
 
 namespace Hotel.API.Controllers;
 
@@ -29,6 +31,13 @@ public class UserController : ControllerBase
     public async Task<ActionResult> Get(int page, int pageSize)
     {
         return Ok(await _userService.GetUserListAsync(page, pageSize));
+    }
+    [Authorize(Roles = "manager")]
+    [HttpGet("{id}")]
+
+    public async Task<ActionResult> Get(int id)
+    {
+        return Ok(await _userService.GetUserByIDAsync(id));
     }
 
     [Authorize(Roles = "manager")]
@@ -69,18 +78,18 @@ public class UserController : ControllerBase
     // admin change password for user
     [Authorize(Roles = "manager")]
     [HttpPut("admin")]
-    public async Task<ActionResult> ChangeUserPassword([FromQuery] int id, [FromBody] string newPassWord)
+    public async Task<ActionResult> ChangeUserPassword(UserUpdateDto usr)
     {
-        await _userService.ChangeUserPassWordAsync(id, newPassWord);
+        await _userService.ChangeUserPassWordAsync(usr.Id, usr.newPassword);
         return Ok("ok");
     }
 
     [Authorize(Roles = "staff,manager")]
     [HttpPut("")]
-    public async Task<ActionResult> ChangeUserPassword([FromBody] string currentPassWord, string newPassWord)
+    public async Task<ActionResult> ChangeUserPassword(PasswordToChangeDTO input)
     {
         var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        await _userService.ChangeUserPassWordAsync(userId, currentPassWord, newPassWord);
+        await _userService.ChangeUserPassWordAsync(userId, input.CurrentPassword, input.NewPassword);
         return Ok("ok");
     }
 

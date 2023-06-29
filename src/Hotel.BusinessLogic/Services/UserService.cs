@@ -83,7 +83,7 @@ namespace Hotel.BusinessLogic.Services
             {
                 throw new DomainBadRequestException("user has existed", "");
             }
-            var new_role = await _roleRepository.FindAsync(r => r.Id == userToCreateDTO.Role);
+            var new_role = await _roleRepository.FindAsync(r => r.NameType == userToCreateDTO.Role.ToLower());
 
             if (new_role == null)
             {
@@ -101,7 +101,7 @@ namespace Hotel.BusinessLogic.Services
         }
         public async Task RemoveUserAsync(int userId)
         {
-            var user = _userRepository.FindAsync(userId);
+            var user = await _userRepository.FindAsync(userId);
             if (user == null)
             {
                 throw new DomainBadRequestException("Remove fail", "User not found");

@@ -21,7 +21,8 @@ namespace Hotel.BusinessLogic.Profiles
             .ConstructUsing((dto, context) => new User(0, dto.Account, dto.Password, dto.FullName, dto.Email, dto.TelephoneNumber, null));
 
             CreateMap<User, UserToReturnDTO>()
-            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src=>src.Role.NameType));
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src=>src.Role.NameType))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Account));
 
             CreateMap<UserToCreateDTO, UserToReturnDTO>();
         }

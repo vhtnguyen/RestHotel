@@ -10,6 +10,7 @@ namespace Hotel.BusinessLogic.DTO.Users
     {
         public required int Id { get; set; } 
         public required string FullName { get; set; }
+        public required string Username { get; set; }
         public string? Email { get; set; }
         public string? TelephoneNumber { get; set; }
         public required string Roles { get; set; }
