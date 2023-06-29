@@ -3,6 +3,7 @@ using Hotel.BusinessLogic.DTO.Payment;
 using Hotel.BusinessLogic.Services.IServices;
 using Hotel.DataAccess.Repositories.IRepositories;
 using Hotel.Shared.Exceptions;
+using Hotel.Shared.Helpers;
 using Hotel.Shared.Payments;
 using Hotel.Shared.Redis;
 using Microsoft.Extensions.Options;
@@ -57,19 +58,23 @@ public class PaymentService : IPaymentService
         double downPayment = 0;
         foreach (var card in invoice.ReservationCards)
         {
-            sessionItems.Add(new CreateSessionItemResouce(
-                $"Card_{card.Id}", card.Room.RoomDetail.Price * _options.DepositRatio, 1));
+            var totalDay = card.DepartureDate.Subtract(card.ArrivalDate).Days + 1;
 
-            downPayment += card.Room.RoomDetail.Price * _options.DepositRatio;
+            sessionItems.Add(new CreateSessionItemResouce(
+                $"Room_{card.Room.Id}", card.Room.RoomDetail.Price * _options.DepositRatio, totalDay));
+
+            downPayment += card.Room.RoomDetail.Price * _options.DepositRatio * totalDay;
         }
 
         foreach (var service in invoice.HotelServices)
         {
+            var totalDay =
+                (int)DateTime.UtcNow.ToVietnameseDatetime().Subtract(service.CreateOn).Days + 1;
             sessionItems.Add(new CreateSessionItemResouce(
                 service.HotelService.Name!,
-                service.HotelService.Price * _options.DepositRatio, 1));
+                service.HotelService.Price * _options.DepositRatio, totalDay));
 
-            downPayment += service.HotelService.Price * _options.DepositRatio;
+            downPayment += service.HotelService.Price * _options.DepositRatio * totalDay;
         }
 
         var sessionResource = new CreateSessionResource(
