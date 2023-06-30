@@ -68,7 +68,7 @@ internal class HotelServiceRepository : IHotelServiceRepository
 
     public async Task<IEnumerable<HotelService>?> FindAllAsync(Expression<Func<HotelService, bool>> predicate)
     {
-        return await _genericRepository.FindAllAsync(predicate);
+        return await _context.HotelService.Where(predicate).Include(u => u.Category).ToListAsync();
     }
 
     public async Task<HotelService?> GetAsync(int id)

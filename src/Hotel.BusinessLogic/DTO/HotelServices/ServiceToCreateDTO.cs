@@ -9,7 +9,7 @@ namespace Hotel.BusinessLogic.DTO.HotelServices
     public class ServiceToCreateDTO
     {
         public string? ServiceName { get; set; }
-        public int Category { get; set; }
+        public required string Category { get; set; }
         public double UnitPrice { get; set; }
     }
 }

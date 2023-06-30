@@ -5,7 +5,7 @@ namespace Hotel.BusinessLogic.Services.IServices
     {
         Task<IEnumerable<ServiceToReturnDTO>> GetServicesAsync();
         Task<ServiceToReturnDTO> CreateServiceAsync(ServiceToCreateDTO serviceDTO);
-        Task<IEnumerable<ServiceToReturnDTO>?> SearchSeviceAsync(string? value, string searchOption, int category);
+        Task<IEnumerable<ServiceToReturnDTO>> SearchSeviceAsync(string? value, string category);
         Task RemoveServiceAsync(int id);
 
 

@@ -26,12 +26,10 @@ public class ServiceController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<ServiceToReturnDTO>> Search([FromQuery] string? value, string option = "all", int category = 0)
+    public async Task<ActionResult<ServiceToReturnDTO>> Search([FromQuery] string? value, string category)
     {
 
-        if (value.IsNullOrEmpty() && option != "all") return BadRequest();
-
-        return Ok(await _hotelServicesService.SearchSeviceAsync(value, option, category));
+        return Ok(await _hotelServicesService.SearchSeviceAsync(value, category));
     }
 
     [Authorize(Roles = "manager")]
